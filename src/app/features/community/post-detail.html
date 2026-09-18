@@ -1,0 +1,39 @@
+<section class="page">
+  <a routerLink="/community" class="back">← All threads</a>
+
+  @if (post(); as thread) {
+    <article class="post">
+      <span class="badge">{{ thread.category_detail?.name }}</span>
+      <h1>{{ thread.title }}</h1>
+      <p class="meta">
+        <a [routerLink]="['/profile', thread.author.username]">{{ thread.author.username }}</a>
+        · {{ thread.created_at | date: 'medium' }}
+      </p>
+      <p class="body">{{ thread.content }}</p>
+    </article>
+  }
+
+  <h2>Comments</h2>
+  <ul class="comments">
+    @for (comment of comments(); track comment.id) {
+      <li>
+        <strong>
+          <a [routerLink]="['/profile', comment.author.username]">{{ comment.author.username }}</a>
+        </strong>
+        <time>{{ comment.created_at | date: 'short' }}</time>
+        <p>{{ comment.content }}</p>
+      </li>
+    } @empty {
+      <li class="empty">No replies yet.</li>
+    }
+  </ul>
+
+  @if (auth.isAuthenticated()) {
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <textarea formControlName="content" rows="4" placeholder="Reply to this thread"></textarea>
+      <button class="btn primary" type="submit">Comment</button>
+    </form>
+  } @else {
+    <a routerLink="/login" class="btn ghost">Sign in to comment</a>
+  }
+</section>

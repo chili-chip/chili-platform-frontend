@@ -1,0 +1,36 @@
+<section class="hero">
+  <div class="copy">
+    <p class="kicker">Handheld · Edge · Indie</p>
+    <h1>The pocket console for people who still make worlds.</h1>
+    <p class="lede">
+      Chili Platform is the store, studio, and community around the
+      <strong>vgc zero</strong> — a retro handheld built to run tiny games at the edge.
+    </p>
+    <div class="cta-row">
+      <a routerLink="/store" class="btn primary">Explore Store</a>
+      <a routerLink="/creator" class="btn ghost">Try Web Creator</a>
+    </div>
+    <ul class="stats">
+      <li><span>128×128</span> native scene</li>
+      <li><span>16×16</span> room grid</li>
+      <li><span>D1 + R2</span> at the edge</li>
+    </ul>
+  </div>
+  <app-vgc-zero />
+</section>
+
+<section class="pillars">
+  <header>
+    <p class="kicker">Four pillars</p>
+    <h2>Everything a scene needs, none of the bloat.</h2>
+  </header>
+  <div class="grid">
+    @for (pillar of pillars; track pillar.title) {
+      <a class="card" [routerLink]="pillar.to">
+        <span class="idx">{{ pillar.kicker }}</span>
+        <h3>{{ pillar.title }}</h3>
+        <p>{{ pillar.copy }}</p>
+      </a>
+    }
+  </div>
+</section>

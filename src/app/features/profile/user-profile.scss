@@ -1,0 +1,38 @@
+.page {
+  padding: 3rem 6vw 5rem;
+}
+
+.hero {
+  display: flex;
+  gap: 1.2rem;
+  align-items: flex-start;
+}
+
+.avatar {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  background: #241016;
+  color: var(--chili-hot);
+  font-family: var(--font-display);
+  font-size: 2rem;
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+}
+
+.bio {
+  max-width: 48ch;
+  color: var(--muted);
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
