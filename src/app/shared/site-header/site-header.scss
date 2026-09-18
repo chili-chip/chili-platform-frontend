@@ -1,0 +1,99 @@
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 0.9rem 1.5rem;
+  backdrop-filter: blur(16px);
+  background: color-mix(in srgb, var(--bg-0) 82%, transparent);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.brand__mark {
+  width: 12px;
+  height: 12px;
+  background: var(--chili);
+  box-shadow:
+    4px 0 0 var(--chili-hot),
+    0 4px 0 #7a1020,
+    8px 4px 0 var(--phosphor);
+}
+
+.brand__word {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+}
+
+.brand__sub {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.links,
+.session {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.links {
+  justify-content: center;
+}
+
+.links a,
+.session a,
+.session button {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.links a.is-active,
+.links a:hover,
+.session a:hover,
+.session button:hover {
+  color: var(--text);
+}
+
+.cta {
+  color: var(--bg-0) !important;
+  background: var(--chili) !important;
+  padding: 0.45rem 0.8rem;
+  box-shadow: 3px 3px 0 #3d050c;
+}
+
+.ghost {
+  color: var(--phosphor) !important;
+}
+
+@media (max-width: 860px) {
+  .nav {
+    grid-template-columns: 1fr auto;
+  }
+
+  .links {
+    display: none;
+  }
+}

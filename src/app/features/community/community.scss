@@ -1,0 +1,152 @@
+.page {
+  padding: 2.5rem 6vw 4rem;
+}
+
+.intro {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.intro h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+}
+
+.lede {
+  max-width: 48ch;
+  color: var(--muted);
+}
+
+.cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.6rem 0;
+}
+
+.chip {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.7rem;
+  cursor: pointer;
+}
+
+.chip.is-on,
+.chip:hover {
+  color: var(--bg-0);
+  background: var(--phosphor);
+  border-color: var(--phosphor);
+}
+
+.composer,
+.thread,
+.empty {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+}
+
+.composer {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1.2rem;
+  margin-bottom: 1.4rem;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+input,
+select,
+textarea {
+  font: inherit;
+  color: var(--text);
+  background: var(--bg-0);
+  border: 1px solid var(--line);
+  padding: 0.65rem 0.7rem;
+}
+
+.cta-row {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.feed {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.thread {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.9rem;
+  padding: 1rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.thread:hover {
+  border-color: var(--chili);
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  background: #241016;
+  color: var(--chili-hot);
+  font-family: var(--font-display);
+  background-size: cover;
+}
+
+.meta {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.badge {
+  color: var(--bg-0);
+  background: var(--chili);
+  padding: 0.15rem 0.4rem;
+}
+
+.thread h3 {
+  margin: 0.25rem 0;
+  font-family: var(--font-display);
+}
+
+.thread p,
+.empty {
+  color: var(--muted);
+}
+
+.empty {
+  padding: 1.4rem;
+}
+
+.err {
+  color: var(--chili-hot);
+}
