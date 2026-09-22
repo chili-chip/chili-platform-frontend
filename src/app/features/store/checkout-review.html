@@ -1,0 +1,92 @@
+<section class="page">
+  <a routerLink="/store" class="back">← Keep shopping</a>
+  <header class="intro">
+    <div>
+      <p class="kicker">Checkout</p>
+      <h1>Review your kit</h1>
+      <p class="lede">
+        Confirm quantities here. Stripe collects payment and shipping on the next screen.
+      </p>
+    </div>
+  </header>
+
+  @if (!cart.count()) {
+    <div class="empty">
+      <p>Your cart is empty. Grab a kit or shell first.</p>
+      <a routerLink="/store" class="btn primary">Open store</a>
+    </div>
+  } @else {
+    <div class="layout">
+      <ul class="lines">
+        @for (line of cart.items(); track line.product.id) {
+          <li>
+            <div class="shot">
+              @if (cover(line.product); as src) {
+                <img [src]="src" [alt]="line.product.name" />
+              } @else {
+                <span>{{ line.product.name.charAt(0) }}</span>
+              }
+            </div>
+            <div class="copy">
+              <p class="sku">{{ line.product.sku || line.product.slug }}</p>
+              <h2><a [routerLink]="['/store', line.product.slug]">{{ line.product.name }}</a></h2>
+              <p class="desc">{{ blurb(line.product) }}</p>
+              <div class="row">
+                <div class="qty">
+                  <button type="button" (click)="cart.setQuantity(line.product.id, line.quantity - 1)">−</button>
+                  <span>{{ line.quantity }}</span>
+                  <button
+                    type="button"
+                    [disabled]="line.quantity >= line.product.stock"
+                    (click)="cart.setQuantity(line.product.id, line.quantity + 1)"
+                  >
+                    +
+                  </button>
+                  <button type="button" class="remove" (click)="cart.remove(line.product.id)">Remove</button>
+                </div>
+                <strong>
+                  {{ (line.product.price_cents * line.quantity) / 100 | currency: line.product.currency.toUpperCase() }}
+                </strong>
+              </div>
+            </div>
+          </li>
+        }
+      </ul>
+
+      <aside class="pay">
+        <p class="kicker">Pay</p>
+        <h2>Stripe Checkout</h2>
+        <dl>
+          <div>
+            <dt>Items</dt>
+            <dd>{{ cart.count() }}</dd>
+          </div>
+          <div>
+            <dt>Subtotal</dt>
+            <dd>{{ cart.totalCents() / 100 | currency: cart.currency().toUpperCase() }}</dd>
+          </div>
+          <div>
+            <dt>Shipping</dt>
+            <dd>At Stripe</dd>
+          </div>
+        </dl>
+        <p class="note">
+          Test card <code>4242 4242 4242 4242</code> · any future date · any CVC. Address is collected by Stripe.
+        </p>
+        @if (error()) {
+          <p class="err">{{ error() }}</p>
+        }
+        @if (auth.isAuthenticated()) {
+          <button type="button" class="btn primary pay-btn" [disabled]="paying()" (click)="pay()">
+            {{ paying() ? 'Redirecting…' : 'Pay with Stripe' }}
+          </button>
+        } @else {
+          <a routerLink="/login" [queryParams]="{ next: '/store/checkout' }" class="btn primary pay-btn">
+            Sign in to pay
+          </a>
+        }
+        <a routerLink="/store" class="ghost-link">Return to catalog</a>
+      </aside>
+    </div>
+  }
+</section>

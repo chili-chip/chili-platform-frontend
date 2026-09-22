@@ -10,4 +10,48 @@
       </div>
     </div>
   }
+
+  @if (isOwn()) {
+    <section class="orders">
+      <header>
+        <div>
+          <p class="kicker">Hardware</p>
+          <h2>My orders</h2>
+        </div>
+        <a routerLink="/store" class="btn ghost">Shop store</a>
+      </header>
+
+      @if (ordersLoading()) {
+        <p class="empty">Loading orders…</p>
+      } @else {
+        <ul>
+          @for (order of orders(); track order.id) {
+            <li>
+              <a class="order-card" [routerLink]="['/store/orders', order.id]">
+                <div class="order-head">
+                  <span class="badge" [attr.data-status]="order.status">{{ order.status | titlecase }}</span>
+                  <span>Order #{{ order.id }}</span>
+                  <time>{{ order.created_at | date: 'medium' }}</time>
+                  <strong>{{ order.total_cents / 100 | currency: order.currency.toUpperCase() }}</strong>
+                </div>
+                <div class="items">
+                  @for (item of order.items; track item.id) {
+                    <div>
+                      <span>{{ item.quantity }} × {{ item.product_name }}</span>
+                      <span>{{ item.line_total_cents / 100 | currency: order.currency.toUpperCase() }}</span>
+                    </div>
+                  }
+                </div>
+                @if (shipping(order); as ship) {
+                  <p class="ship">{{ ship }}</p>
+                }
+              </a>
+            </li>
+          } @empty {
+            <li class="empty">No hardware orders yet. The Chilichip store is ready when you are.</li>
+          }
+        </ul>
+      }
+    </section>
+  }
 </section>

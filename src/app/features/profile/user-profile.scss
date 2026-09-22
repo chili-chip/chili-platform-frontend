@@ -36,3 +36,119 @@ h1 {
   text-transform: uppercase;
   color: var(--muted);
 }
+
+.orders {
+  margin-top: 2.6rem;
+}
+
+.orders header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-end;
+  margin-bottom: 1rem;
+}
+
+.orders h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+
+.orders > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.orders > ul > li,
+.empty {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+}
+
+.order-card {
+  display: block;
+  padding: 1rem 1.1rem;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.empty {
+  display: block;
+  padding: 1rem 1.1rem;
+}
+
+.orders > ul > li:hover:not(.empty) {
+  border-color: var(--phosphor);
+}
+
+.order-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+
+.order-head strong {
+  margin-left: auto;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.badge {
+  color: var(--bg-0);
+  background: var(--muted);
+  padding: 0.15rem 0.4rem;
+}
+
+.badge[data-status='paid'],
+.badge[data-status='fulfilled'] {
+  background: var(--phosphor);
+}
+
+.badge[data-status='pending'] {
+  background: var(--amber);
+}
+
+.badge[data-status='canceled'],
+.badge[data-status='failed'] {
+  background: var(--chili);
+}
+
+.items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.items div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--text);
+  font-size: 0.92rem;
+}
+
+.ship,
+.empty {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.ship {
+  margin-top: 0.7rem;
+}

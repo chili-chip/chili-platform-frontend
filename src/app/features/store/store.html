@@ -1,0 +1,57 @@
+<section class="page">
+  <header class="intro">
+    <div>
+      <p class="kicker">Chilichip</p>
+      <h1>Store</h1>
+      <p class="lede">Kits, shells, and parts for the vgc zero. Pay with Stripe Checkout — test cards welcome.</p>
+    </div>
+    @if (!auth.isAuthenticated()) {
+      <a routerLink="/login" [queryParams]="{ next: '/store/checkout' }" class="btn ghost">Sign in to buy</a>
+    }
+  </header>
+
+  @if (error()) {
+    <p class="err">{{ error() }}</p>
+  }
+
+  @if (loading()) {
+    <p class="empty">Loading catalog…</p>
+  } @else {
+    <ul class="catalog">
+      @for (product of products(); track product.id) {
+        <li class="card" [class.is-out]="product.stock < 1">
+          <a class="shot" [routerLink]="['/store', product.slug]">
+            @if (cover(product); as src) {
+              <img [src]="src" [alt]="product.name" />
+            } @else {
+              <span>{{ product.name.charAt(0) }}</span>
+            }
+          </a>
+          <div class="body">
+            <div class="meta">
+              <span class="sku">{{ product.sku || product.slug }}</span>
+              <span class="stock" [class.is-low]="product.stock > 0 && product.stock < 8">
+                {{ product.stock < 1 ? 'Sold out' : product.stock + ' in stock' }}
+              </span>
+            </div>
+            <h2><a [routerLink]="['/store', product.slug]">{{ product.name }}</a></h2>
+            <p>{{ product.short_description || 'Hardware for the handheld.' }}</p>
+            <div class="buy">
+              <strong>{{ product.price_cents / 100 | currency: product.currency.toUpperCase() }}</strong>
+              <button
+                type="button"
+                class="btn primary"
+                [disabled]="product.stock < 1"
+                (click)="addToCart(product)"
+              >
+                {{ product.stock < 1 ? 'Sold out' : 'Add to cart' }}
+              </button>
+            </div>
+          </div>
+        </li>
+      } @empty {
+        <li class="empty">No products yet. Seed the store API and refresh.</li>
+      }
+    </ul>
+  }
+</section>

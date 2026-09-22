@@ -15,6 +15,37 @@ export const routes: Routes = [
     title: 'Chilichip Store',
   },
   {
+    path: 'store/checkout',
+    loadComponent: () =>
+      import('./features/store/checkout-review').then((m) => m.CheckoutReviewComponent),
+    title: 'Checkout',
+  },
+  {
+    path: 'store/checkout/success',
+    loadComponent: () =>
+      import('./features/store/checkout-success').then((m) => m.CheckoutSuccessComponent),
+    title: 'Checkout complete',
+  },
+  {
+    path: 'store/checkout/cancel',
+    loadComponent: () =>
+      import('./features/store/checkout-cancel').then((m) => m.CheckoutCancelComponent),
+    title: 'Checkout canceled',
+  },
+  {
+    path: 'store/orders/:id',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/store/order-detail').then((m) => m.OrderDetailComponent),
+    title: 'Order',
+  },
+  {
+    path: 'store/:slug',
+    loadComponent: () =>
+      import('./features/store/product-detail').then((m) => m.ProductDetailComponent),
+    title: 'Product',
+  },
+  {
     path: 'marketplace',
     loadComponent: () =>
       import('./features/marketplace/marketplace').then((m) => m.MarketplaceComponent),

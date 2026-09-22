@@ -1,0 +1,101 @@
+<section class="page">
+  @if (justPaid()) {
+    <p class="kicker">Payment received</p>
+  } @else {
+    <p class="kicker">Order</p>
+  }
+
+  @if (loading()) {
+    <h1>Loading order</h1>
+    <p class="lede">Fetching the latest status from the store…</p>
+  } @else if (error()) {
+    <h1>Order unavailable</h1>
+    <p class="err">{{ error() }}</p>
+    <a routerLink="/store" class="btn ghost">Back to store</a>
+  } @else if (order(); as receipt) {
+    <h1>Order #{{ receipt.id }}</h1>
+    <p class="lede">
+      @if (justPaid()) {
+        Stripe captured the payment. Keep this page for your records.
+      } @else if (receipt.status === 'paid') {
+        This hardware order is paid and waiting to ship.
+      } @else if (receipt.status === 'fulfilled') {
+        This order has been fulfilled.
+      } @else if (receipt.status === 'pending') {
+        Payment is still pending. If you just paid, refresh in a moment.
+      } @else {
+        This order is {{ receipt.status }}.
+      }
+    </p>
+
+    <div class="order-head">
+      <span class="badge" [attr.data-status]="receipt.status">{{ receipt.status | titlecase }}</span>
+      <span class="badge" [attr.data-shipping]="shippingStatus(receipt).key">
+        {{ shippingStatus(receipt).label }}
+      </span>
+      <time>{{ receipt.created_at | date: 'medium' }}</time>
+      @if (receipt.paid_at) {
+        <span>Paid {{ receipt.paid_at | date: 'medium' }}</span>
+      }
+    </div>
+
+    <article class="receipt">
+      <p class="kicker">Items</p>
+      <ul>
+        @for (item of receipt.items; track item.id) {
+          <li>
+            <div>
+              <strong>{{ item.product_name }}</strong>
+              <span class="qty">
+                {{ item.quantity }} ×
+                {{ item.unit_price_cents / 100 | currency: receipt.currency.toUpperCase() }}
+              </span>
+            </div>
+            <strong>{{ item.line_total_cents / 100 | currency: receipt.currency.toUpperCase() }}</strong>
+          </li>
+        }
+      </ul>
+      <p class="total">
+        <span>Total</span>
+        <strong>{{ receipt.total_cents / 100 | currency: receipt.currency.toUpperCase() }}</strong>
+      </p>
+    </article>
+
+    <div class="panels">
+      <section class="panel">
+        <p class="kicker">Payment</p>
+        <p class="status">{{ receipt.status | titlecase }}</p>
+        @if (receipt.paid_at) {
+          <p>Paid {{ receipt.paid_at | date: 'medium' }}</p>
+        }
+        @if (receipt.customer_email) {
+          <p>{{ receipt.customer_email }}</p>
+        }
+        <p>{{ receipt.total_cents / 100 | currency: receipt.currency.toUpperCase() }}</p>
+      </section>
+
+      <section class="panel">
+        <p class="kicker">Shipping</p>
+        <p class="status" [attr.data-shipping]="shippingStatus(receipt).key">
+          {{ shippingStatus(receipt).label }}
+        </p>
+        @if (addressLines(receipt).length) {
+          <address>
+            @for (line of addressLines(receipt); track $index) {
+              <span>{{ line }}</span>
+            }
+          </address>
+        } @else {
+          <p class="muted">No shipping address on this order yet.</p>
+        }
+      </section>
+    </div>
+
+    <div class="cta-row">
+      <a routerLink="/store" class="btn primary">Continue shopping</a>
+      @if (auth.currentUser()?.username; as username) {
+        <a [routerLink]="['/profile', username]" class="btn ghost">All orders</a>
+      }
+    </div>
+  }
+</section>

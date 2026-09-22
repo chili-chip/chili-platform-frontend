@@ -1,0 +1,133 @@
+.page {
+  padding: 2.5rem 6vw 4rem;
+}
+
+.intro {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.intro h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+}
+
+.lede {
+  max-width: 48ch;
+  color: var(--muted);
+}
+
+.err {
+  margin: 1rem 0 0;
+  color: var(--chili-hot);
+  max-width: 72ch;
+  overflow-wrap: anywhere;
+}
+
+.catalog {
+  list-style: none;
+  margin: 1.8rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.card,
+.empty {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+}
+
+.card {
+  display: grid;
+  overflow: hidden;
+  box-shadow: 6px 6px 0 rgba(255, 59, 59, 0.12);
+}
+
+.card.is-out {
+  opacity: 0.62;
+}
+
+.body h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.body h2 a:hover {
+  color: var(--chili-hot);
+}
+
+.shot {
+  min-height: 160px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  text-decoration: none;
+  background:
+    linear-gradient(135deg, #241016, #10131a 55%),
+    var(--bg-0);
+  color: var(--chili-hot);
+  font-family: var(--font-display);
+  font-size: 3rem;
+}
+
+.shot img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.body {
+  display: grid;
+  gap: 0.55rem;
+  padding: 1rem;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stock.is-low {
+  color: var(--amber);
+}
+
+.body h2 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+}
+
+.body p {
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.buy {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.buy strong {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+}
+
+.empty {
+  margin-top: 1.8rem;
+  padding: 1.2rem;
+}

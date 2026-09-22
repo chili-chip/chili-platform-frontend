@@ -23,5 +23,5 @@
     }
     <button class="btn primary" type="submit">Create account</button>
   </form>
-  <p class="switch">Already playing? <a routerLink="/login">Sign in</a></p>
+  <p class="switch">Already playing? <a routerLink="/login" [queryParams]="next ? { next } : {}">Sign in</a></p>
 </section>

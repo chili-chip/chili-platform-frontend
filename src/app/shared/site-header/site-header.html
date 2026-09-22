@@ -6,13 +6,14 @@
   </a>
 
   <nav class="links" aria-label="Primary">
-    <a routerLink="/store" routerLinkActive="is-active">Store</a>
+    <a routerLink="/store" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">Store</a>
     <a routerLink="/marketplace" routerLinkActive="is-active">Marketplace</a>
     <a routerLink="/creator" routerLinkActive="is-active">Creator</a>
     <a routerLink="/community" routerLinkActive="is-active">Community</a>
   </nav>
 
   <div class="session">
+    <app-cart-popup />
     @if (auth.isAuthenticated()) {
       <a class="ghost" [routerLink]="['/profile', auth.currentUser()?.username ?? 'me']">
         {{ auth.currentUser()?.username ?? 'profile' }}
