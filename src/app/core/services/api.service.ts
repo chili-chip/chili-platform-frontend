@@ -7,6 +7,9 @@ import {
   ForumComment,
   ForumPost,
   Paginated,
+  StoreCheckoutSession,
+  StoreOrder,
+  StoreProduct,
   UserProfile,
 } from '../models/platform';
 
@@ -49,5 +52,31 @@ export class ApiService {
 
   getProfile(username: string) {
     return this.http.get<UserProfile>(`${this.base}/profiles/${username}/`);
+  }
+
+  listProducts() {
+    return this.http.get<Paginated<StoreProduct> | StoreProduct[]>(`${this.base}/store/products/`);
+  }
+
+  getProduct(slug: string) {
+    return this.http.get<StoreProduct>(`${this.base}/store/products/${slug}/`);
+  }
+
+  createCheckout(items: { product: number; quantity: number }[]) {
+    return this.http.post<StoreCheckoutSession>(`${this.base}/store/checkout/`, { items });
+  }
+
+  confirmCheckout(sessionId: string) {
+    return this.http.post<StoreOrder>(`${this.base}/store/checkout/confirm/`, {
+      session_id: sessionId,
+    });
+  }
+
+  listOrders() {
+    return this.http.get<Paginated<StoreOrder> | StoreOrder[]>(`${this.base}/store/orders/`);
+  }
+
+  getOrder(id: string | number) {
+    return this.http.get<StoreOrder>(`${this.base}/store/orders/${id}/`);
   }
 }

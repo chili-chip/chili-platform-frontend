@@ -9,13 +9,16 @@ Angular client for **Chili Platform**: store, community, creator, and marketplac
 | Path | Screen |
 |---|---|
 | `/` | Landing page with vgc zero hero |
-| `/store` | Chilichip store placeholder |
+| `/store` | Hardware catalog and cart |
+| `/store/checkout` | Review cart and start Stripe Checkout |
+| `/store/checkout/success` | Confirm Stripe session and show receipt |
+| `/store/checkout/cancel` | Canceled checkout return |
 | `/marketplace` | Marketplace placeholder |
 | `/creator` | Web creator placeholder (auth required) |
 | `/community` | Forum categories + threads |
 | `/community/post/:id` | Thread + comments |
 | `/login` `/register` | Auth |
-| `/profile/:username` | Public profile |
+| `/profile/:username` | Public profile, plus own hardware orders |
 
 Auth uses JWT in `localStorage`, an HTTP interceptor, and Angular Signals for `currentUser`.
 

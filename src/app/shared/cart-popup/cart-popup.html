@@ -1,0 +1,67 @@
+<div class="wrap">
+  <button
+    type="button"
+    class="cart-btn"
+    [class.is-on]="cart.open()"
+    [attr.aria-expanded]="cart.open()"
+    aria-label="Cart"
+    (click)="cart.toggle(); $event.stopPropagation()"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M6 7h15l-1.4 8.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.6L5.2 4H3"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="square"
+      />
+      <circle cx="10" cy="20" r="1.4" fill="currentColor" />
+      <circle cx="18" cy="20" r="1.4" fill="currentColor" />
+    </svg>
+    @if (cart.count()) {
+      <span class="bag">{{ cart.count() }}</span>
+    }
+  </button>
+
+  @if (cart.open()) {
+    <button type="button" class="scrim" aria-label="Close cart" (click)="cart.hide()"></button>
+    <div class="panel" role="dialog" aria-label="Cart">
+      <header>
+        <h2>Cart</h2>
+        <p>{{ cart.count() }} item{{ cart.count() === 1 ? '' : 's' }}</p>
+      </header>
+      <ul>
+        @for (line of cart.items(); track line.product.id) {
+          <li>
+            <div class="row">
+              <strong>{{ line.product.name }}</strong>
+              <span>{{ line.product.price_cents / 100 | currency: line.product.currency.toUpperCase() }}</span>
+            </div>
+            <div class="qty">
+              <button type="button" (click)="cart.setQuantity(line.product.id, line.quantity - 1)">−</button>
+              <span>{{ line.quantity }}</span>
+              <button
+                type="button"
+                [disabled]="line.quantity >= line.product.stock"
+                (click)="cart.setQuantity(line.product.id, line.quantity + 1)"
+              >
+                +
+              </button>
+              <button type="button" class="remove" (click)="cart.remove(line.product.id)">Remove</button>
+            </div>
+          </li>
+        } @empty {
+          <li class="empty">Your cart is empty.</li>
+        }
+      </ul>
+      <div class="total">
+        <span>Total</span>
+        <strong>{{ cart.totalCents() / 100 | currency: cart.currency().toUpperCase() }}</strong>
+      </div>
+      <button type="button" class="btn primary checkout" [disabled]="!cart.count()" (click)="review()">
+        Review order
+      </button>
+      <a routerLink="/store" class="shop" (click)="cart.hide()">Keep shopping</a>
+    </div>
+  }
+</div>

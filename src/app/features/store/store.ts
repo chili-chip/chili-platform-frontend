@@ -1,26 +1,46 @@
-import { Component } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+
+import { StoreProduct } from '../../core/models/platform';
+import { ApiService } from '../../core/services/api.service';
+import { AuthService } from '../../core/services/auth.service';
+import { CartService } from '../../core/services/cart.service';
+import { unwrapList, productCover } from './store-utils';
 
 @Component({
   selector: 'app-store',
-  template: `
-    <section class="placeholder">
-      <p class="kicker">Chilichip</p>
-      <h1>Store</h1>
-      <p>Preorders, kits, and accessories for the vgc zero land here next.</p>
-    </section>
-  `,
-  styles: `
-    .placeholder {
-      padding: 4rem 6vw;
-    }
-    h1 {
-      font-family: var(--font-display);
-      font-size: clamp(2.2rem, 5vw, 4rem);
-    }
-    p:last-child {
-      color: var(--muted);
-      max-width: 42ch;
-    }
-  `,
+  imports: [CurrencyPipe, RouterLink],
+  templateUrl: './store.html',
+  styleUrl: './store.scss',
 })
-export class StoreComponent {}
+export class StoreComponent implements OnInit {
+  private readonly api = inject(ApiService);
+  readonly auth = inject(AuthService);
+  readonly cart = inject(CartService);
+
+  readonly products = signal<StoreProduct[]>([]);
+  readonly loading = signal(true);
+  readonly error = signal('');
+  readonly cover = productCover;
+
+  ngOnInit(): void {
+    this.api.listProducts().subscribe({
+      next: (payload) => {
+        const products = unwrapList(payload);
+        this.products.set(products);
+        this.cart.reconcile(products);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.products.set([]);
+        this.loading.set(false);
+        this.error.set('Could not load the catalog. Is the API running?');
+      },
+    });
+  }
+
+  addToCart(product: StoreProduct): void {
+    this.cart.add(product);
+  }
+}

@@ -1,0 +1,12 @@
+<section class="page">
+  <p class="kicker">Checkout</p>
+
+  @if (loading()) {
+    <h1>Confirming payment</h1>
+    <p class="lede">Syncing your Stripe session with the store…</p>
+  } @else if (error()) {
+    <h1>Could not confirm</h1>
+    <p class="err">{{ error() }}</p>
+    <a routerLink="/store" class="btn ghost">Back to store</a>
+  }
+</section>

@@ -1,0 +1,59 @@
+<section class="page">
+  <a routerLink="/store" class="back">← Store</a>
+
+  @if (loading()) {
+    <p class="empty">Loading product…</p>
+  } @else if (error()) {
+    <h1>Product unavailable</h1>
+    <p class="err">{{ error() }}</p>
+    <a routerLink="/store" class="btn ghost">Back to store</a>
+  } @else if (product(); as item) {
+    <div class="hero">
+      <div class="gallery">
+        <div class="shot">
+          @if (cover(); as src) {
+            <img [src]="src" [alt]="item.name" />
+          } @else {
+            <span>{{ item.name.charAt(0) }}</span>
+          }
+        </div>
+        @if (gallery().length > 1) {
+          <ul class="thumbs">
+            @for (url of gallery(); track url; let i = $index) {
+              <li>
+                <button
+                  type="button"
+                  [class.is-on]="selected() === i"
+                  [attr.aria-label]="'Picture ' + (i + 1)"
+                  (click)="selected.set(i)"
+                >
+                  <img [src]="url" alt="" />
+                </button>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+      <div class="copy">
+        <p class="kicker">{{ item.sku || item.slug }}</p>
+        <h1>{{ item.name }}</h1>
+        @if (blurb()) {
+          <p class="lede">{{ blurb() }}</p>
+        }
+        <p class="stock" [class.is-low]="item.stock > 0 && item.stock < 8">
+          {{ item.stock < 1 ? 'Sold out' : item.stock + ' in stock' }}
+        </p>
+        <div class="buy">
+          <strong>{{ item.price_cents / 100 | currency: item.currency.toUpperCase() }}</strong>
+          <button type="button" class="btn primary" [disabled]="item.stock < 1" (click)="addToCart()">
+            {{ item.stock < 1 ? 'Sold out' : 'Add to cart' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    @if (longHtml()) {
+      <article class="markdown" [innerHTML]="longHtml()"></article>
+    }
+  }
+</section>
