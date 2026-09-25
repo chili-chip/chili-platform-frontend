@@ -1,0 +1,17 @@
+<div class="viewport" #viewport>
+  <canvas
+    #canvas
+    aria-label="ChiliChip console. Drag to turn it."
+    (pointerdown)="onPointerDown($event)"
+    (pointermove)="onPointerMove($event)"
+    (pointerup)="onPointerUp()"
+    (pointercancel)="onPointerUp()"
+    (lostpointercapture)="onPointerUp()"
+  ></canvas>
+  <p class="hint">Drag to turn</p>
+  @if (failed()) {
+    <div class="fallback">
+      <app-vgc-zero />
+    </div>
+  }
+</div>
