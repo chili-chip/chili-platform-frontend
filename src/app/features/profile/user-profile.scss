@@ -68,6 +68,43 @@ h1 {
   border: 1px solid var(--line);
 }
 
+.project {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: stretch;
+}
+
+.cover {
+  display: block;
+  width: 96px;
+  height: 96px;
+  margin: 0.8rem 0 0.8rem 0.8rem;
+  object-fit: contain;
+  image-rendering: pixelated;
+  background: #07080c;
+  border: 1px solid var(--line);
+}
+
+.project .order-card {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.remove {
+  margin: 0.8rem;
+  align-self: center;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--chili);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--chili) 55%, transparent);
+  padding: 0.45rem 0.6rem;
+  cursor: pointer;
+}
+
 .order-card {
   display: block;
   padding: 1rem 1.1rem;

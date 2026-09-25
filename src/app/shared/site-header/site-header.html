@@ -1,15 +1,25 @@
-<header class="nav">
-  <a routerLink="/" class="brand">
+<header class="nav" [class.is-open]="menuOpen()">
+  <a routerLink="/" class="brand" (click)="closeMenu()">
     <span class="brand__mark" aria-hidden="true"></span>
     <span class="brand__word">chili</span>
     <span class="brand__sub">platform</span>
   </a>
 
-  <nav class="links" aria-label="Primary">
-    <a routerLink="/store" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">Store</a>
-    <a routerLink="/marketplace" routerLinkActive="is-active">Marketplace</a>
-    <a routerLink="/creator" routerLinkActive="is-active">Creator</a>
-    <a routerLink="/community" routerLinkActive="is-active">Community</a>
+  <button
+    type="button"
+    class="menu-toggle"
+    [attr.aria-expanded]="menuOpen()"
+    aria-controls="site-nav"
+    (click)="toggleMenu()"
+  >
+    {{ menuOpen() ? 'Close' : 'Menu' }}
+  </button>
+
+  <nav id="site-nav" class="links" aria-label="Primary">
+    <a routerLink="/store" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Store</a>
+    <a routerLink="/marketplace" routerLinkActive="is-active" (click)="closeMenu()">Marketplace</a>
+    <a routerLink="/creator" routerLinkActive="is-active" (click)="closeMenu()">Creator</a>
+    <a routerLink="/community" routerLinkActive="is-active" (click)="closeMenu()">Community</a>
   </nav>
 
   <div class="session">
