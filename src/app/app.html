@@ -1,5 +1,7 @@
 <app-site-header />
-<main class="shell">
+<main class="shell" [class.shell--creator]="isCreator()">
   <router-outlet />
 </main>
-<app-site-footer />
+@if (!isCreator()) {
+  <app-site-footer />
+}

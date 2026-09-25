@@ -7,3 +7,15 @@
 .shell {
   flex: 1;
 }
+
+:host:has(.shell--creator) {
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.shell--creator {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}

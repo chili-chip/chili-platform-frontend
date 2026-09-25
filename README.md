@@ -14,7 +14,7 @@ Angular client for **Chili Platform**: store, community, creator, and marketplac
 | `/store/checkout/success` | Confirm Stripe session and show receipt |
 | `/store/checkout/cancel` | Canceled checkout return |
 | `/marketplace` | Marketplace placeholder |
-| `/creator` | Web creator placeholder (auth required) |
+| `/creator` | Bitsy editor with the citsy runtime (auth required) |
 | `/community` | Forum categories + threads |
 | `/community/post/:id` | Thread + comments |
 | `/login` `/register` | Auth |
