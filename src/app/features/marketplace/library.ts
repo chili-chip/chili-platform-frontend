@@ -1,35 +1,37 @@
-import { DatePipe } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, effect, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
-import { MarketplacePurchase } from '../../core/models/platform';
-import { ApiService } from '../../core/services/api.service';
-import { formatPrice, marketError } from './market-utils';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
-  selector: 'app-library',
-  imports: [RouterLink, DatePipe],
-  templateUrl: './library.html',
-  styleUrl: './market.scss',
+  selector: 'app-library-redirect',
+  template: `<p class="note">Opening your library…</p>`,
+  styles: `
+    .note {
+      padding: 3rem 6vw;
+      color: var(--muted);
+    }
+  `,
 })
-export class LibraryComponent implements OnInit {
-  private readonly api = inject(ApiService);
+export class LibraryRedirectComponent {
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
+  private sent = false;
 
-  readonly purchases = signal<MarketplacePurchase[]>([]);
-  readonly loading = signal(true);
-  readonly error = signal('');
-  readonly priceLabel = formatPrice;
-
-  ngOnInit(): void {
-    this.api.listLibrary().subscribe({
-      next: (payload) => {
-        this.purchases.set(payload.results ?? []);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.loading.set(false);
-        this.error.set(marketError(err, 'Could not load your library.'));
-      },
+  constructor() {
+    effect(() => {
+      if (!this.auth.bootstrapped() || this.sent) {
+        return;
+      }
+      const name = this.auth.currentUser()?.username;
+      if (!name) {
+        return;
+      }
+      this.sent = true;
+      void this.router.navigate(['/profile', name], {
+        queryParams: { tab: 'library', shelf: 'bought' },
+        replaceUrl: true,
+      });
     });
   }
 }

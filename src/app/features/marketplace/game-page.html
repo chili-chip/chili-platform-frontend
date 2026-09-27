@@ -27,9 +27,21 @@
         <div class="buy">
           <strong>{{ priceLabel(game.price_cents, game.currency) }}</strong>
           @if (ownListing(game)) {
-            <a routerLink="/marketplace/sales" class="btn ghost">Manage listing</a>
+            <a
+              class="btn ghost"
+              [routerLink]="['/profile', game.game.owner, 'listing']"
+              [queryParams]="{ game: game.game.id }"
+            >
+              Listing
+            </a>
           } @else if (game.owned) {
-            <a routerLink="/marketplace/library" class="btn primary">In your library</a>
+            <a
+              class="btn primary"
+              [routerLink]="['/profile', auth.currentUser()?.username]"
+              [queryParams]="{ tab: 'library', shelf: 'bought' }"
+            >
+              In your library
+            </a>
           } @else {
             <button type="button" class="btn primary" [disabled]="buying()" (click)="buy(game)">
               {{ game.price_cents === 0 ? 'Get' : 'Buy' }}

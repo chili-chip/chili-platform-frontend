@@ -37,8 +37,48 @@ h1 {
   color: var(--muted);
 }
 
+.tabs,
+.shelves {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.tabs {
+  margin-top: 2rem;
+}
+
+.shelves {
+  margin-bottom: 1rem;
+}
+
+.tabs button,
+.shelves button {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--line);
+  padding: 0.45rem 0.7rem;
+  cursor: pointer;
+}
+
+.tabs button.is-on,
+.shelves button.is-on {
+  color: #140407;
+  background: var(--chili);
+  border-color: var(--chili);
+}
+
+.err {
+  margin: 1rem 0 0;
+  color: var(--chili-hot);
+}
+
 .orders {
-  margin-top: 2.6rem;
+  margin-top: 1.4rem;
 }
 
 .orders header {
@@ -72,6 +112,27 @@ h1 {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: stretch;
+}
+
+.project.is-block {
+  grid-template-columns: 1fr;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  margin: 0 0.8rem 0.8rem;
+}
+
+.actions .btn {
+  padding: 0.45rem 0.65rem;
+  font-size: 0.68rem;
+}
+
+.order-card .actions {
+  margin: 0.2rem 0 0;
 }
 
 .cover {

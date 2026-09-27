@@ -1,0 +1,80 @@
+<section class="page">
+  <header class="intro">
+    <div>
+      <p class="kicker">Marketplace</p>
+      <h1>Listing</h1>
+      <p class="lede">
+        Choose a released game and publish it. A project cannot be sold. Releasing keeps the Bitsy
+        file and leaves the game off this page until you list it.
+      </p>
+    </div>
+    <a class="btn ghost" [routerLink]="['/profile', username()]" [queryParams]="{ tab: 'library', shelf: 'mine' }">
+      My games
+    </a>
+  </header>
+
+  @if (error()) {
+    <p class="err">{{ error() }}</p>
+  }
+
+  @if (loading()) {
+    <p class="empty">Loading games…</p>
+  } @else if (!games().length) {
+    <p class="empty">Release a project before listing. The Bitsy file stays on the game.</p>
+    <p class="tools">
+      <a class="btn ghost" [routerLink]="['/profile', username()]" [queryParams]="{ tab: 'projects' }">Projects</a>
+    </p>
+  } @else {
+    <section class="stack">
+      <label>
+        Game
+        <select [value]="gameId()" (change)="pick(+$any($event.target).value)">
+          <option value="0">Choose a released game</option>
+          @for (game of games(); track game.id) {
+            <option [value]="game.id">{{ game.title }}</option>
+          }
+        </select>
+      </label>
+
+      @if (gameId() && !selected()) {
+        <p class="muted">Release this project before listing it.</p>
+      } @else if (selected(); as game) {
+        <label class="checks">
+          <input type="checkbox" [checked]="free()" (change)="free.set($any($event.target).checked)" />
+          Free listing
+        </label>
+        @if (!free()) {
+          <label>
+            Price (USD, at least $1)
+            <input [value]="price()" (input)="price.set($any($event.target).value)" inputmode="decimal" />
+          </label>
+        }
+        <label>
+          Category
+          <select [value]="category()" (change)="category.set($any($event.target).value)">
+            @for (item of categories(); track item.slug) {
+              <option [value]="item.slug">{{ item.name }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          Tags
+          <input [value]="tags()" (input)="tags.set($any($event.target).value)" placeholder="bitsy, maze" />
+        </label>
+        <label>
+          Description
+          <textarea rows="4" [value]="description()" (input)="description.set($any($event.target).value)"></textarea>
+        </label>
+        <div class="tools">
+          <button type="button" class="btn primary" [disabled]="busy()" (click)="save()">
+            {{ game.listing_slug ? 'Update listing' : 'List game' }}
+          </button>
+          @if (game.listing_slug) {
+            <button type="button" class="btn ghost" [disabled]="busy()" (click)="unlist()">Unlist</button>
+            <a class="btn ghost" [routerLink]="['/marketplace', game.listing_slug]">View</a>
+          }
+        </div>
+      }
+    </section>
+  }
+</section>

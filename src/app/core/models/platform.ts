@@ -5,6 +5,8 @@ export interface GameProject {
   owner: string;
   cover: string;
   data?: string;
+  released: boolean;
+  listing_slug: string;
   created_at: string;
   updated_at: string;
 }

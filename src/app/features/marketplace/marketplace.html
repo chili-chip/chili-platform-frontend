@@ -7,7 +7,6 @@
     </div>
     <div class="tools">
       @if (auth.isAuthenticated()) {
-        <a routerLink="/marketplace/library" class="btn ghost">Library</a>
         <a routerLink="/marketplace/sales" class="btn primary">Your sales</a>
       } @else {
         <a routerLink="/login" [queryParams]="{ next: '/marketplace' }" class="btn ghost">Sign in to buy</a>

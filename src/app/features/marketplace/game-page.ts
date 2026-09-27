@@ -52,7 +52,10 @@ export class GamePageComponent implements OnInit {
     this.api.checkoutListing(listing.slug).subscribe({
       next: (result) => {
         if (result.free || !result.checkout_url) {
-          void this.router.navigate(['/marketplace/library']);
+          const name = this.auth.currentUser()?.username;
+          void this.router.navigate(['/profile', name], {
+            queryParams: { tab: 'library', shelf: 'bought' },
+          });
           return;
         }
         window.location.assign(result.checkout_url);

@@ -1,11 +1,17 @@
 import { CurrencyPipe, DatePipe, TitleCasePipe } from '@angular/common';
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { GameProject, StoreOrder, UserProfile } from '../../core/models/platform';
+import { GameProject, MarketplacePurchase, StoreOrder, UserProfile } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { formatPrice, marketError } from '../marketplace/market-utils';
+import { downloadBitsy } from '../play/bitsy-file';
 import { shippingSummary, unwrapList } from '../store/store-utils';
+
+type ProfileTab = 'orders' | 'library' | 'projects';
+type LibraryShelf = 'bought' | 'mine';
 
 @Component({
   selector: 'app-user-profile',
@@ -15,50 +21,112 @@ import { shippingSummary, unwrapList } from '../store/store-utils';
 })
 export class UserProfileComponent {
   private readonly api = inject(ApiService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   readonly auth = inject(AuthService);
   readonly username = input.required<string>();
+  private readonly query = toSignal(this.route.queryParamMap);
+
   readonly profile = signal<UserProfile | null>(null);
   readonly games = signal<GameProject[]>([]);
+  readonly projects = signal<GameProject[]>([]);
+  readonly purchases = signal<MarketplacePurchase[]>([]);
   readonly gamesLoading = signal(false);
   readonly orders = signal<StoreOrder[]>([]);
   readonly ordersLoading = signal(false);
+  readonly libraryLoading = signal(false);
+  readonly error = signal('');
+  readonly priceLabel = formatPrice;
 
   readonly isOwn = computed(() => {
     const me = this.auth.currentUser()?.username;
     return Boolean(me && me === this.username());
   });
 
-  private ordersUser = '';
-  private gamesUser = '';
+  readonly tab = computed<ProfileTab>(() => {
+    const value = this.query()?.get('tab');
+    if (value === 'library' || value === 'projects' || value === 'orders') {
+      return value;
+    }
+    return 'orders';
+  });
+
+  readonly shelf = computed<LibraryShelf>(() => (this.query()?.get('shelf') === 'mine' ? 'mine' : 'bought'));
+
+  private profileUser = '';
+  private panelKey = '';
+  private generation = 0;
 
   constructor() {
     effect(() => {
       const name = this.username();
-      if (!name || this.gamesUser === name) {
+      if (!name || this.profileUser === name) {
         return;
       }
-      this.gamesUser = name;
+      this.profileUser = name;
       this.profile.set(null);
-      this.api.getProfile(name).subscribe((profile) => this.profile.set(profile));
-      this.loadGames(name);
+      this.api.getProfile(name).subscribe((profile) => {
+        if (this.username() === name) {
+          this.profile.set(profile);
+        }
+      });
     });
 
     effect(() => {
-      if (!this.isOwn()) {
-        this.orders.set([]);
-        this.ordersUser = '';
-        return;
-      }
       const name = this.username();
-      if (this.ordersUser === name) {
+      const own = this.isOwn();
+      const tab = this.tab();
+      const shelf = this.shelf();
+      const key = own ? `${name}:${tab}:${shelf}` : `${name}:public`;
+      if (!name || this.panelKey === key) {
         return;
       }
-      this.ordersUser = name;
-      this.loadOrders();
+      this.panelKey = key;
+      this.error.set('');
+      const ticket = ++this.generation;
+      if (!own) {
+        this.loadReleased(name, ticket);
+        return;
+      }
+      if (tab === 'orders') {
+        this.loadOrders(ticket);
+      } else if (tab === 'projects') {
+        this.loadProjects(name, ticket);
+      } else if (shelf === 'mine') {
+        this.loadReleased(name, ticket);
+      } else {
+        this.loadBought(ticket);
+      }
     });
   }
 
   shipping = shippingSummary;
+
+  selectTab(tab: ProfileTab): void {
+    void this.router.navigate(['/profile', this.username()], {
+      queryParams: { tab, shelf: tab === 'library' ? this.shelf() : null },
+    });
+  }
+
+  selectShelf(shelf: LibraryShelf): void {
+    void this.router.navigate(['/profile', this.username()], {
+      queryParams: { tab: 'library', shelf },
+    });
+  }
+
+  release(game: GameProject): void {
+    const proceed = confirm(
+      `Release “${game.title}”? It becomes a game you can sell. The Bitsy file stays. Listing it is a separate step.`,
+    );
+    if (!proceed) {
+      return;
+    }
+    this.error.set('');
+    this.api.releaseGame(game.id).subscribe({
+      next: () => this.projects.update((list) => list.filter((item) => item.id !== game.id)),
+      error: (err) => this.error.set(marketError(err, 'Could not release this project.')),
+    });
+  }
 
   removeGame(game: GameProject, event: Event): void {
     event.preventDefault();
@@ -67,32 +135,115 @@ export class UserProfileComponent {
       return;
     }
     this.api.deleteGame(game.id).subscribe({
-      next: () => this.games.update((list) => list.filter((item) => item.id !== game.id)),
+      next: () => this.projects.update((list) => list.filter((item) => item.id !== game.id)),
     });
   }
 
-  private loadGames(username: string): void {
+  downloadGame(game: GameProject): void {
+    if (game.data) {
+      downloadBitsy(game.slug, game.data);
+      return;
+    }
+    this.fetchAndDownload(game.id, game.slug);
+  }
+
+  downloadPurchase(purchase: MarketplacePurchase): void {
+    if (!purchase.game_id) {
+      this.error.set('This copy no longer has a Bitsy file.');
+      return;
+    }
+    this.fetchAndDownload(purchase.game_id, purchase.title);
+  }
+
+  private fetchAndDownload(id: number, fallback: string): void {
+    this.error.set('');
+    this.api.getGame(id).subscribe({
+      next: (loaded) => {
+        if (!loaded.data) {
+          this.error.set('This game has no Bitsy file.');
+          return;
+        }
+        downloadBitsy(loaded.slug || fallback, loaded.data);
+      },
+      error: (err) => this.error.set(marketError(err, 'Could not download this game.')),
+    });
+  }
+
+  private loadReleased(username: string, ticket: number): void {
     this.gamesLoading.set(true);
     this.api.listGames(username).subscribe({
       next: (payload) => {
+        if (ticket !== this.generation) {
+          return;
+        }
         this.games.set(unwrapList(payload));
         this.gamesLoading.set(false);
       },
       error: () => {
+        if (ticket !== this.generation) {
+          return;
+        }
         this.games.set([]);
         this.gamesLoading.set(false);
       },
     });
   }
 
-  private loadOrders(): void {
+  private loadProjects(username: string, ticket: number): void {
+    this.gamesLoading.set(true);
+    this.api.listGames(username, { released: false }).subscribe({
+      next: (payload) => {
+        if (ticket !== this.generation) {
+          return;
+        }
+        this.projects.set(unwrapList(payload));
+        this.gamesLoading.set(false);
+      },
+      error: () => {
+        if (ticket !== this.generation) {
+          return;
+        }
+        this.projects.set([]);
+        this.gamesLoading.set(false);
+      },
+    });
+  }
+
+  private loadBought(ticket: number): void {
+    this.libraryLoading.set(true);
+    this.api.listLibrary().subscribe({
+      next: (payload) => {
+        if (ticket !== this.generation) {
+          return;
+        }
+        this.purchases.set(payload.results ?? []);
+        this.libraryLoading.set(false);
+      },
+      error: (err) => {
+        if (ticket !== this.generation) {
+          return;
+        }
+        this.purchases.set([]);
+        this.libraryLoading.set(false);
+        this.error.set(marketError(err, 'Could not load your library.'));
+      },
+    });
+  }
+
+  private loadOrders(ticket: number): void {
     this.ordersLoading.set(true);
     this.api.listOrders().subscribe({
       next: (payload) => {
+        if (ticket !== this.generation) {
+          return;
+        }
         this.orders.set(unwrapList(payload));
         this.ordersLoading.set(false);
       },
       error: () => {
+        if (ticket !== this.generation) {
+          return;
+        }
         this.orders.set([]);
         this.ordersLoading.set(false);
       },

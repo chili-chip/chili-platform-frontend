@@ -11,87 +11,227 @@
     </div>
   }
 
-  <section class="orders">
-    <header>
-      <div>
-        <p class="kicker">Studio</p>
-        <h2>Projects</h2>
-      </div>
-      @if (isOwn()) {
-        <a routerLink="/creator" class="btn ghost">New game</a>
-      }
-    </header>
-
-    @if (gamesLoading()) {
-      <p class="empty">Loading projects…</p>
-    } @else {
-      <ul>
-        @for (game of games(); track game.id) {
-          <li class="project">
-            <a class="order-card" [routerLink]="['/creator', game.id]">
-              @if (game.cover) {
-                <img class="cover" [src]="game.cover" [alt]="game.title" />
-              }
-              <div class="order-head">
-                <span>#{{ game.id }} {{ game.title }}</span>
-                <time>{{ game.updated_at | date: 'medium' }}</time>
-              </div>
-            </a>
-            @if (isOwn()) {
-              <button type="button" class="remove" (click)="removeGame(game, $event)">Remove</button>
-            }
-          </li>
-        } @empty {
-          <li class="empty">
-            @if (isOwn()) {
-              No games yet. Open the creator and save one to your profile.
-            } @else {
-              No public games yet.
-            }
-          </li>
-        }
-      </ul>
-    }
-  </section>
-
   @if (isOwn()) {
+    <nav class="tabs" aria-label="Profile">
+      <button type="button" [class.is-on]="tab() === 'orders'" (click)="selectTab('orders')">Orders</button>
+      <button type="button" [class.is-on]="tab() === 'library'" (click)="selectTab('library')">Library</button>
+      <button type="button" [class.is-on]="tab() === 'projects'" (click)="selectTab('projects')">Projects</button>
+    </nav>
+
+    @if (error()) {
+      <p class="err">{{ error() }}</p>
+    }
+
+    @switch (tab()) {
+      @case ('orders') {
+        <section class="orders">
+          <header>
+            <div>
+              <p class="kicker">Hardware</p>
+              <h2>Orders</h2>
+            </div>
+            <a routerLink="/store" class="btn ghost">Shop store</a>
+          </header>
+          @if (ordersLoading()) {
+            <p class="empty">Loading orders…</p>
+          } @else {
+            <ul>
+              @for (order of orders(); track order.id) {
+                <li>
+                  <a class="order-card" [routerLink]="['/store/orders', order.id]">
+                    <div class="order-head">
+                      <span class="badge" [attr.data-status]="order.status">{{ order.status | titlecase }}</span>
+                      <span>Order #{{ order.id }}</span>
+                      <time>{{ order.created_at | date: 'medium' }}</time>
+                      <strong>{{ order.total_cents / 100 | currency: order.currency.toUpperCase() }}</strong>
+                    </div>
+                    <div class="items">
+                      @for (item of order.items; track item.id) {
+                        <div>
+                          <span>{{ item.quantity }} × {{ item.product_name }}</span>
+                          <span>{{ item.line_total_cents / 100 | currency: order.currency.toUpperCase() }}</span>
+                        </div>
+                      }
+                    </div>
+                    @if (shipping(order); as ship) {
+                      <p class="ship">{{ ship }}</p>
+                    }
+                  </a>
+                </li>
+              } @empty {
+                <li class="empty">No hardware orders yet. The Chilichip store is ready when you are.</li>
+              }
+            </ul>
+          }
+        </section>
+      }
+      @case ('library') {
+        <section class="orders">
+          <header>
+            <div>
+              <p class="kicker">Your copies</p>
+              <h2>Library</h2>
+            </div>
+            <a routerLink="/marketplace" class="btn ghost">Marketplace</a>
+          </header>
+          <div class="shelves" aria-label="Library shelves">
+            <button type="button" [class.is-on]="shelf() === 'bought'" (click)="selectShelf('bought')">
+              Bought games
+            </button>
+            <button type="button" [class.is-on]="shelf() === 'mine'" (click)="selectShelf('mine')">My games</button>
+          </div>
+
+          @if (shelf() === 'bought') {
+            @if (libraryLoading()) {
+              <p class="empty">Loading bought games…</p>
+            } @else {
+              <ul>
+                @for (purchase of purchases(); track purchase.id) {
+                  <li class="project is-block">
+                    <div class="order-card">
+                      @if (purchase.cover) {
+                        <img class="cover" [src]="purchase.cover" [alt]="purchase.title" />
+                      }
+                      <div>
+                        <div class="order-head">
+                          <span>{{ purchase.title }}</span>
+                          <span>by {{ purchase.seller }}</span>
+                          <span>{{ priceLabel(purchase.price_cents, purchase.currency) }}</span>
+                          @if (purchase.paid_at) {
+                            <time>{{ purchase.paid_at | date: 'mediumDate' }}</time>
+                          }
+                        </div>
+                        @if (purchase.game_id) {
+                          <div class="actions">
+                            <a class="btn ghost" [routerLink]="['/play', purchase.game_id]">Play</a>
+                            <button type="button" class="btn ghost" (click)="downloadPurchase(purchase)">
+                              Download
+                            </button>
+                          </div>
+                        } @else {
+                          <p class="ship">This copy no longer has a Bitsy file.</p>
+                        }
+                      </div>
+                    </div>
+                  </li>
+                } @empty {
+                  <li class="empty">No bought games yet. The marketplace is where you claim or pay for one.</li>
+                }
+              </ul>
+            }
+          } @else if (gamesLoading()) {
+            <p class="empty">Loading your games…</p>
+          } @else {
+            <ul>
+              @for (game of games(); track game.id) {
+                <li class="project is-block">
+                  <div class="order-card">
+                    @if (game.cover) {
+                      <img class="cover" [src]="game.cover" [alt]="game.title" />
+                    }
+                    <div>
+                      <div class="order-head">
+                        <span>#{{ game.id }} {{ game.title }}</span>
+                        <time>{{ game.updated_at | date: 'medium' }}</time>
+                        @if (game.listing_slug) {
+                          <span>Listed</span>
+                        }
+                      </div>
+                      <div class="actions">
+                        <a class="btn ghost" [routerLink]="['/play', game.id]">Play</a>
+                        <button type="button" class="btn ghost" (click)="downloadGame(game)">Download</button>
+                        <a
+                          class="btn ghost"
+                          [routerLink]="['/profile', username(), 'listing']"
+                          [queryParams]="{ game: game.id }"
+                        >
+                          {{ game.listing_slug ? 'Listing' : 'List' }}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              } @empty {
+                <li class="empty">No released games yet. Release a project when it is ready to sell.</li>
+              }
+            </ul>
+          }
+        </section>
+      }
+      @case ('projects') {
+        <section class="orders">
+          <header>
+            <div>
+              <p class="kicker">In progress</p>
+              <h2>Projects</h2>
+            </div>
+            <a routerLink="/creator" class="btn ghost">New game</a>
+          </header>
+          @if (gamesLoading()) {
+            <p class="empty">Loading projects…</p>
+          } @else {
+            <ul>
+              @for (game of projects(); track game.id) {
+                <li class="project">
+                  <a class="order-card" [routerLink]="['/creator', game.id]">
+                    @if (game.cover) {
+                      <img class="cover" [src]="game.cover" [alt]="game.title" />
+                    }
+                    <div class="order-head">
+                      <span>#{{ game.id }} {{ game.title }}</span>
+                      <time>{{ game.updated_at | date: 'medium' }}</time>
+                    </div>
+                  </a>
+                  <div class="actions">
+                    <button type="button" class="btn ghost" (click)="release(game)">Release</button>
+                    <button type="button" class="remove" (click)="removeGame(game, $event)">Remove</button>
+                  </div>
+                </li>
+              } @empty {
+                <li class="empty">No projects yet. Open the creator and save one to your profile.</li>
+              }
+            </ul>
+          }
+        </section>
+      }
+    }
+  } @else {
     <section class="orders">
       <header>
         <div>
-          <p class="kicker">Hardware</p>
-          <h2>My orders</h2>
+          <p class="kicker">Released</p>
+          <h2>Games</h2>
         </div>
-        <a routerLink="/store" class="btn ghost">Shop store</a>
       </header>
-
-      @if (ordersLoading()) {
-        <p class="empty">Loading orders…</p>
+      @if (gamesLoading()) {
+        <p class="empty">Loading games…</p>
       } @else {
         <ul>
-          @for (order of orders(); track order.id) {
-            <li>
-              <a class="order-card" [routerLink]="['/store/orders', order.id]">
-                <div class="order-head">
-                  <span class="badge" [attr.data-status]="order.status">{{ order.status | titlecase }}</span>
-                  <span>Order #{{ order.id }}</span>
-                  <time>{{ order.created_at | date: 'medium' }}</time>
-                  <strong>{{ order.total_cents / 100 | currency: order.currency.toUpperCase() }}</strong>
-                </div>
-                <div class="items">
-                  @for (item of order.items; track item.id) {
-                    <div>
-                      <span>{{ item.quantity }} × {{ item.product_name }}</span>
-                      <span>{{ item.line_total_cents / 100 | currency: order.currency.toUpperCase() }}</span>
-                    </div>
+          @for (game of games(); track game.id) {
+            <li class="project is-block">
+              @if (game.listing_slug) {
+                <a class="order-card" [routerLink]="['/marketplace', game.listing_slug]">
+                  @if (game.cover) {
+                    <img class="cover" [src]="game.cover" [alt]="game.title" />
                   }
+                  <div class="order-head">
+                    <span>{{ game.title }}</span>
+                    <span>On the marketplace</span>
+                  </div>
+                </a>
+              } @else {
+                <div class="order-card">
+                  @if (game.cover) {
+                    <img class="cover" [src]="game.cover" [alt]="game.title" />
+                  }
+                  <div class="order-head">
+                    <span>{{ game.title }}</span>
+                  </div>
                 </div>
-                @if (shipping(order); as ship) {
-                  <p class="ship">{{ ship }}</p>
-                }
-              </a>
+              }
             </li>
           } @empty {
-            <li class="empty">No hardware orders yet. The Chilichip store is ready when you are.</li>
+            <li class="empty">No released games yet.</li>
           }
         </ul>
       }
