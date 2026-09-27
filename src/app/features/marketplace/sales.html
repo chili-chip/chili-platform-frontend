@@ -1,0 +1,174 @@
+<section class="page">
+  <header class="intro">
+    <div>
+      <p class="kicker">Creator</p>
+      <h1>Sales</h1>
+      <p class="lede">
+        Chili keeps 20% plus estimated card processing. Payouts start at $20 after a 7-day hold.
+        Sales count before you set up payouts.
+      </p>
+    </div>
+    <a routerLink="/marketplace" class="btn ghost">Marketplace</a>
+  </header>
+
+  @if (error()) {
+    <p class="err">{{ error() }}</p>
+  }
+
+  @if (loading()) {
+    <p class="empty">Loading sales…</p>
+  } @else if (sales(); as desk) {
+    <div class="panels">
+      <article class="panel">
+        <span class="muted">In hold</span>
+        <strong>{{ money(desk.balance.held_cents) }}</strong>
+      </article>
+      <article class="panel">
+        <span class="muted">Cleared</span>
+        <strong>{{ money(desk.balance.available_cents) }}</strong>
+      </article>
+      <article class="panel">
+        <span class="muted">Paid out</span>
+        <strong>{{ money(desk.balance.paid_out_cents) }}</strong>
+      </article>
+    </div>
+    @if (desk.payout.blocked_reason) {
+      <p class="muted">{{ desk.payout.blocked_reason }}</p>
+    } @else if (desk.payout.transferred) {
+      <p class="muted">Sent {{ money(desk.payout.amount_cents) }}.</p>
+    }
+
+    <section class="stack">
+      <h2>Payouts</h2>
+      @if (!desk.account.stripe_account_id) {
+        <p class="muted">Buyers can already pay. Set up payouts when you want Chili to send the balance.</p>
+        <button type="button" class="btn primary" [disabled]="busy()" (click)="startPayouts()">
+          Set up payouts
+        </button>
+      } @else {
+        <p class="muted">
+          Transfers {{ desk.account.transfers_status || 'pending' }} ·
+          payouts {{ desk.account.payouts_status || 'pending' }}
+        </p>
+        @if (connectError()) {
+          <p class="err">{{ connectError() }}</p>
+        }
+        <div #bannerHost class="mount"></div>
+        @if (!desk.account.ready) {
+          <div #onboardingHost class="mount"></div>
+        }
+        <div #managementHost class="mount"></div>
+        <div #payoutsHost class="mount"></div>
+      }
+    </section>
+
+    <section class="stack">
+      <h2>List a game</h2>
+      @if (!unlisted().length) {
+        <p class="muted">Every saved game is already listed. Make another in the creator.</p>
+        <a routerLink="/creator" class="btn ghost">Open creator</a>
+      } @else {
+        <label>
+          Game
+          <select [value]="gameId()" (change)="gameId.set(+$any($event.target).value)">
+            <option value="0">Choose a saved game</option>
+            @for (game of unlisted(); track game.id) {
+              <option [value]="game.id">{{ game.title }}</option>
+            }
+          </select>
+        </label>
+        <label class="checks">
+          <input type="checkbox" [checked]="free()" (change)="free.set($any($event.target).checked)" />
+          Free listing
+        </label>
+        @if (!free()) {
+          <label>
+            Price (USD, at least $1)
+            <input [value]="price()" (input)="price.set($any($event.target).value)" inputmode="decimal" />
+          </label>
+        }
+        <label>
+          Category
+          <select [value]="category()" (change)="category.set($any($event.target).value)">
+            @for (item of categories(); track item.slug) {
+              <option [value]="item.slug">{{ item.name }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          Tags
+          <input [value]="tags()" (input)="tags.set($any($event.target).value)" placeholder="bitsy, maze" />
+        </label>
+        <label>
+          Description
+          <textarea rows="4" [value]="description()" (input)="description.set($any($event.target).value)"></textarea>
+        </label>
+        <button type="button" class="btn primary" [disabled]="busy()" (click)="listGame()">List game</button>
+      }
+    </section>
+
+    <section class="stack">
+      <h2>Listings</h2>
+      <ul class="grid">
+        @for (listing of desk.listings; track listing.id) {
+          <li class="card">
+            <a class="shot" [routerLink]="['/marketplace', listing.slug]">
+              @if (listing.game.cover) {
+                <img [src]="listing.game.cover" [alt]="listing.game.title" />
+              } @else {
+                <span>{{ listing.game.title.charAt(0) }}</span>
+              }
+            </a>
+            <div class="body">
+              <div class="meta">
+                <span>{{ listing.published ? listing.category.name : 'Unpublished' }}</span>
+                <span>{{ priceLabel(listing.price_cents, listing.currency) }}</span>
+              </div>
+              <h2>{{ listing.game.title }}</h2>
+              <button type="button" class="btn ghost" [disabled]="busy()" (click)="unlist(listing.slug)">
+                Unlist
+              </button>
+            </div>
+          </li>
+        } @empty {
+          <li class="empty">No listings yet.</li>
+        }
+      </ul>
+    </section>
+
+    <section class="stack">
+      <h2>Sales</h2>
+      @if (!desk.sales.length) {
+        <p class="empty">No sales yet. Earnings show up here, including before payout setup.</p>
+      } @else {
+        <table>
+          <thead>
+            <tr>
+              <th>Game</th>
+              <th>Buyer</th>
+              <th>Price</th>
+              <th>Your credit</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (sale of desk.sales; track sale.id) {
+              <tr>
+                <td>{{ sale.title }}</td>
+                <td>{{ sale.buyer }}</td>
+                <td>{{ money(sale.price_cents, sale.currency) }}</td>
+                <td>{{ money(sale.creator_credit_cents, sale.currency) }}</td>
+                <td>
+                  {{ sale.status }}
+                  @if (sale.available_at) {
+                    <div class="muted">clears {{ sale.available_at | date: 'mediumDate' }}</div>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </section>
+  }
+</section>

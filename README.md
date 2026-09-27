@@ -13,7 +13,12 @@ Angular client for **Chili Platform**: store, community, creator, and marketplac
 | `/store/checkout` | Review cart and start Stripe Checkout |
 | `/store/checkout/success` | Confirm Stripe session and show receipt |
 | `/store/checkout/cancel` | Canceled checkout return |
-| `/marketplace` | Marketplace placeholder |
+| `/marketplace` | Browse games: search, tags, categories, free or paid |
+| `/marketplace/:slug` | Game page and card checkout |
+| `/marketplace/library` | Purchased games (auth) |
+| `/marketplace/sales` | Creator listings, balance, and embedded payouts (auth) |
+| `/marketplace/checkout/success` | Confirm a game payment |
+| `/marketplace/checkout/cancel` | Canceled game checkout |
 | `/creator` | Bitsy editor with the citsy runtime (auth required) |
 | `/community` | Forum categories + threads |
 | `/community/post/:id` | Thread + comments |
