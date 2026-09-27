@@ -85,34 +85,16 @@
             @if (libraryLoading()) {
               <p class="empty">Loading bought games…</p>
             } @else {
-              <ul>
+              <ul class="game-grid">
                 @for (purchase of purchases(); track purchase.id) {
-                  <li class="project is-block">
-                    <div class="order-card">
-                      @if (purchase.cover) {
-                        <img class="cover" [src]="purchase.cover" [alt]="purchase.title" />
-                      }
-                      <div>
-                        <div class="order-head">
-                          <span>{{ purchase.title }}</span>
-                          <span>by {{ purchase.seller }}</span>
-                          <span>{{ priceLabel(purchase.price_cents, purchase.currency) }}</span>
-                          @if (purchase.paid_at) {
-                            <time>{{ purchase.paid_at | date: 'mediumDate' }}</time>
-                          }
-                        </div>
-                        @if (purchase.game_id) {
-                          <div class="actions">
-                            <a class="btn ghost" [routerLink]="['/play', purchase.game_id]">Play</a>
-                            <button type="button" class="btn ghost" (click)="downloadPurchase(purchase)">
-                              Download
-                            </button>
-                          </div>
-                        } @else {
-                          <p class="ship">This copy no longer has a Bitsy file.</p>
-                        }
-                      </div>
-                    </div>
+                  <li>
+                    <app-game-tile
+                      [title]="purchase.title"
+                      [cover]="purchase.cover"
+                      [link]="purchase.game_id ? ['/games', purchase.game_id] : null"
+                      [meta]="priceLabel(purchase.price_cents, purchase.currency)"
+                      [detail]="purchase.game_id ? 'by ' + purchase.seller : 'This copy no longer has a Bitsy file.'"
+                    />
                   </li>
                 } @empty {
                   <li class="empty">No bought games yet. The marketplace is where you claim or pay for one.</li>
@@ -122,34 +104,16 @@
           } @else if (gamesLoading()) {
             <p class="empty">Loading your games…</p>
           } @else {
-            <ul>
+            <ul class="game-grid">
               @for (game of games(); track game.id) {
-                <li class="project is-block">
-                  <div class="order-card">
-                    @if (game.cover) {
-                      <img class="cover" [src]="game.cover" [alt]="game.title" />
-                    }
-                    <div>
-                      <div class="order-head">
-                        <span>#{{ game.id }} {{ game.title }}</span>
-                        <time>{{ game.updated_at | date: 'medium' }}</time>
-                        @if (game.listing_slug) {
-                          <span>Listed</span>
-                        }
-                      </div>
-                      <div class="actions">
-                        <a class="btn ghost" [routerLink]="['/play', game.id]">Play</a>
-                        <button type="button" class="btn ghost" (click)="downloadGame(game)">Download</button>
-                        <a
-                          class="btn ghost"
-                          [routerLink]="['/profile', username(), 'listing']"
-                          [queryParams]="{ game: game.id }"
-                        >
-                          {{ game.listing_slug ? 'Listing' : 'List' }}
-                        </a>
-                      </div>
-                    </div>
-                  </div>
+                <li>
+                  <app-game-tile
+                    [title]="game.title"
+                    [cover]="game.cover"
+                    [link]="['/games', game.id]"
+                    [meta]="game.listing_slug ? 'Listed' : ''"
+                    [detail]="(game.updated_at | date: 'medium') ?? ''"
+                  />
                 </li>
               } @empty {
                 <li class="empty">No released games yet. Release a project when it is ready to sell.</li>
@@ -170,18 +134,15 @@
           @if (gamesLoading()) {
             <p class="empty">Loading projects…</p>
           } @else {
-            <ul>
+            <ul class="game-grid">
               @for (game of projects(); track game.id) {
-                <li class="project">
-                  <a class="order-card" [routerLink]="['/creator', game.id]">
-                    @if (game.cover) {
-                      <img class="cover" [src]="game.cover" [alt]="game.title" />
-                    }
-                    <div class="order-head">
-                      <span>#{{ game.id }} {{ game.title }}</span>
-                      <time>{{ game.updated_at | date: 'medium' }}</time>
-                    </div>
-                  </a>
+                <li>
+                  <app-game-tile
+                    [title]="game.title"
+                    [cover]="game.cover"
+                    [link]="['/creator', game.id]"
+                    [detail]="(game.updated_at | date: 'medium') ?? ''"
+                  />
                   <div class="actions">
                     <button type="button" class="btn ghost" (click)="release(game)">Release</button>
                     <button type="button" class="remove" (click)="removeGame(game, $event)">Remove</button>
@@ -206,29 +167,15 @@
       @if (gamesLoading()) {
         <p class="empty">Loading games…</p>
       } @else {
-        <ul>
+        <ul class="game-grid">
           @for (game of games(); track game.id) {
-            <li class="project is-block">
-              @if (game.listing_slug) {
-                <a class="order-card" [routerLink]="['/marketplace', game.listing_slug]">
-                  @if (game.cover) {
-                    <img class="cover" [src]="game.cover" [alt]="game.title" />
-                  }
-                  <div class="order-head">
-                    <span>{{ game.title }}</span>
-                    <span>On the marketplace</span>
-                  </div>
-                </a>
-              } @else {
-                <div class="order-card">
-                  @if (game.cover) {
-                    <img class="cover" [src]="game.cover" [alt]="game.title" />
-                  }
-                  <div class="order-head">
-                    <span>{{ game.title }}</span>
-                  </div>
-                </div>
-              }
+            <li>
+              <app-game-tile
+                [title]="game.title"
+                [cover]="game.cover"
+                [link]="['/games', game.id]"
+                [meta]="game.listing_slug ? 'On the marketplace' : ''"
+              />
             </li>
           } @empty {
             <li class="empty">No released games yet.</li>

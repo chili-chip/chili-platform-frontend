@@ -81,6 +81,12 @@ export const routes: Routes = [
     title: 'Checkout canceled',
   },
   {
+    path: 'games/:id',
+    loadComponent: () =>
+      import('./features/marketplace/game-page').then((m) => m.GamePageComponent),
+    title: 'Game',
+  },
+  {
     path: 'marketplace/:slug',
     loadComponent: () =>
       import('./features/marketplace/game-page').then((m) => m.GamePageComponent),

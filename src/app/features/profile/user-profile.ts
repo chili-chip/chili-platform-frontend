@@ -6,8 +6,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { GameProject, MarketplacePurchase, StoreOrder, UserProfile } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { GameTileComponent } from '../../shared/game-tile/game-tile';
 import { formatPrice, marketError } from '../marketplace/market-utils';
-import { downloadBitsy } from '../play/bitsy-file';
 import { shippingSummary, unwrapList } from '../store/store-utils';
 
 type ProfileTab = 'orders' | 'library' | 'projects';
@@ -15,7 +15,7 @@ type LibraryShelf = 'bought' | 'mine';
 
 @Component({
   selector: 'app-user-profile',
-  imports: [CurrencyPipe, DatePipe, RouterLink, TitleCasePipe],
+  imports: [CurrencyPipe, DatePipe, GameTileComponent, RouterLink, TitleCasePipe],
   templateUrl: './user-profile.html',
   styleUrl: './user-profile.scss',
 })
@@ -136,36 +136,6 @@ export class UserProfileComponent {
     }
     this.api.deleteGame(game.id).subscribe({
       next: () => this.projects.update((list) => list.filter((item) => item.id !== game.id)),
-    });
-  }
-
-  downloadGame(game: GameProject): void {
-    if (game.data) {
-      downloadBitsy(game.slug, game.data);
-      return;
-    }
-    this.fetchAndDownload(game.id, game.slug);
-  }
-
-  downloadPurchase(purchase: MarketplacePurchase): void {
-    if (!purchase.game_id) {
-      this.error.set('This copy no longer has a Bitsy file.');
-      return;
-    }
-    this.fetchAndDownload(purchase.game_id, purchase.title);
-  }
-
-  private fetchAndDownload(id: number, fallback: string): void {
-    this.error.set('');
-    this.api.getGame(id).subscribe({
-      next: (loaded) => {
-        if (!loaded.data) {
-          this.error.set('This game has no Bitsy file.');
-          return;
-        }
-        downloadBitsy(loaded.slug || fallback, loaded.data);
-      },
-      error: (err) => this.error.set(marketError(err, 'Could not download this game.')),
     });
   }
 

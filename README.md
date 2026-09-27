@@ -14,7 +14,8 @@ Angular client for **Chili Platform**: store, community, creator, and marketplac
 | `/store/checkout/success` | Confirm Stripe session and show receipt |
 | `/store/checkout/cancel` | Canceled checkout return |
 | `/marketplace` | Browse listed games: search, tags, categories, free or paid |
-| `/marketplace/:slug` | Game page and card checkout |
+| `/marketplace/:slug` | Listed game page and card checkout |
+| `/games/:id` | Game page. A listed game continues at its marketplace slug |
 | `/marketplace/sales` | Creator balance and embedded payouts (auth) |
 | `/marketplace/checkout/success` | Confirm a game payment |
 | `/marketplace/checkout/cancel` | Canceled game checkout |
