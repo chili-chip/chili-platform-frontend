@@ -1,8 +1,8 @@
 import { CurrencyPipe, DatePipe, TitleCasePipe } from '@angular/common';
-import { Component, computed, effect, inject, input, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { StoreOrder, UserProfile } from '../../core/models/platform';
+import { GameProject, StoreOrder, UserProfile } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { shippingSummary, unwrapList } from '../store/store-utils';
@@ -13,11 +13,13 @@ import { shippingSummary, unwrapList } from '../store/store-utils';
   templateUrl: './user-profile.html',
   styleUrl: './user-profile.scss',
 })
-export class UserProfileComponent implements OnInit {
+export class UserProfileComponent {
   private readonly api = inject(ApiService);
   readonly auth = inject(AuthService);
   readonly username = input.required<string>();
   readonly profile = signal<UserProfile | null>(null);
+  readonly games = signal<GameProject[]>([]);
+  readonly gamesLoading = signal(false);
   readonly orders = signal<StoreOrder[]>([]);
   readonly ordersLoading = signal(false);
 
@@ -27,8 +29,20 @@ export class UserProfileComponent implements OnInit {
   });
 
   private ordersUser = '';
+  private gamesUser = '';
 
   constructor() {
+    effect(() => {
+      const name = this.username();
+      if (!name || this.gamesUser === name) {
+        return;
+      }
+      this.gamesUser = name;
+      this.profile.set(null);
+      this.api.getProfile(name).subscribe((profile) => this.profile.set(profile));
+      this.loadGames(name);
+    });
+
     effect(() => {
       if (!this.isOwn()) {
         this.orders.set([]);
@@ -44,11 +58,32 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.api.getProfile(this.username()).subscribe((profile) => this.profile.set(profile));
+  shipping = shippingSummary;
+
+  removeGame(game: GameProject, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!confirm(`Remove “${game.title}” from your profile?`)) {
+      return;
+    }
+    this.api.deleteGame(game.id).subscribe({
+      next: () => this.games.update((list) => list.filter((item) => item.id !== game.id)),
+    });
   }
 
-  shipping = shippingSummary;
+  private loadGames(username: string): void {
+    this.gamesLoading.set(true);
+    this.api.listGames(username).subscribe({
+      next: (payload) => {
+        this.games.set(unwrapList(payload));
+        this.gamesLoading.set(false);
+      },
+      error: () => {
+        this.games.set([]);
+        this.gamesLoading.set(false);
+      },
+    });
+  }
 
   private loadOrders(): void {
     this.ordersLoading.set(true);

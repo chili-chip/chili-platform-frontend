@@ -1,3 +1,14 @@
+export interface GameProject {
+  id: number;
+  title: string;
+  slug: string;
+  owner: string;
+  cover: string;
+  data?: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface UserProfile {
   id: number;
   username: string;

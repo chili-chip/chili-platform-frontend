@@ -6,6 +6,7 @@ import {
   ForumCategory,
   ForumComment,
   ForumPost,
+  GameProject,
   Paginated,
   StoreCheckoutSession,
   StoreOrder,
@@ -52,6 +53,26 @@ export class ApiService {
 
   getProfile(username: string) {
     return this.http.get<UserProfile>(`${this.base}/profiles/${username}/`);
+  }
+
+  listGames(username: string) {
+    const params = new HttpParams().set('username', username);
+    return this.http.get<Paginated<GameProject> | GameProject[]>(`${this.base}/games/`, { params });
+  }
+
+  getGame(id: number | string) {
+    return this.http.get<GameProject>(`${this.base}/games/${id}/`);
+  }
+
+  deleteGame(id: number | string) {
+    return this.http.delete(`${this.base}/games/${id}/`);
+  }
+
+  saveGame(payload: { title: string; data: string }, id?: number | null) {
+    if (id) {
+      return this.http.put<GameProject>(`${this.base}/games/${id}/`, payload);
+    }
+    return this.http.post<GameProject>(`${this.base}/games/`, payload);
   }
 
   listProducts() {

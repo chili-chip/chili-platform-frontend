@@ -1,5 +1,3 @@
-<iframe
-  class="creator-frame"
-  title="Chili game creator"
-  src="/creator/editor/index.html"
-></iframe>
+@if (editorSrc(); as src) {
+  <iframe class="creator-frame" title="Chili game creator" [src]="src"></iframe>
+}
