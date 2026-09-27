@@ -1,0 +1,49 @@
+<section class="page">
+  <p class="kicker"><a routerLink="/marketplace">Marketplace</a></p>
+
+  @if (loading()) {
+    <p class="empty">Loading game…</p>
+  } @else if (listing(); as game) {
+    <div class="hero">
+      <div class="cover">
+        @if (game.game.cover) {
+          <img [src]="game.game.cover" [alt]="game.game.title" />
+        } @else {
+          <span>{{ game.game.title.charAt(0) }}</span>
+        }
+      </div>
+      <div class="body">
+        <div class="meta">
+          <span>{{ game.category.name }}</span>
+          <a [routerLink]="['/profile', game.game.owner]">{{ game.game.owner }}</a>
+        </div>
+        <h1>{{ game.game.title }}</h1>
+        <p class="lede">{{ game.description || 'No description yet.' }}</p>
+        <div class="tags">
+          @for (tag of game.tags; track tag) {
+            <a class="tag" [routerLink]="['/marketplace']" [queryParams]="{ tag }">{{ tag }}</a>
+          }
+        </div>
+        <div class="buy">
+          <strong>{{ priceLabel(game.price_cents, game.currency) }}</strong>
+          @if (ownListing(game)) {
+            <a routerLink="/marketplace/sales" class="btn ghost">Manage listing</a>
+          } @else if (game.owned) {
+            <a routerLink="/marketplace/library" class="btn primary">In your library</a>
+          } @else {
+            <button type="button" class="btn primary" [disabled]="buying()" (click)="buy(game)">
+              {{ game.price_cents === 0 ? 'Get' : 'Buy' }}
+            </button>
+          }
+        </div>
+        @if (error()) {
+          <p class="err">{{ error() }}</p>
+        }
+      </div>
+    </div>
+  } @else {
+    <h1>Game not found</h1>
+    <p class="err">{{ error() }}</p>
+    <a routerLink="/marketplace" class="btn ghost">Back to the marketplace</a>
+  }
+</section>

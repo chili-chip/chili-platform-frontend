@@ -1,0 +1,115 @@
+<section class="page">
+  <header class="intro">
+    <div>
+      <p class="kicker">Digital carts</p>
+      <h1>Marketplace</h1>
+      <p class="lede">Games from the creator. Buy with a card, or pick up a free release. No token wallet.</p>
+    </div>
+    <div class="tools">
+      @if (auth.isAuthenticated()) {
+        <a routerLink="/marketplace/library" class="btn ghost">Library</a>
+        <a routerLink="/marketplace/sales" class="btn primary">Your sales</a>
+      } @else {
+        <a routerLink="/login" [queryParams]="{ next: '/marketplace' }" class="btn ghost">Sign in to buy</a>
+      }
+    </div>
+  </header>
+
+  <form class="search" (submit)="$event.preventDefault(); search()">
+    <input
+      type="search"
+      [value]="draft()"
+      (input)="draft.set($any($event.target).value)"
+      placeholder="Search games, tags, creators"
+      aria-label="Search the marketplace"
+    />
+    <button type="submit" class="btn primary">Search</button>
+  </form>
+
+  <div class="chips">
+    <button type="button" class="chip" [class.is-on]="!category()" (click)="apply({ category: '' })">All</button>
+    @for (item of categories(); track item.slug) {
+      <button
+        type="button"
+        class="chip"
+        [class.is-on]="category() === item.slug"
+        (click)="apply({ category: item.slug })"
+      >
+        {{ item.name }}
+      </button>
+    }
+  </div>
+
+  <div class="chips">
+    <button type="button" class="chip" [class.is-on]="!price()" (click)="apply({ price: '' })">Any price</button>
+    <button type="button" class="chip" [class.is-on]="price() === 'free'" (click)="apply({ price: 'free' })">Free</button>
+    <button type="button" class="chip" [class.is-on]="price() === 'paid'" (click)="apply({ price: 'paid' })">Paid</button>
+    <label class="checks">
+      Sort
+      <select [value]="sort()" (change)="apply({ sort: $any($event.target).value })">
+        <option value="new">Newest</option>
+        <option value="price_asc">Price, low</option>
+        <option value="price_desc">Price, high</option>
+        <option value="title">Title</option>
+      </select>
+    </label>
+  </div>
+
+  @if (tags().length) {
+    <div class="tags">
+      @for (item of tags(); track item.name) {
+        <button
+          type="button"
+          class="tag"
+          [class.is-on]="tag() === item.name"
+          (click)="apply({ tag: tag() === item.name ? '' : item.name })"
+        >
+          {{ item.name }}
+        </button>
+      }
+    </div>
+  }
+
+  @if (error()) {
+    <p class="err">{{ error() }}</p>
+  }
+
+  @if (loading()) {
+    <p class="empty">Loading games…</p>
+  } @else {
+    <ul class="grid">
+      @for (listing of listings(); track listing.id) {
+        <li class="card">
+          <a class="shot" [routerLink]="['/marketplace', listing.slug]">
+            @if (listing.game.cover) {
+              <img [src]="listing.game.cover" [alt]="listing.game.title" />
+            } @else {
+              <span>{{ listing.game.title.charAt(0) }}</span>
+            }
+          </a>
+          <div class="body">
+            <div class="meta">
+              <span>{{ listing.category.name }}</span>
+              @if (listing.owned) {
+                <span>Owned</span>
+              }
+            </div>
+            <h2><a [routerLink]="['/marketplace', listing.slug]">{{ listing.game.title }}</a></h2>
+            <p class="muted">by {{ listing.game.owner }}</p>
+            <div class="buy">
+              <strong>{{ priceLabel(listing.price_cents, listing.currency) }}</strong>
+              <a class="btn ghost" [routerLink]="['/marketplace', listing.slug]">Open</a>
+            </div>
+          </div>
+        </li>
+      } @empty {
+        <li class="empty">No games match that filter.</li>
+      }
+    </ul>
+    @if (hasMore()) {
+      <p class="tools">
+        <button type="button" class="btn ghost" (click)="loadMore()">More games</button>
+      </p>
+    }
+  }
+</section>

@@ -138,3 +138,119 @@ export interface CartLine {
   product: StoreProduct;
   quantity: number;
 }
+
+export interface MarketplaceCategory {
+  id: number;
+  name: string;
+  slug: string;
+  description: string;
+}
+
+export interface MarketplaceTag {
+  name: string;
+  count: number;
+}
+
+export interface MarketplaceGameCard {
+  id: number;
+  title: string;
+  slug: string;
+  cover: string;
+  owner: string;
+}
+
+export interface MarketplaceListing {
+  id: number;
+  slug: string;
+  description: string;
+  price_cents: number;
+  currency: string;
+  category: { slug: string; name: string };
+  tags: string[];
+  game: MarketplaceGameCard;
+  published: boolean;
+  owned: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MarketplacePurchase {
+  id: number;
+  status: 'pending' | 'paid' | 'refunded' | 'disputed' | 'canceled' | 'failed';
+  title: string;
+  price_cents: number;
+  currency: string;
+  platform_fee_cents: number;
+  processing_estimate_cents: number;
+  creator_credit_cents: number;
+  seller: string;
+  buyer: string;
+  cover: string;
+  listing_slug: string;
+  game_id: number | null;
+  paid_at: string | null;
+  available_at: string | null;
+  created_at: string;
+}
+
+export interface MarketplaceCheckout {
+  free: boolean;
+  checkout_url: string;
+  session_id: string;
+  purchase: MarketplacePurchase;
+}
+
+export interface MarketplaceAccount {
+  stripe_account_id: string;
+  transfers_status: string;
+  payouts_status: string;
+  ready: boolean;
+}
+
+export interface MarketplaceBalance {
+  held_cents: number;
+  available_cents: number;
+  paid_out_cents: number;
+  min_payout_cents: number;
+  hold_days: number;
+}
+
+export interface MarketplacePayout {
+  transferred: boolean;
+  amount_cents: number;
+  payout_id: number | null;
+  blocked_reason: string;
+}
+
+export interface MarketplaceSellerGame {
+  id: number;
+  title: string;
+  slug: string;
+  listing_slug: string;
+}
+
+export interface MarketplaceSales {
+  balance: MarketplaceBalance;
+  payout: MarketplacePayout;
+  account: MarketplaceAccount;
+  listings: MarketplaceListing[];
+  games: MarketplaceSellerGame[];
+  sales: MarketplacePurchase[];
+}
+
+export interface MarketplaceAccountSession {
+  client_secret: string;
+  publishable_key: string;
+  components: string[];
+}
+
+export interface MarketplaceConfig {
+  currency: string;
+  min_paid_cents: number;
+  min_payout_cents: number;
+  hold_days: number;
+  platform_fee_bps: number;
+  processing_fee_bps: number;
+  processing_fee_fixed_cents: number;
+  stripe_publishable_key: string;
+}

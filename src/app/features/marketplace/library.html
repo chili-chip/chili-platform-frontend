@@ -1,0 +1,47 @@
+<section class="page">
+  <header class="intro">
+    <div>
+      <p class="kicker">Your copies</p>
+      <h1>Library</h1>
+      <p class="lede">Games you claimed or paid for.</p>
+    </div>
+    <a routerLink="/marketplace" class="btn ghost">Browse</a>
+  </header>
+
+  @if (error()) {
+    <p class="err">{{ error() }}</p>
+  }
+
+  @if (loading()) {
+    <p class="empty">Loading library…</p>
+  } @else {
+    <ul class="grid">
+      @for (purchase of purchases(); track purchase.id) {
+        <li class="card">
+          @if (purchase.listing_slug) {
+            <a class="shot" [routerLink]="['/marketplace', purchase.listing_slug]">
+              @if (purchase.cover) {
+                <img [src]="purchase.cover" [alt]="purchase.title" />
+              } @else {
+                <span>{{ purchase.title.charAt(0) }}</span>
+              }
+            </a>
+          } @else {
+            <div class="shot"><span>{{ purchase.title.charAt(0) }}</span></div>
+          }
+          <div class="body">
+            <div class="meta">
+              <span>{{ purchase.status }}</span>
+              <span>{{ purchase.paid_at | date: 'mediumDate' }}</span>
+            </div>
+            <h2>{{ purchase.title }}</h2>
+            <p class="muted">by {{ purchase.seller }}</p>
+            <strong>{{ priceLabel(purchase.price_cents, purchase.currency) }}</strong>
+          </div>
+        </li>
+      } @empty {
+        <li class="empty">No purchases yet. The marketplace is one page back.</li>
+      }
+    </ul>
+  }
+</section>

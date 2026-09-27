@@ -52,6 +52,41 @@ export const routes: Routes = [
     title: 'Marketplace',
   },
   {
+    path: 'marketplace/library',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/marketplace/library').then((m) => m.LibraryComponent),
+    title: 'Library',
+  },
+  {
+    path: 'marketplace/sales',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/marketplace/sales').then((m) => m.SalesComponent),
+    title: 'Sales',
+  },
+  {
+    path: 'marketplace/checkout/success',
+    loadComponent: () =>
+      import('./features/marketplace/checkout-success').then(
+        (m) => m.MarketplaceCheckoutSuccessComponent,
+      ),
+    title: 'Purchase complete',
+  },
+  {
+    path: 'marketplace/checkout/cancel',
+    loadComponent: () =>
+      import('./features/marketplace/checkout-cancel').then(
+        (m) => m.MarketplaceCheckoutCancelComponent,
+      ),
+    title: 'Checkout canceled',
+  },
+  {
+    path: 'marketplace/:slug',
+    loadComponent: () =>
+      import('./features/marketplace/game-page').then((m) => m.GamePageComponent),
+    title: 'Game',
+  },
+  {
     path: 'creator',
     canActivate: [authGuard],
     loadComponent: () => import('./features/creator/creator').then((m) => m.CreatorComponent),

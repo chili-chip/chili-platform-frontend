@@ -8,6 +8,15 @@ import {
   ForumPost,
   GameProject,
   Paginated,
+  MarketplaceAccount,
+  MarketplaceAccountSession,
+  MarketplaceCategory,
+  MarketplaceCheckout,
+  MarketplaceConfig,
+  MarketplaceListing,
+  MarketplacePurchase,
+  MarketplaceSales,
+  MarketplaceTag,
   StoreCheckoutSession,
   StoreOrder,
   StoreProduct,
@@ -99,5 +108,83 @@ export class ApiService {
 
   getOrder(id: string | number) {
     return this.http.get<StoreOrder>(`${this.base}/store/orders/${id}/`);
+  }
+
+  marketplaceConfig() {
+    return this.http.get<MarketplaceConfig>(`${this.base}/marketplace/config/`);
+  }
+
+  listMarketplaceCategories() {
+    return this.http.get<MarketplaceCategory[]>(`${this.base}/marketplace/categories/`);
+  }
+
+  listMarketplaceTags() {
+    return this.http.get<MarketplaceTag[]>(`${this.base}/marketplace/tags/`);
+  }
+
+  listMarketplaceListings(query: Record<string, string> = {}) {
+    let params = new HttpParams();
+    for (const [key, value] of Object.entries(query)) {
+      if (value) {
+        params = params.set(key, value);
+      }
+    }
+    return this.http.get<Paginated<MarketplaceListing>>(`${this.base}/marketplace/listings/`, {
+      params,
+    });
+  }
+
+  getMarketplaceListing(slug: string) {
+    return this.http.get<MarketplaceListing>(`${this.base}/marketplace/listings/${slug}/`);
+  }
+
+  createMarketplaceListing(body: {
+    game: number;
+    price_cents: number;
+    category: string;
+    description?: string;
+    tags?: string[];
+  }) {
+    return this.http.post<MarketplaceListing>(`${this.base}/marketplace/listings/`, body);
+  }
+
+  updateMarketplaceListing(
+    slug: string,
+    body: { price_cents?: number; category?: string; description?: string; tags?: string[]; published?: boolean },
+  ) {
+    return this.http.patch<MarketplaceListing>(`${this.base}/marketplace/listings/${slug}/`, body);
+  }
+
+  deleteMarketplaceListing(slug: string) {
+    return this.http.delete(`${this.base}/marketplace/listings/${slug}/`, {
+      observe: 'response',
+      responseType: 'text',
+    });
+  }
+
+  checkoutListing(slug: string) {
+    return this.http.post<MarketplaceCheckout>(`${this.base}/marketplace/listings/${slug}/checkout/`, {});
+  }
+
+  confirmMarketplaceCheckout(sessionId: string) {
+    return this.http.post<MarketplacePurchase>(`${this.base}/marketplace/checkout/confirm/`, {
+      session_id: sessionId,
+    });
+  }
+
+  listLibrary() {
+    return this.http.get<Paginated<MarketplacePurchase>>(`${this.base}/marketplace/library/`);
+  }
+
+  getMarketplaceSales() {
+    return this.http.get<MarketplaceSales>(`${this.base}/marketplace/me/`);
+  }
+
+  createMarketplaceAccount() {
+    return this.http.post<MarketplaceAccount>(`${this.base}/marketplace/me/account/`, {});
+  }
+
+  createMarketplaceAccountSession() {
+    return this.http.post<MarketplaceAccountSession>(`${this.base}/marketplace/me/account-session/`, {});
   }
 }
