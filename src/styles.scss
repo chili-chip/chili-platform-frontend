@@ -95,3 +95,27 @@ button.btn.ghost:hover,
 a.btn.ghost:hover {
   transform: translate(-1px, -1px);
 }
+
+.game-grid {
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.game-grid > li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.game-grid > li.empty {
+  grid-column: 1 / -1;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  padding: 1rem 1.1rem;
+  color: var(--muted);
+}

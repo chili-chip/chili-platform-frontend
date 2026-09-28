@@ -1,0 +1,51 @@
+.page {
+  padding: 2.5rem 6vw 4rem;
+}
+
+.intro,
+.tools {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.lede,
+.hint,
+.err {
+  color: var(--muted);
+}
+
+.err {
+  color: var(--chili-hot);
+  margin-top: 1rem;
+}
+
+.hint {
+  margin-top: 0.8rem;
+  font-size: 0.82rem;
+}
+
+canvas {
+  display: block;
+  width: min(512px, 100%);
+  height: auto;
+  margin-top: 1.2rem;
+  background: #000;
+  border: 1px solid var(--line);
+  image-rendering: pixelated;
+}
+
+@media (max-width: 720px) {
+  .intro,
+  .tools {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+}

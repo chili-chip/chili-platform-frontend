@@ -1,0 +1,34 @@
+<section class="page">
+  <p class="kicker">Library</p>
+  @if (loading()) {
+    <h1>Loading game…</h1>
+  } @else if (game(); as current) {
+    <header class="intro">
+      <div>
+        <h1>{{ current.title }}</h1>
+        <p class="lede">by {{ current.owner }}</p>
+      </div>
+      <div class="tools">
+        @if (current.data) {
+          <button type="button" class="btn ghost" (click)="download()">Download</button>
+        }
+        <a
+          class="btn ghost"
+          [routerLink]="['/profile', auth.currentUser()?.username]"
+          [queryParams]="{ tab: 'library', shelf: auth.currentUser()?.username === current.owner ? 'mine' : 'bought' }"
+        >
+          Library
+        </a>
+      </div>
+    </header>
+    @if (current.data) {
+      <canvas #screen width="512" height="512" aria-label="Game"></canvas>
+      <p class="hint">Arrows or WASD move. Z, X, space, or enter confirms. Escape leaves.</p>
+    }
+  } @else {
+    <h1>Game unavailable</h1>
+  }
+  @if (error()) {
+    <p class="err">{{ error() }}</p>
+  }
+</section>

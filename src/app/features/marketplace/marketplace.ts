@@ -9,11 +9,12 @@ import {
 } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { GameTileComponent } from '../../shared/game-tile/game-tile';
 import { formatPrice, marketError } from './market-utils';
 
 @Component({
   selector: 'app-marketplace',
-  imports: [RouterLink],
+  imports: [GameTileComponent, RouterLink],
   templateUrl: './marketplace.html',
   styleUrl: './market.scss',
 })

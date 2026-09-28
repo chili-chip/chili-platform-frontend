@@ -14,7 +14,7 @@ import { marketError } from './market-utils';
 })
 export class MarketplaceCheckoutSuccessComponent {
   private readonly api = inject(ApiService);
-  private readonly auth = inject(AuthService);
+  readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private started = false;

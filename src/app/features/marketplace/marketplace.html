@@ -7,7 +7,6 @@
     </div>
     <div class="tools">
       @if (auth.isAuthenticated()) {
-        <a routerLink="/marketplace/library" class="btn ghost">Library</a>
         <a routerLink="/marketplace/sales" class="btn primary">Your sales</a>
       } @else {
         <a routerLink="/login" [queryParams]="{ next: '/marketplace' }" class="btn ghost">Sign in to buy</a>
@@ -77,30 +76,18 @@
   @if (loading()) {
     <p class="empty">Loading games…</p>
   } @else {
-    <ul class="grid">
+    <ul class="game-grid">
       @for (listing of listings(); track listing.id) {
-        <li class="card">
-          <a class="shot" [routerLink]="['/marketplace', listing.slug]">
-            @if (listing.game.cover) {
-              <img [src]="listing.game.cover" [alt]="listing.game.title" />
-            } @else {
-              <span>{{ listing.game.title.charAt(0) }}</span>
-            }
-          </a>
-          <div class="body">
-            <div class="meta">
-              <span>{{ listing.category.name }}</span>
-              @if (listing.owned) {
-                <span>Owned</span>
-              }
-            </div>
-            <h2><a [routerLink]="['/marketplace', listing.slug]">{{ listing.game.title }}</a></h2>
-            <p class="muted">by {{ listing.game.owner }}</p>
-            <div class="buy">
-              <strong>{{ priceLabel(listing.price_cents, listing.currency) }}</strong>
-              <a class="btn ghost" [routerLink]="['/marketplace', listing.slug]">Open</a>
-            </div>
-          </div>
+        <li>
+          <app-game-tile
+            [title]="listing.game.title"
+            [cover]="listing.game.cover"
+            [link]="['/marketplace', listing.slug]"
+            [meta]="listing.category.name"
+            [badge]="listing.owned ? 'Owned' : ''"
+            [detail]="'by ' + listing.game.owner"
+            [foot]="priceLabel(listing.price_cents, listing.currency)"
+          />
         </li>
       } @empty {
         <li class="empty">No games match that filter.</li>

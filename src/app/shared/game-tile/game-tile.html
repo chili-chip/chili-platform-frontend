@@ -1,0 +1,36 @@
+@if (link(); as dest) {
+  <a class="face" [routerLink]="dest">
+    <ng-container [ngTemplateOutlet]="face" />
+  </a>
+} @else {
+  <div class="face">
+    <ng-container [ngTemplateOutlet]="face" />
+  </div>
+}
+
+<ng-template #face>
+  <div class="shot">
+    @if (cover()) {
+      <img [src]="cover()" [alt]="title()" />
+    } @else {
+      <span>{{ title().charAt(0) }}</span>
+    }
+  </div>
+  <div class="body">
+    @if (meta() || badge()) {
+      <div class="meta">
+        <span>{{ meta() }}</span>
+        @if (badge()) {
+          <span>{{ badge() }}</span>
+        }
+      </div>
+    }
+    <h2>{{ title() }}</h2>
+    @if (detail()) {
+      <p class="muted">{{ detail() }}</p>
+    }
+    @if (foot()) {
+      <strong class="foot">{{ foot() }}</strong>
+    }
+  </div>
+</ng-template>

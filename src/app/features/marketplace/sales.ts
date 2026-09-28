@@ -1,14 +1,11 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { Component, effect, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
-import {
-  MarketplaceCategory,
-  MarketplaceSales,
-} from '../../core/models/platform';
+import { MarketplaceSales } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
-import { dollarsToCents, formatMoney, formatPrice, marketError } from './market-utils';
+import { formatMoney, marketError } from './market-utils';
 
 @Component({
   selector: 'app-sales',
@@ -26,32 +23,14 @@ export class SalesComponent {
   private mounting = false;
 
   readonly sales = signal<MarketplaceSales | null>(null);
-  readonly categories = signal<MarketplaceCategory[]>([]);
   readonly publishableKey = signal('');
   readonly loading = signal(true);
   readonly busy = signal(false);
   readonly error = signal('');
   readonly connectError = signal('');
-  readonly gameId = signal(0);
-  readonly price = signal('1.00');
-  readonly free = signal(false);
-  readonly category = signal('puzzle');
-  readonly tags = signal('');
-  readonly description = signal('');
   readonly money = formatMoney;
-  readonly priceLabel = formatPrice;
-  readonly unlisted = computed(() => (this.sales()?.games ?? []).filter((game) => !game.listing_slug));
 
   constructor() {
-    this.api.listMarketplaceCategories().subscribe({
-      next: (rows) => {
-        this.categories.set(rows);
-        if (rows[0] && !rows.some((row) => row.slug === this.category())) {
-          this.category.set(rows[0].slug);
-        }
-      },
-      error: () => this.categories.set([]),
-    });
     this.api.marketplaceConfig().subscribe({
       next: (config) => this.publishableKey.set(config.stripe_publishable_key),
       error: () => this.publishableKey.set(''),
@@ -96,53 +75,6 @@ export class SalesComponent {
       error: (err) => {
         this.busy.set(false);
         this.error.set(marketError(err, 'Could not start payout setup.'));
-      },
-    });
-  }
-
-  listGame(): void {
-    const cents = this.free() ? 0 : dollarsToCents(this.price());
-    if (!this.gameId()) {
-      this.error.set('Choose a saved game.');
-      return;
-    }
-    if (cents === null || (cents !== 0 && cents < 100)) {
-      this.error.set('Paid games must cost at least $1. Free listings are allowed.');
-      return;
-    }
-    this.busy.set(true);
-    this.error.set('');
-    this.api
-      .createMarketplaceListing({
-        game: this.gameId(),
-        price_cents: cents,
-        category: this.category(),
-        description: this.description().trim(),
-        tags: this.tags()
-          .split(',')
-          .map((tag) => tag.trim())
-          .filter(Boolean),
-      })
-      .subscribe({
-        next: () => {
-          this.description.set('');
-          this.tags.set('');
-          this.reload();
-        },
-        error: (err) => {
-          this.busy.set(false);
-          this.error.set(marketError(err, 'Could not list that game.'));
-        },
-      });
-  }
-
-  unlist(slug: string): void {
-    this.busy.set(true);
-    this.api.deleteMarketplaceListing(slug).subscribe({
-      next: () => this.reload(),
-      error: (err) => {
-        this.busy.set(false);
-        this.error.set(marketError(err, 'Could not unlist that game.'));
       },
     });
   }

@@ -55,7 +55,7 @@ export const routes: Routes = [
     path: 'marketplace/library',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/marketplace/library').then((m) => m.LibraryComponent),
+      import('./features/marketplace/library').then((m) => m.LibraryRedirectComponent),
     title: 'Library',
   },
   {
@@ -81,10 +81,22 @@ export const routes: Routes = [
     title: 'Checkout canceled',
   },
   {
+    path: 'games/:id',
+    loadComponent: () =>
+      import('./features/marketplace/game-page').then((m) => m.GamePageComponent),
+    title: 'Game',
+  },
+  {
     path: 'marketplace/:slug',
     loadComponent: () =>
       import('./features/marketplace/game-page').then((m) => m.GamePageComponent),
     title: 'Game',
+  },
+  {
+    path: 'play/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/play/play').then((m) => m.PlayComponent),
+    title: 'Play',
   },
   {
     path: 'creator',
@@ -119,6 +131,12 @@ export const routes: Routes = [
     path: 'register',
     loadComponent: () => import('./features/auth/register').then((m) => m.RegisterComponent),
     title: 'Create account',
+  },
+  {
+    path: 'profile/:username/listing',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/profile/listing').then((m) => m.ListingComponent),
+    title: 'Listing',
   },
   {
     path: 'profile/:username',

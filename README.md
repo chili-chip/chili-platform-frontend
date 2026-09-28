@@ -13,17 +13,19 @@ Angular client for **Chili Platform**: store, community, creator, and marketplac
 | `/store/checkout` | Review cart and start Stripe Checkout |
 | `/store/checkout/success` | Confirm Stripe session and show receipt |
 | `/store/checkout/cancel` | Canceled checkout return |
-| `/marketplace` | Browse games: search, tags, categories, free or paid |
-| `/marketplace/:slug` | Game page and card checkout |
-| `/marketplace/library` | Purchased games (auth) |
-| `/marketplace/sales` | Creator listings, balance, and embedded payouts (auth) |
+| `/marketplace` | Browse listed games: search, tags, categories, free or paid |
+| `/marketplace/:slug` | Listed game page and card checkout |
+| `/games/:id` | Game page. A listed game continues at its marketplace slug |
+| `/marketplace/sales` | Creator balance and embedded payouts (auth) |
 | `/marketplace/checkout/success` | Confirm a game payment |
 | `/marketplace/checkout/cancel` | Canceled game checkout |
+| `/play/:id` | Play a library game in the web player (auth) |
 | `/creator` | Bitsy editor with the citsy runtime (auth required) |
 | `/community` | Forum categories + threads |
 | `/community/post/:id` | Thread + comments |
 | `/login` `/register` | Auth |
-| `/profile/:username` | Public profile, plus own hardware orders |
+| `/profile/:username` | Tabs for your orders, library, and projects. A public profile shows released games |
+| `/profile/:username/listing` | List a released game (your profile only) |
 
 Auth uses JWT in `localStorage`, an HTTP interceptor, and Angular Signals for `currentUser`.
 

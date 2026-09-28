@@ -37,8 +37,48 @@ h1 {
   color: var(--muted);
 }
 
+.tabs,
+.shelves {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.tabs {
+  margin-top: 2rem;
+}
+
+.shelves {
+  margin-bottom: 1rem;
+}
+
+.tabs button,
+.shelves button {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--line);
+  padding: 0.45rem 0.7rem;
+  cursor: pointer;
+}
+
+.tabs button.is-on,
+.shelves button.is-on {
+  color: #140407;
+  background: var(--chili);
+  border-color: var(--chili);
+}
+
+.err {
+  margin: 1rem 0 0;
+  color: var(--chili-hot);
+}
+
 .orders {
-  margin-top: 2.6rem;
+  margin-top: 1.4rem;
 }
 
 .orders header {
@@ -54,7 +94,7 @@ h1 {
   font-size: clamp(1.6rem, 3vw, 2.2rem);
 }
 
-.orders > ul {
+.orders > ul:not(.game-grid) {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -62,7 +102,7 @@ h1 {
   gap: 0.8rem;
 }
 
-.orders > ul > li,
+.orders > ul:not(.game-grid) > li,
 .empty {
   background: var(--bg-1);
   border: 1px solid var(--line);
@@ -72,6 +112,27 @@ h1 {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: stretch;
+}
+
+.project.is-block {
+  grid-template-columns: 1fr;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  margin: 0;
+}
+
+.actions .btn {
+  padding: 0.45rem 0.65rem;
+  font-size: 0.68rem;
+}
+
+.order-card .actions {
+  margin: 0.2rem 0 0;
 }
 
 .cover {
@@ -92,7 +153,7 @@ h1 {
 }
 
 .remove {
-  margin: 0.8rem;
+  margin: 0;
   align-self: center;
   font-family: var(--font-mono);
   font-size: 0.68rem;
@@ -118,7 +179,7 @@ h1 {
   padding: 1rem 1.1rem;
 }
 
-.orders > ul > li:hover:not(.empty) {
+.orders > ul:not(.game-grid) > li:hover:not(.empty) {
   border-color: var(--phosphor);
 }
 

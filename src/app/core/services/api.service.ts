@@ -64,9 +64,16 @@ export class ApiService {
     return this.http.get<UserProfile>(`${this.base}/profiles/${username}/`);
   }
 
-  listGames(username: string) {
-    const params = new HttpParams().set('username', username);
+  listGames(username: string, options?: { released?: boolean }) {
+    let params = new HttpParams().set('username', username);
+    if (options?.released === false) {
+      params = params.set('released', 'false');
+    }
     return this.http.get<Paginated<GameProject> | GameProject[]>(`${this.base}/games/`, { params });
+  }
+
+  releaseGame(id: number | string) {
+    return this.http.post<GameProject>(`${this.base}/games/${id}/release/`, {});
   }
 
   getGame(id: number | string) {

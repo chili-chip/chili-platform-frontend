@@ -5,6 +5,9 @@ export interface GameProject {
   owner: string;
   cover: string;
   data?: string;
+  released: boolean;
+  listing_slug: string;
+  in_library: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -170,6 +173,7 @@ export interface MarketplaceListing {
   game: MarketplaceGameCard;
   published: boolean;
   owned: boolean;
+  in_library: boolean;
   created_at: string;
   updated_at: string;
 }
