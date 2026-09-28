@@ -16,4 +16,16 @@ export class GameTileComponent {
   readonly badge = input('');
   readonly detail = input('');
   readonly foot = input('');
+  readonly ratingAverage = input<number | null>(null);
+  readonly ratingCount = input<number | null>(null);
+
+  ratingLine(): string {
+    const count = this.ratingCount();
+    if (count === null) {
+      return '';
+    }
+    const average = this.ratingAverage();
+    const score = average === null ? '—' : average.toFixed(1);
+    return `${score} · ${count}`;
+  }
 }

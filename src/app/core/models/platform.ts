@@ -162,6 +162,12 @@ export interface MarketplaceGameCard {
   owner: string;
 }
 
+export interface MarketplaceReview {
+  username: string;
+  stars: number;
+  comment: string;
+}
+
 export interface MarketplaceListing {
   id: number;
   slug: string;
@@ -174,6 +180,10 @@ export interface MarketplaceListing {
   published: boolean;
   owned: boolean;
   in_library: boolean;
+  rating_average: number | null;
+  rating_count: number;
+  my_rating: number | null;
+  reviews: MarketplaceReview[];
   created_at: string;
   updated_at: string;
 }
