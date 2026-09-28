@@ -40,6 +40,8 @@ npm start                 # http://localhost:4200
 
 `ng serve` proxies `/api` to the Worker at `http://localhost:8787`. Point `src/environments/environment.ts` at a remote API if needed.
 
+The landing hero loads `public/models/vgc-zero.glb`.
+
 ```bash
 npm run build
 npx wrangler pages deploy dist/chili-platform/browser --project-name=chili-platform

@@ -12,12 +12,12 @@ import { ConsoleStageComponent } from './console-stage';
 export class LandingPageComponent {
   readonly specs = [
     {
-      title: '1.5″ color OLED',
-      body: 'A square 128×128 panel, the native size of a Bitsy room.',
+      title: '1.5″ color OLED screen',
+      body: 'A square display with a resolution of 128×128 pixels.',
     },
     {
-      title: 'RP2350',
-      body: 'The board that runs carts and the tools around them.',
+      title: 'RP2350 MCU',
+      body: 'The brain of the console. Low power, yet high performance.',
     },
     {
       title: 'Four arrow buttons',

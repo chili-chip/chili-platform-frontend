@@ -11,7 +11,7 @@ import {
 import * as THREE from '../../../vendor/three';
 
 import { VgcZeroComponent } from '../../shared/vgc-zero/vgc-zero';
-import { createChiliChip, type ChiliChipRig } from './console-model';
+import { loadVgcZeroModel, type VgcZeroRig } from './console-model';
 
 @Component({
   selector: 'app-console-stage',
@@ -21,6 +21,7 @@ import { createChiliChip, type ChiliChipRig } from './console-model';
 })
 export class ConsoleStageComponent {
   readonly failed = signal(false);
+  readonly loading = signal(true);
 
   private readonly zone = inject(NgZone);
   private readonly destroyRef = inject(DestroyRef);
@@ -28,20 +29,24 @@ export class ConsoleStageComponent {
   private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
 
   private renderer?: THREE.WebGLRenderer;
-  private rig?: ChiliChipRig;
+  private scene?: THREE.Scene;
+  private rig?: VgcZeroRig;
   private raf = 0;
   private reduced = false;
   private dragging = false;
   private lastX = 0;
   private lastY = 0;
-  private yaw = 0.35;
-  private pitch = -0.08;
+  private yaw = 0.12;
+  private pitch = -0.22;
   private bobTime = 0;
   private lastStamp = 0;
-  private readonly camera = new THREE.PerspectiveCamera(30, 1, 0.1, 40);
+  private modelBaseY = 0;
+  private readonly camera = new THREE.PerspectiveCamera(30, 1, 0.01, 200);
 
   constructor() {
-    afterNextRender(() => this.mount());
+    afterNextRender(() => {
+      void this.mount();
+    });
   }
 
   onPointerDown(event: PointerEvent): void {
@@ -71,7 +76,7 @@ export class ConsoleStageComponent {
     this.dragging = false;
   }
 
-  private mount(): void {
+  private async mount(): Promise<void> {
     const canvas = this.canvasRef().nativeElement;
     const reducedQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     this.reduced = reducedQuery.matches;
@@ -84,12 +89,12 @@ export class ConsoleStageComponent {
     try {
       renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     } catch {
-      this.failed.set(true);
+      this.finishLoad(false);
       return;
     }
     if (!renderer.getContext()) {
       renderer.dispose();
-      this.failed.set(true);
+      this.finishLoad(false);
       return;
     }
 
@@ -97,35 +102,54 @@ export class ConsoleStageComponent {
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
+    renderer.toneMappingExposure = 1.15;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer = renderer;
 
     const scene = new THREE.Scene();
-    let rig: ChiliChipRig;
+    this.scene = scene;
+
+    let rig: VgcZeroRig;
     try {
-      rig = createChiliChip();
+      rig = await loadVgcZeroModel();
     } catch {
       renderer.dispose();
-      this.failed.set(true);
+      this.finishLoad(false);
       return;
     }
+    this.finishLoad(true);
     this.rig = rig;
-    rig.setExplode(0);
     scene.add(rig.root);
+
+    rig.root.updateMatrixWorld(true);
+    const bounds = new THREE.Box3().setFromObject(rig.root);
+    const focus = bounds.getCenter(new THREE.Vector3());
+    const sphere = bounds.getBoundingSphere(new THREE.Sphere());
+    const fitDistance =
+      (sphere.radius || 0.5) / Math.sin((this.camera.fov * Math.PI) / 360);
+    this.camera.near = Math.max(0.01, fitDistance / 100);
+    this.camera.far = fitDistance * 20;
+    this.camera.position.set(
+      focus.x + fitDistance * 0.08,
+      focus.y + sphere.radius * 0.35,
+      focus.z + fitDistance * 1.05,
+    );
+    this.camera.lookAt(focus);
+    this.modelBaseY = rig.root.position.y;
+    rig.root.rotation.order = 'YXZ';
 
     const ground = new THREE.Mesh(
       new THREE.PlaneGeometry(8, 8),
       new THREE.ShadowMaterial({ opacity: 0.38 }),
     );
     ground.rotation.x = -Math.PI / 2;
-    ground.position.y = -1.2;
+    ground.position.y = focus.y - sphere.radius * 0.92;
     ground.receiveShadow = true;
     scene.add(ground);
 
-    scene.add(new THREE.AmbientLight(0xc5cedd, 0.55));
-    const key = new THREE.DirectionalLight(0xfff6ee, 3.4);
+    scene.add(new THREE.AmbientLight(0xc5cedd, 0.75));
+    const key = new THREE.DirectionalLight(0xfff6ee, 3.6);
     key.position.set(2.8, 4.6, 4.2);
     key.castShadow = true;
     key.shadow.mapSize.set(1024, 1024);
@@ -136,15 +160,12 @@ export class ConsoleStageComponent {
     key.shadow.camera.top = 2.5;
     key.shadow.camera.bottom = -2.5;
     scene.add(key);
-    const rim = new THREE.DirectionalLight(0xff3b3b, 1.7);
+    const rim = new THREE.DirectionalLight(0xff3b3b, 1.15);
     rim.position.set(-3.5, 1.6, -2.4);
     scene.add(rim);
-    const fill = new THREE.DirectionalLight(0x7dffb3, 0.35);
+    const fill = new THREE.DirectionalLight(0x7dffb3, 0.5);
     fill.position.set(-2.2, 0.4, 3.2);
     scene.add(fill);
-
-    this.camera.position.set(0.05, 0.1, 7.2);
-    this.camera.lookAt(0, 0.05, 0);
 
     const viewport = this.viewportRef().nativeElement;
     const resize = new ResizeObserver(() => this.resize());
@@ -171,6 +192,13 @@ export class ConsoleStageComponent {
     });
   }
 
+  private finishLoad(ok: boolean): void {
+    this.zone.run(() => {
+      this.loading.set(false);
+      this.failed.set(!ok);
+    });
+  }
+
   private resize(): void {
     const renderer = this.renderer;
     const viewport = this.viewportRef().nativeElement;
@@ -186,8 +214,9 @@ export class ConsoleStageComponent {
 
   private frame(now: number): void {
     const renderer = this.renderer;
+    const scene = this.scene;
     const rig = this.rig;
-    if (!renderer || !rig) {
+    if (!renderer || !scene || !rig) {
       return;
     }
     const dt = Math.min(0.05, (now - this.lastStamp) / 1000);
@@ -195,11 +224,9 @@ export class ConsoleStageComponent {
     this.bobTime += dt;
     rig.root.rotation.y = this.yaw;
     rig.root.rotation.x = this.pitch;
-    rig.root.position.y = this.reduced ? 0 : Math.sin(this.bobTime * 1.35) * 0.06;
-    if (!this.reduced) {
-      rig.tickScreen(this.bobTime);
-    }
-    renderer.render(rig.root.parent as THREE.Scene, this.camera);
+    rig.root.position.y =
+      this.modelBaseY + (this.reduced ? 0 : Math.sin(this.bobTime * 1.35) * 0.06);
+    renderer.render(scene, this.camera);
   }
 }
 
