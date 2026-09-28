@@ -25,6 +25,8 @@ export class GamePageComponent implements OnInit {
   readonly buying = signal(false);
   readonly savingRating = signal(false);
   readonly starHover = signal(0);
+  readonly pickedStars = signal(0);
+  readonly comment = signal('');
   readonly error = signal('');
   readonly priceLabel = formatPrice;
   readonly starChoices = [1, 2, 3, 4, 5];
@@ -64,17 +66,24 @@ export class GamePageComponent implements OnInit {
     return listing.in_library && listing.my_rating === null && !this.savingRating();
   }
 
-  rate(listing: MarketplaceListing, stars: number): void {
-    if (!this.canRate(listing)) {
+  shownStars(): number {
+    return this.starHover() || this.pickedStars();
+  }
+
+  rate(listing: MarketplaceListing): void {
+    const stars = this.pickedStars();
+    if (!this.canRate(listing) || stars < 1) {
       return;
     }
     this.savingRating.set(true);
     this.error.set('');
-    this.api.rateMarketplaceListing(listing.slug, stars).subscribe({
+    this.api.rateMarketplaceListing(listing.slug, stars, this.comment()).subscribe({
       next: (updated) => {
         this.listing.set(updated);
         this.savingRating.set(false);
         this.starHover.set(0);
+        this.pickedStars.set(0);
+        this.comment.set('');
       },
       error: (err) => {
         this.savingRating.set(false);

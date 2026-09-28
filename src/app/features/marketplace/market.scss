@@ -52,6 +52,36 @@
   cursor: wait;
 }
 
+.rate {
+  display: grid;
+  gap: 0.55rem;
+  max-width: 40rem;
+}
+
+.reviews {
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.reviews li {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  padding: 0.9rem 1rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.reviews .meta span {
+  color: var(--amber);
+}
+
+.reviews p {
+  white-space: pre-wrap;
+}
+
 .lede {
   max-width: 52ch;
 }

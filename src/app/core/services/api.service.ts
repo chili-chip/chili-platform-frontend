@@ -145,9 +145,10 @@ export class ApiService {
     return this.http.get<MarketplaceListing>(`${this.base}/marketplace/listings/${slug}/`);
   }
 
-  rateMarketplaceListing(slug: string, stars: number) {
+  rateMarketplaceListing(slug: string, stars: number, comment = '') {
     return this.http.post<MarketplaceListing>(`${this.base}/marketplace/listings/${slug}/rating/`, {
       stars,
+      comment,
     });
   }
 
