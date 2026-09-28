@@ -1,8 +1,9 @@
 :host {
   display: block;
   position: sticky;
-  top: 4.05rem;
-  height: calc(100dvh - 4.05rem);
+  top: 50%;
+  translate: 0 -50%;
+  height: calc(100dvh - 10rem);
 }
 
 .viewport {
@@ -60,6 +61,7 @@
   :host {
     position: relative;
     top: auto;
+    translate: none;
     height: 58dvh;
     min-height: 280px;
   }
