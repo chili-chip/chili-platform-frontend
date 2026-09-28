@@ -29,6 +29,9 @@
     @if (detail()) {
       <p class="muted">{{ detail() }}</p>
     }
+    @if (ratingCount() !== null) {
+      <p class="rating">{{ ratingLine() }}</p>
+    }
     @if (foot()) {
       <strong class="foot">{{ foot() }}</strong>
     }

@@ -174,6 +174,9 @@ export interface MarketplaceListing {
   published: boolean;
   owned: boolean;
   in_library: boolean;
+  rating_average: number | null;
+  rating_count: number;
+  my_rating: number | null;
   created_at: string;
   updated_at: string;
 }

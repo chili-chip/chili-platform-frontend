@@ -23,6 +23,35 @@
   color: var(--muted);
 }
 
+.rating-summary {
+  color: var(--amber);
+  font-size: 0.85rem;
+}
+
+.yours {
+  color: var(--amber);
+  font-size: 0.85rem;
+}
+
+.stars {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.stars button {
+  background: transparent;
+  border: 0;
+  color: var(--amber);
+  font-size: 1.35rem;
+  line-height: 1;
+  padding: 0.1rem 0.15rem;
+  cursor: pointer;
+}
+
+.stars button:disabled {
+  cursor: wait;
+}
+
 .lede {
   max-width: 52ch;
 }

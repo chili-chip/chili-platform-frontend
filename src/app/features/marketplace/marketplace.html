@@ -86,6 +86,8 @@
             [meta]="listing.category.name"
             [badge]="listing.owned ? 'Owned' : ''"
             [detail]="'by ' + listing.game.owner"
+            [ratingAverage]="listing.rating_average"
+            [ratingCount]="listing.rating_count"
             [foot]="priceLabel(listing.price_cents, listing.currency)"
           />
         </li>

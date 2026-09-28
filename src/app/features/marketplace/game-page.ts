@@ -23,8 +23,11 @@ export class GamePageComponent implements OnInit {
   readonly game = signal<GameProject | null>(null);
   readonly loading = signal(true);
   readonly buying = signal(false);
+  readonly savingRating = signal(false);
+  readonly starHover = signal(0);
   readonly error = signal('');
   readonly priceLabel = formatPrice;
+  readonly starChoices = [1, 2, 3, 4, 5];
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -45,6 +48,39 @@ export class GamePageComponent implements OnInit {
 
   ownerName(): string {
     return this.listing()?.game.owner ?? this.game()?.owner ?? '';
+  }
+
+  ratingSummary(listing: MarketplaceListing): string {
+    const score = listing.rating_average === null ? '—' : listing.rating_average.toFixed(1);
+    const label = listing.rating_count === 1 ? 'rating' : 'ratings';
+    return `${score} · ${listing.rating_count} ${label}`;
+  }
+
+  filledStars(count: number): string {
+    return '★★★★★☆☆☆☆☆'.slice(5 - count, 10 - count);
+  }
+
+  canRate(listing: MarketplaceListing): boolean {
+    return listing.in_library && listing.my_rating === null && !this.savingRating();
+  }
+
+  rate(listing: MarketplaceListing, stars: number): void {
+    if (!this.canRate(listing)) {
+      return;
+    }
+    this.savingRating.set(true);
+    this.error.set('');
+    this.api.rateMarketplaceListing(listing.slug, stars).subscribe({
+      next: (updated) => {
+        this.listing.set(updated);
+        this.savingRating.set(false);
+        this.starHover.set(0);
+      },
+      error: (err) => {
+        this.savingRating.set(false);
+        this.error.set(marketError(err, 'Could not save your rating.'));
+      },
+    });
   }
 
   ownReleased(): boolean {

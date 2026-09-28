@@ -145,6 +145,12 @@ export class ApiService {
     return this.http.get<MarketplaceListing>(`${this.base}/marketplace/listings/${slug}/`);
   }
 
+  rateMarketplaceListing(slug: string, stars: number) {
+    return this.http.post<MarketplaceListing>(`${this.base}/marketplace/listings/${slug}/rating/`, {
+      stars,
+    });
+  }
+
   createMarketplaceListing(body: {
     game: number;
     price_cents: number;
