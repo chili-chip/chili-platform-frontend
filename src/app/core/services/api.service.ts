@@ -6,6 +6,8 @@ import {
   ForumCategory,
   ForumComment,
   ForumPost,
+  GameAssistResult,
+  GameAssistTurn,
   GameProject,
   Paginated,
   MarketplaceAccount,
@@ -89,6 +91,13 @@ export class ApiService {
       return this.http.put<GameProject>(`${this.base}/games/${id}/`, payload);
     }
     return this.http.post<GameProject>(`${this.base}/games/`, payload);
+  }
+
+  assistGame(
+    id: number | string,
+    body: { message: string; history?: GameAssistTurn[] },
+  ) {
+    return this.http.post<GameAssistResult>(`${this.base}/games/${id}/assist/`, body);
   }
 
   listProducts() {

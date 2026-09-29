@@ -12,6 +12,17 @@ export interface GameProject {
   updated_at: string;
 }
 
+export interface GameAssistTurn {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+export interface GameAssistResult {
+  reply: string;
+  data?: string;
+  error?: string;
+}
+
 export interface UserProfile {
   id: number;
   username: string;

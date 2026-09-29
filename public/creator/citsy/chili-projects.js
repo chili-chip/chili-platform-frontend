@@ -417,6 +417,42 @@
     });
   }
 
+  window.addEventListener("message", function (event) {
+    if (event.origin !== window.location.origin || event.source !== window.parent) {
+      return;
+    }
+    var data = event.data;
+    if (!data || typeof data !== "object") {
+      return;
+    }
+    if (data.type === "chili-assistant-read") {
+      var snapshot = "";
+      var ready = false;
+      try {
+        if (typeof serializeWorld === "function") {
+          snapshot = serializeWorld();
+          ready = booted;
+        }
+      } catch (err) {
+        ready = false;
+      }
+      window.parent.postMessage(
+        { type: "chili-assistant-snapshot", data: snapshot, ready: ready },
+        window.location.origin
+      );
+      return;
+    }
+    if (data.type === "chili-assistant-apply") {
+      if (typeof data.data !== "string" || !data.data) {
+        return;
+      }
+      applyGame(data.data);
+      // applyGame holds `applying` while the editor reloads, so the autosave
+      // inside that reload is skipped. Schedule it once the apply finishes.
+      scheduleSave();
+    }
+  });
+
   window.ChiliProjects = {
     save: save,
     remove: remove,
