@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, OnDestroy, effect, inject, input, signal, viewChild } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, TimeoutError, timeout } from 'rxjs';
 
 import { GameAssistResult, GameAssistTurn } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
@@ -132,17 +132,17 @@ export class CreatorComponent implements OnDestroy {
         return;
       }
       if (!ready) {
-        this.turns.update((turns) => turns.slice(0, -1));
-        this.draft.set(message);
-        this.note.set('The editor is not ready yet.');
-        this.sending.set(false);
+        this.addAssistant('The editor is not ready yet. Wait for the project to load, then send again.');
         return;
       }
       this.assistSub?.unsubscribe();
-      this.assistSub = this.api.assistGame(id, { message, history }).subscribe({
-        next: (body) => this.finishAssist(body),
-        error: (err: HttpErrorResponse) => this.failAssist(err),
-      });
+      this.assistSub = this.api
+        .assistGame(id, { message, history })
+        .pipe(timeout(60_000))
+        .subscribe({
+          next: (body) => this.finishAssist(body),
+          error: (err: unknown) => this.failAssist(err),
+        });
     });
   }
 
@@ -155,18 +155,37 @@ export class CreatorComponent implements OnDestroy {
   }
 
   private confirmEditor(): Promise<boolean> {
+    const waitMs = 8000;
     return new Promise((resolve) => {
-      window.clearTimeout(this.snapshotTimer);
-      this.snapshotTimer = window.setTimeout(() => {
-        this.snapshotWait = null;
-        resolve(false);
-      }, 4000);
-      this.snapshotWait = (ready: boolean) => {
+      const started = Date.now();
+      const attempt = (): void => {
+        if (this.destroyed) {
+          resolve(false);
+          return;
+        }
+        const remaining = waitMs - (Date.now() - started);
+        if (remaining <= 0) {
+          this.snapshotWait = null;
+          resolve(false);
+          return;
+        }
         window.clearTimeout(this.snapshotTimer);
-        this.snapshotWait = null;
-        resolve(ready);
+        this.snapshotTimer = window.setTimeout(() => {
+          this.snapshotWait = null;
+          resolve(false);
+        }, remaining);
+        this.snapshotWait = (ready: boolean) => {
+          if (!ready) {
+            window.setTimeout(attempt, 250);
+            return;
+          }
+          window.clearTimeout(this.snapshotTimer);
+          this.snapshotWait = null;
+          resolve(true);
+        };
+        this.postToEditor({ type: 'chili-assistant-read' });
       };
-      this.postToEditor({ type: 'chili-assistant-read' });
+      attempt();
     });
   }
 
@@ -182,15 +201,30 @@ export class CreatorComponent implements OnDestroy {
     this.sending.set(false);
   }
 
-  private failAssist(err: HttpErrorResponse): void {
-    const body = (err.error ?? {}) as { reply?: unknown; error?: unknown; detail?: unknown };
+  private failAssist(err: unknown): void {
+    if (err instanceof TimeoutError || (err instanceof HttpErrorResponse && err.status === 0)) {
+      this.addAssistant(
+        'The API did not answer. Start it with `npm run dev`. For a live Bitsy reply, run `npx wrangler login`, then `npm run dev:ai`.',
+      );
+      return;
+    }
+    const http = err instanceof HttpErrorResponse ? err : null;
+    const body = (http?.error ?? {}) as { reply?: unknown; error?: unknown; detail?: unknown };
     const reply = typeof body.reply === 'string' ? body.reply.trim() : '';
     const problem =
       (typeof body.error === 'string' && body.error) ||
       (typeof body.detail === 'string' && body.detail) ||
-      'The assistant could not answer.';
+      (http && http.status >= 500
+        ? 'The API could not answer. If Workers AI is not logged in, run `npx wrangler login`, then `npm run dev:ai`.'
+        : 'The assistant could not answer.');
     this.turns.update((turns) => [...turns, { role: 'assistant', content: reply || problem }]);
     this.note.set(reply && problem !== reply ? problem : '');
+    this.sending.set(false);
+  }
+
+  private addAssistant(content: string): void {
+    this.turns.update((turns) => [...turns, { role: 'assistant', content }]);
+    this.note.set('');
     this.sending.set(false);
   }
 

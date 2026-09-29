@@ -339,7 +339,11 @@
 
   var editorStart = start;
   start = function () {
-    editorStart();
+    try {
+      editorStart();
+    } catch (err) {
+      console.warn(err);
+    }
     var pending = projectId ? load(projectId) : Promise.resolve();
     pending.then(function () {
       booted = true;
@@ -347,7 +351,7 @@
       return refresh();
     }).catch(function (err) {
       booted = true;
-      window.alert(err && err.message ? err.message : "could not open this project");
+      statusText = err && err.message ? err.message : "could not open this project";
       emit();
     });
   };
@@ -427,17 +431,15 @@
     }
     if (data.type === "chili-assistant-read") {
       var snapshot = "";
-      var ready = false;
       try {
         if (typeof serializeWorld === "function") {
-          snapshot = serializeWorld();
-          ready = booted;
+          snapshot = serializeWorld() || "";
         }
       } catch (err) {
-        ready = false;
+        snapshot = "";
       }
       window.parent.postMessage(
-        { type: "chili-assistant-snapshot", data: snapshot, ready: ready },
+        { type: "chili-assistant-snapshot", data: snapshot, ready: booted },
         window.location.origin
       );
       return;
