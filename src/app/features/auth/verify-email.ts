@@ -15,7 +15,6 @@ export class VerifyEmailComponent implements OnInit {
 
   readonly message = signal('');
   readonly error = signal('');
-  readonly devLink = signal(readVerificationUrl());
   readonly busy = signal(false);
 
   ngOnInit(): void {
@@ -48,9 +47,6 @@ export class VerifyEmailComponent implements OnInit {
       next: (response) => {
         this.busy.set(false);
         this.message.set(response.detail);
-        if (response.verification_url) {
-          this.devLink.set(response.verification_url);
-        }
       },
       error: (err: { error?: { detail?: string } }) => {
         this.busy.set(false);
@@ -58,9 +54,4 @@ export class VerifyEmailComponent implements OnInit {
       },
     });
   }
-}
-
-function readVerificationUrl(): string {
-  const state = history.state as { verificationUrl?: string } | null;
-  return state?.verificationUrl || '';
 }

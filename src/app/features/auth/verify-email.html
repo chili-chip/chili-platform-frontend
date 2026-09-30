@@ -6,9 +6,6 @@
   } @else {
     <p class="note">Open the link in your email, or send another one if you are signed in.</p>
   }
-  @if (devLink()) {
-    <p class="note">Local link: <a [href]="devLink()">{{ devLink() }}</a></p>
-  }
   @if (error()) {
     <p class="err">{{ error() }}</p>
   }

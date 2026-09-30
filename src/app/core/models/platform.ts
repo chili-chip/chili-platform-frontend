@@ -29,7 +29,6 @@ export interface AuthTokens {
 
 export interface AuthResponse extends AuthTokens {
   user: UserProfile;
-  verification_url?: string;
 }
 
 export interface Paginated<T> {

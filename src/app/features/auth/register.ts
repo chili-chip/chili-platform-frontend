@@ -33,10 +33,7 @@ export class RegisterComponent {
     }
     this.error.set('');
     this.auth.register(this.form.getRawValue()).subscribe({
-      next: (response) =>
-        void this.router.navigate(['/verify-email'], {
-          state: { verificationUrl: response.verification_url ?? '' },
-        }),
+      next: () => void this.router.navigate(['/verify-email']),
       error: (err: HttpErrorResponse) => {
         const password = err.error?.password;
         if (Array.isArray(password) && typeof password[0] === 'string') {

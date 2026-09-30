@@ -97,17 +97,11 @@ export class AuthService {
   }
 
   resendVerification() {
-    return this.http.post<{ detail: string; verification_url?: string }>(
-      `${environment.apiUrl}/auth/verify-email/resend/`,
-      {},
-    );
+    return this.http.post<{ detail: string }>(`${environment.apiUrl}/auth/verify-email/resend/`, {});
   }
 
   requestPasswordReset(email: string) {
-    return this.http.post<{ detail: string; reset_url?: string }>(
-      `${environment.apiUrl}/auth/password/reset/`,
-      { email },
-    );
+    return this.http.post<{ detail: string }>(`${environment.apiUrl}/auth/password/reset/`, { email });
   }
 
   confirmPasswordReset(payload: { uid: string; token: string; password: string }) {
