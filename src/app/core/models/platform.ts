@@ -16,6 +16,7 @@ export interface UserProfile {
   id: number;
   username: string;
   email?: string;
+  email_verified?: boolean;
   avatar_url: string;
   bio: string;
   created_at: string;
@@ -28,6 +29,7 @@ export interface AuthTokens {
 
 export interface AuthResponse extends AuthTokens {
   user: UserProfile;
+  verification_url?: string;
 }
 
 export interface Paginated<T> {

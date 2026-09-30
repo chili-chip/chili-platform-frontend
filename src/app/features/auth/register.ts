@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -32,12 +33,23 @@ export class RegisterComponent {
     }
     this.error.set('');
     this.auth.register(this.form.getRawValue()).subscribe({
-      next: () => void this.router.navigateByUrl(this.nextUrl()),
-      error: () => this.error.set('Registration failed. Try a different username or email.'),
+      next: (response) =>
+        void this.router.navigate(['/verify-email'], {
+          state: { verificationUrl: response.verification_url ?? '' },
+        }),
+      error: (err: HttpErrorResponse) => {
+        const password = err.error?.password;
+        if (Array.isArray(password) && typeof password[0] === 'string') {
+          this.error.set(password.join(' '));
+          return;
+        }
+        const detail = err.error?.detail;
+        this.error.set(
+          typeof detail === 'string'
+            ? detail
+            : 'Registration failed. Try a different username or email.',
+        );
+      },
     });
-  }
-
-  private nextUrl(): string {
-    return this.auth.safeReturnUrl(this.route.snapshot.queryParamMap.get('next')) ?? '/community';
   }
 }

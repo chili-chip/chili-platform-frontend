@@ -1,0 +1,21 @@
+<section class="auth">
+  <p class="kicker">Account</p>
+  <h1>Verify email</h1>
+  @if (message()) {
+    <p>{{ message() }}</p>
+  } @else {
+    <p class="note">Open the link in your email, or send another one if you are signed in.</p>
+  }
+  @if (devLink()) {
+    <p class="note">Local link: <a [href]="devLink()">{{ devLink() }}</a></p>
+  }
+  @if (error()) {
+    <p class="err">{{ error() }}</p>
+  }
+  @if (auth.isAuthenticated() && auth.currentUser()?.email_verified !== true) {
+    <button class="btn primary" type="button" (click)="resend()" [disabled]="busy()">
+      Send a new link
+    </button>
+  }
+  <p class="switch"><a routerLink="/login">Sign in</a></p>
+</section>

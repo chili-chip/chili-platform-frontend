@@ -133,6 +133,24 @@ export const routes: Routes = [
     title: 'Create account',
   },
   {
+    path: 'verify-email',
+    loadComponent: () =>
+      import('./features/auth/verify-email').then((m) => m.VerifyEmailComponent),
+    title: 'Verify email',
+  },
+  {
+    path: 'forgot-password',
+    loadComponent: () =>
+      import('./features/auth/forgot-password').then((m) => m.ForgotPasswordComponent),
+    title: 'Forgot password',
+  },
+  {
+    path: 'reset-password',
+    loadComponent: () =>
+      import('./features/auth/reset-password').then((m) => m.ResetPasswordComponent),
+    title: 'Reset password',
+  },
+  {
     path: 'profile/:username/listing',
     canActivate: [authGuard],
     loadComponent: () => import('./features/profile/listing').then((m) => m.ListingComponent),

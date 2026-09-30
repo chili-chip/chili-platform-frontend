@@ -24,6 +24,9 @@ Angular client for **Chili Platform**: store, community, creator, and marketplac
 | `/community` | Forum categories + threads |
 | `/community/post/:id` | Thread + comments |
 | `/login` `/register` | Auth |
+| `/verify-email` | Confirm the link from the verification email, or resend it |
+| `/forgot-password` | Ask for a password reset link |
+| `/reset-password` | Set a new password from the reset link |
 | `/profile/:username` | Tabs for your orders, library, and projects. A public profile shows released games |
 | `/profile/:username/listing` | List a released game (your profile only) |
 

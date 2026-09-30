@@ -89,12 +89,42 @@ export class AuthService {
     return this.refreshInFlight;
   }
 
+  verifyEmail(uid: string, token: string) {
+    return this.http.post<{ detail: string }>(`${environment.apiUrl}/auth/verify-email/`, {
+      uid,
+      token,
+    });
+  }
+
+  resendVerification() {
+    return this.http.post<{ detail: string; verification_url?: string }>(
+      `${environment.apiUrl}/auth/verify-email/resend/`,
+      {},
+    );
+  }
+
+  requestPasswordReset(email: string) {
+    return this.http.post<{ detail: string; reset_url?: string }>(
+      `${environment.apiUrl}/auth/password/reset/`,
+      { email },
+    );
+  }
+
+  confirmPasswordReset(payload: { uid: string; token: string; password: string }) {
+    return this.http.post<{ detail: string }>(
+      `${environment.apiUrl}/auth/password/reset/confirm/`,
+      payload,
+    );
+  }
+
   logout(navigate = true): void {
-    localStorage.removeItem(ACCESS_KEY);
-    localStorage.removeItem(REFRESH_KEY);
-    localStorage.removeItem(USER_KEY);
-    this.accessToken.set(null);
-    this.currentUser.set(null);
+    const refresh = localStorage.getItem(REFRESH_KEY);
+    this.clearSession();
+    if (refresh) {
+      this.http.post(`${environment.apiUrl}/auth/logout/`, { refresh }).subscribe({
+        error: () => undefined,
+      });
+    }
     if (navigate) {
       void this.router.navigate(['/']);
     }
@@ -123,6 +153,14 @@ export class AuthService {
       next: () => this.bootstrapped.set(true),
       error: () => this.bootstrapped.set(true),
     });
+  }
+
+  private clearSession(): void {
+    localStorage.removeItem(ACCESS_KEY);
+    localStorage.removeItem(REFRESH_KEY);
+    localStorage.removeItem(USER_KEY);
+    this.accessToken.set(null);
+    this.currentUser.set(null);
   }
 
   private persistSession(response: AuthResponse): void {
