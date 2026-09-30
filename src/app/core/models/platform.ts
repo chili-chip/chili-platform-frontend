@@ -17,12 +17,6 @@ export interface GameAssistTurn {
   content: string;
 }
 
-export interface GameAssistResult {
-  reply: string;
-  data?: string;
-  error?: string;
-}
-
 export interface UserProfile {
   id: number;
   username: string;

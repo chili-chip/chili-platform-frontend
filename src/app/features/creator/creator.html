@@ -7,7 +7,12 @@
       @if (chatOpen()) {
         <header class="assistant__bar">
           <p class="kicker">Bitsy</p>
-          <button type="button" class="assistant__toggle" (click)="chatOpen.set(false)">Hide</button>
+          <span class="assistant__actions">
+            @if (undoText()) {
+              <button type="button" class="assistant__undo" (click)="undo()" [disabled]="sending()">Undo</button>
+            }
+            <button type="button" class="assistant__toggle" (click)="chatOpen.set(false)">Hide</button>
+          </span>
         </header>
         <div class="assistant__log" aria-live="polite">
           @if (turns().length === 0) {

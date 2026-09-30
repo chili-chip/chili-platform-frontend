@@ -91,9 +91,14 @@
       return;
     }
     applying = true;
-    Store.set("game_data", data);
-    on_game_data_change();
-    applying = false;
+    try {
+      Store.set("game_data", data);
+      on_game_data_change();
+    } catch (err) {
+      // The world is already loaded. Reselecting the paint tool can throw.
+    } finally {
+      applying = false;
+    }
   }
 
   function emit() {
@@ -448,10 +453,13 @@
       if (typeof data.data !== "string" || !data.data) {
         return;
       }
-      applyGame(data.data);
-      // applyGame holds `applying` while the editor reloads, so the autosave
-      // inside that reload is skipped. Schedule it once the apply finishes.
-      scheduleSave();
+      try {
+        applyGame(data.data);
+      } finally {
+        // The reload sets `applying`, so its own autosave is skipped. Schedule
+        // one after it finishes, even if a paint tool throws while reselecting.
+        scheduleSave();
+      }
     }
   });
 
