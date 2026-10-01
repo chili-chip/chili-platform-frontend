@@ -43,6 +43,15 @@ textarea {
   color: var(--phosphor);
 }
 
+.note {
+  margin: 0.8rem 0;
+  color: var(--muted);
+}
+
+.note a {
+  color: var(--phosphor);
+}
+
 .err {
   color: var(--chili-hot);
 }

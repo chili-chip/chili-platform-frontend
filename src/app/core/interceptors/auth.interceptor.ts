@@ -50,5 +50,8 @@ function withAuth(req: HttpRequest<unknown>, token: string | null): HttpRequest<
 }
 
 function isAnonymousAuthUrl(url: string): boolean {
-  return /\/auth\/(token|register)(\/|$|\?)/.test(url);
+  return (
+    /\/auth\/(token|register|logout|password)(\/|$|\?)/.test(url) ||
+    /\/auth\/verify-email\/?(\?|$)/.test(url)
+  );
 }

@@ -14,6 +14,13 @@
     }
   </header>
 
+  @if (auth.isAuthenticated() && auth.currentUser()?.email_verified === false) {
+    <p class="lede">
+      Verify your email before posting.
+      <a routerLink="/verify-email">Send a new link</a>
+    </p>
+  }
+
   <div class="cats">
     <button type="button" class="chip" [class.is-on]="!activeCategory()" (click)="filterBy()">
       All

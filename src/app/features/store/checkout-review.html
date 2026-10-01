@@ -10,6 +10,13 @@
     </div>
   </header>
 
+  @if (auth.isAuthenticated() && auth.currentUser()?.email_verified === false) {
+    <p class="lede">
+      Verify your email before checkout.
+      <a routerLink="/verify-email">Send a new link</a>
+    </p>
+  }
+
   @if (!cart.count()) {
     <div class="empty">
       <p>Your cart is empty. Grab a kit or shell first.</p>

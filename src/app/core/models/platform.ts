@@ -16,6 +16,7 @@ export interface UserProfile {
   id: number;
   username: string;
   email?: string;
+  email_verified?: boolean;
   avatar_url: string;
   bio: string;
   created_at: string;
