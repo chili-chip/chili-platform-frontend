@@ -1,3 +1,48 @@
-@if (editorSrc(); as src) {
-  <iframe class="creator-frame" title="Chili game creator" [src]="src"></iframe>
-}
+<div class="creator-shell">
+  @if (editorSrc(); as src) {
+    <iframe #editor class="creator-frame" title="Chili game creator" [src]="src"></iframe>
+  }
+  @if (projectId()) {
+    <aside class="assistant" [class.is-collapsed]="!chatOpen()">
+      @if (chatOpen()) {
+        <header class="assistant__bar">
+          <p class="kicker">Bitsy</p>
+          <span class="assistant__actions">
+            @if (undoText()) {
+              <button type="button" class="assistant__undo" (click)="undo()" [disabled]="sending()">Undo</button>
+            }
+            <button type="button" class="assistant__toggle" (click)="chatOpen.set(false)">Hide</button>
+          </span>
+        </header>
+        <div class="assistant__log" aria-live="polite">
+          @if (turns().length === 0) {
+            <p class="assistant__empty">Ask for a room, a sprite, or a line of dialog.</p>
+          }
+          @for (turn of turns(); track $index) {
+            <p class="assistant__turn" [class.is-user]="turn.role === 'user'">{{ turn.content }}</p>
+          }
+        </div>
+        @if (note()) {
+          <p class="assistant__note">{{ note() }}</p>
+        }
+        <form class="assistant__form" (submit)="$event.preventDefault(); send()">
+          <label class="assistant__label" for="bitsy-prompt">Message</label>
+          <textarea
+            id="bitsy-prompt"
+            rows="3"
+            [value]="draft()"
+            [disabled]="sending()"
+            placeholder="Describe a change"
+            (input)="onDraft($event)"
+            (keydown)="onDraftKey($event)"
+          ></textarea>
+          <button type="submit" class="btn primary" [disabled]="sending() || !draft().trim()">
+            {{ sending() ? 'Sending' : 'Send' }}
+          </button>
+        </form>
+      } @else {
+        <button type="button" class="assistant__open" (click)="chatOpen.set(true)">Bitsy</button>
+      }
+    </aside>
+  }
+</div>
