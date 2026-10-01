@@ -123,6 +123,24 @@ export const routes: Routes = [
     title: 'Thread',
   },
   {
+    path: 'terms',
+    loadComponent: () =>
+      import('./features/legal/legal-page').then((m) => m.TermsPageComponent),
+    title: 'Terms of Service',
+  },
+  {
+    path: 'privacy',
+    loadComponent: () =>
+      import('./features/legal/legal-page').then((m) => m.PrivacyPageComponent),
+    title: 'Privacy Policy',
+  },
+  {
+    path: 'seller-terms',
+    loadComponent: () =>
+      import('./features/legal/legal-page').then((m) => m.SellerTermsPageComponent),
+    title: 'Seller terms',
+  },
+  {
     path: 'login',
     loadComponent: () => import('./features/auth/login').then((m) => m.LoginComponent),
     title: 'Sign in',

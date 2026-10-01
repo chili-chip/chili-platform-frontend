@@ -1,0 +1,113 @@
+<article class="page">
+  <div class="sheet">
+    <p class="draft" role="note">
+      Draft for Kacper to review. This is not a lawyer-approved document. Replace every highlighted
+      placeholder before treating this page as final.
+    </p>
+    <p class="kicker">Chili Platform</p>
+    <h1>Privacy policy</h1>
+    <p>
+      This policy describes what Chili Platform stores about an account, a game, a forum post, a
+      checkout, and a creator payout. It is written to match the service as it runs today. Account
+      rules are in the <a routerLink="/terms">terms of service</a>. Marketplace sales are in the
+      <a routerLink="/seller-terms">seller terms</a>.
+    </p>
+    <p>
+      The operator is <mark>[OPERATOR LEGAL NAME]</mark>, <mark>[OPERATOR POSTAL ADDRESS]</mark>.
+      Privacy questions go to <mark>[PRIVACY CONTACT EMAIL]</mark>. This policy is effective on
+      <mark>[EFFECTIVE DATE]</mark>.
+    </p>
+
+    <h2>Account email</h2>
+    <p>
+      Registration stores your email address. It is unique on the service. Chili uses it to sign you
+      in, to send the verification link, and to send a password reset link when one is requested.
+      The public profile does not show the email address.
+    </p>
+
+    <h2>Profile</h2>
+    <p>
+      The profile stores your username, a short bio, and an avatar URL when you set one. The public
+      profile shows the username, the bio, the avatar URL, and when the account was created.
+    </p>
+
+    <h2>Games and covers</h2>
+    <p>
+      Game projects, including the Bitsy file, are stored in Cloudflare D1. Cover images are PNG
+      files stored in Cloudflare R2 and served from the site's <code>/media/</code> path. A released
+      game's title, owner, and cover are public. The game file is returned to the owner and to
+      someone who has the game in their library.
+    </p>
+
+    <h2>Forum posts</h2>
+    <p>
+      Forum posts and comments are stored in Cloudflare D1. They are readable without an account.
+      Each one is tied to the username that wrote it.
+    </p>
+
+    <h2>Stripe customer id</h2>
+    <p>
+      When checkout creates a Stripe customer for your account, Chili stores that Stripe customer id
+      on the account. It is an identifier Stripe assigns. It is not your card number.
+    </p>
+
+    <h2>Checkout</h2>
+    <p>
+      Game purchases and kit orders are paid through Stripe Checkout. Stripe collects the card
+      details. Chili does not store the card number.
+    </p>
+    <p>
+      A game purchase uses the email on your account and the listed price. Chili records the
+      purchase, the price, and the payment status.
+    </p>
+    <p>
+      A kit order also asks Stripe Checkout for a shipping address. Chili stores that address and
+      the email on the order so the kit can be sent. Kit sales are Chili's own sales. They are
+      separate from creator payouts.
+    </p>
+
+    <h2>Connect identity</h2>
+    <p>
+      Creator payout setup uses Stripe Connect inside the Chili sales page. Stripe collects identity
+      and bank details there. Chili's own forms do not collect that information. Chili stores the
+      connected account id Stripe assigns, and the transfer and payout status Stripe reports.
+    </p>
+
+    <h2>Cloudflare request logs</h2>
+    <p>
+      The API runs on Cloudflare Workers with observability turned on at a full sample rate.
+      Cloudflare therefore keeps request logs for the API. Those logs can include the request path,
+      timing, and the network data Cloudflare records for a Worker request.
+    </p>
+
+    <h2>What stays in the browser</h2>
+    <p>
+      After you sign in, the site stores the access token and the refresh token in the browser's
+      local storage so later visits stay signed in. Signing out deletes them from that browser.
+    </p>
+
+    <h2>Who else receives it</h2>
+    <p>
+      Stripe receives what Checkout and Connect need to take a payment or pay a creator. Cloudflare
+      receives the request data described above because it hosts the API, the database, the file
+      bucket, and the site. Chili uses those companies to run the service.
+    </p>
+    <p>
+      <mark>[OTHER RECIPIENTS]</mark>. Say whether anyone else receives personal information,
+      including whether Chili sells it or shares it for advertising. This draft does not describe
+      any sale or advertising share.
+    </p>
+
+    <h2>How long it is kept</h2>
+    <p>
+      <mark>[DATA RETENTION PERIOD]</mark>. Say how long Chili keeps the account, games, covers,
+      forum posts, orders, and payout records, and what happens when an account is closed.
+    </p>
+
+    <h2>Your requests</h2>
+    <p>
+      <mark>[PRIVACY REQUESTS]</mark>. Say how someone asks for a copy, a correction, or a deletion,
+      and which requests Chili will fulfill.
+    </p>
+  </div>
+</article>

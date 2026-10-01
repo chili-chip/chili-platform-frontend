@@ -1,0 +1,26 @@
+<div class="veil" role="dialog" aria-modal="true" aria-labelledby="legal-prompt-title">
+  <section class="card">
+    <p class="kicker">Account</p>
+    <h2 id="legal-prompt-title">Accept the terms to continue</h2>
+    <p>
+      This account does not yet have a record of accepting the terms of service and the privacy
+      policy. That happens once. The pages are drafts pending review.
+    </p>
+    <p class="links">
+      <a routerLink="/terms">Terms of service</a>
+      <a routerLink="/privacy">Privacy policy</a>
+    </p>
+    <label class="checks">
+      <input
+        type="checkbox"
+        [checked]="agreed()"
+        (change)="agreed.set($any($event.target).checked)"
+      />
+      <span>I am able to enter a contract, and I agree to the terms of service and the privacy policy.</span>
+    </label>
+    @if (error()) {
+      <p class="err">{{ error() }}</p>
+    }
+    <button class="btn primary" type="button" [disabled]="busy()" (click)="submit()">Continue</button>
+  </section>
+</div>

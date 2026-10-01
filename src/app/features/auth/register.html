@@ -18,6 +18,15 @@
       Bio
       <textarea formControlName="bio" rows="3"></textarea>
     </label>
+    <label class="checks">
+      <input type="checkbox" formControlName="acceptTerms" />
+      <span>
+        I am able to enter a contract, and I agree to the
+        <a routerLink="/terms" (click)="$event.stopPropagation()">terms of service</a>
+        and the
+        <a routerLink="/privacy" (click)="$event.stopPropagation()">privacy policy</a>.
+      </span>
+    </label>
     @if (error()) {
       <p class="err">{{ error() }}</p>
     }
