@@ -24,29 +24,47 @@ export class RegisterComponent {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     bio: [''],
+    acceptTerms: [false, Validators.requiredTrue],
   });
 
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      if (this.form.controls.acceptTerms.invalid) {
+        this.error.set('Accept the terms of service and privacy policy to create an account.');
+      }
       return;
     }
     this.error.set('');
-    this.auth.register(this.form.getRawValue()).subscribe({
-      next: () => void this.router.navigate(['/verify-email']),
-      error: (err: HttpErrorResponse) => {
-        const password = err.error?.password;
-        if (Array.isArray(password) && typeof password[0] === 'string') {
-          this.error.set(password.join(' '));
-          return;
-        }
-        const detail = err.error?.detail;
-        this.error.set(
-          typeof detail === 'string'
-            ? detail
-            : 'Registration failed. Try a different username or email.',
-        );
-      },
-    });
+    const value = this.form.getRawValue();
+    this.auth
+      .register({
+        username: value.username,
+        email: value.email,
+        password: value.password,
+        bio: value.bio,
+        accept_terms: value.acceptTerms,
+      })
+      .subscribe({
+        next: () => void this.router.navigate(['/verify-email']),
+        error: (err: HttpErrorResponse) => {
+          const accepted = err.error?.accept_terms;
+          if (Array.isArray(accepted) && typeof accepted[0] === 'string') {
+            this.error.set(accepted.join(' '));
+            return;
+          }
+          const password = err.error?.password;
+          if (Array.isArray(password) && typeof password[0] === 'string') {
+            this.error.set(password.join(' '));
+            return;
+          }
+          const detail = err.error?.detail;
+          this.error.set(
+            typeof detail === 'string'
+              ? detail
+              : 'Registration failed. Try a different username or email.',
+          );
+        },
+      });
   }
 }

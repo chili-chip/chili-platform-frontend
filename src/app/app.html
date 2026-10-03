@@ -2,6 +2,9 @@
 <main class="shell" [class.shell--creator]="isCreator()">
   <router-outlet />
 </main>
+@if (needsLegalAcceptance()) {
+  <app-legal-prompt />
+}
 @if (!isCreator()) {
   <app-site-footer />
 }

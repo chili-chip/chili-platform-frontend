@@ -19,6 +19,9 @@ export interface UserProfile {
   email_verified?: boolean;
   avatar_url: string;
   bio: string;
+  terms_accepted_at?: string | null;
+  privacy_accepted_at?: string | null;
+  seller_terms_accepted_at?: string | null;
   created_at: string;
 }
 
