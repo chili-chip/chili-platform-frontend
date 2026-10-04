@@ -52,7 +52,7 @@
         </label>
         @if (!free()) {
           <label>
-            Price (USD, at least $1)
+            Price (EUR, at least €1)
             <input [value]="price()" (input)="price.set($any($event.target).value)" inputmode="decimal" />
           </label>
         }

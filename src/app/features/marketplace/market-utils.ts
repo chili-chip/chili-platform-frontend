@@ -1,13 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 
-export function formatMoney(cents: number, currency = 'usd'): string {
+export function formatMoney(cents: number, currency = 'eur'): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currency.toUpperCase(),
   }).format(cents / 100);
 }
 
-export function formatPrice(cents: number, currency = 'usd'): string {
+export function formatPrice(cents: number, currency = 'eur'): string {
   if (cents <= 0) {
     return 'Free';
   }

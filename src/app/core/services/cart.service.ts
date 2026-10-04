@@ -11,7 +11,7 @@ export class CartService {
   readonly totalCents = computed(() =>
     this.items().reduce((sum, line) => sum + line.product.price_cents * line.quantity, 0),
   );
-  readonly currency = computed(() => this.items()[0]?.product.currency || 'usd');
+  readonly currency = computed(() => this.items()[0]?.product.currency || 'eur');
   readonly open = signal(false);
 
   toggle(): void {
