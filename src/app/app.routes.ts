@@ -105,7 +105,7 @@ export const routes: Routes = [
     title: 'Web Creator',
   },
   {
-    path: 'creator/:id',
+    path: 'creator/:projectId',
     canActivate: [authGuard],
     loadComponent: () => import('./features/creator/creator').then((m) => m.CreatorComponent),
     title: 'Web Creator',

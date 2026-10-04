@@ -91,9 +91,14 @@
       return;
     }
     applying = true;
-    Store.set("game_data", data);
-    on_game_data_change();
-    applying = false;
+    try {
+      Store.set("game_data", data);
+      on_game_data_change();
+    } catch (err) {
+      // The world is already loaded. Reselecting the paint tool can throw.
+    } finally {
+      applying = false;
+    }
   }
 
   function emit() {
@@ -339,7 +344,11 @@
 
   var editorStart = start;
   start = function () {
-    editorStart();
+    try {
+      editorStart();
+    } catch (err) {
+      console.warn(err);
+    }
     var pending = projectId ? load(projectId) : Promise.resolve();
     pending.then(function () {
       booted = true;
@@ -347,7 +356,7 @@
       return refresh();
     }).catch(function (err) {
       booted = true;
-      window.alert(err && err.message ? err.message : "could not open this project");
+      statusText = err && err.message ? err.message : "could not open this project";
       emit();
     });
   };
@@ -416,6 +425,43 @@
       window.alert(err && err.message ? err.message : "could not remove this game");
     });
   }
+
+  window.addEventListener("message", function (event) {
+    if (event.origin !== window.location.origin || event.source !== window.parent) {
+      return;
+    }
+    var data = event.data;
+    if (!data || typeof data !== "object") {
+      return;
+    }
+    if (data.type === "chili-assistant-read") {
+      var snapshot = "";
+      try {
+        if (typeof serializeWorld === "function") {
+          snapshot = serializeWorld() || "";
+        }
+      } catch (err) {
+        snapshot = "";
+      }
+      window.parent.postMessage(
+        { type: "chili-assistant-snapshot", data: snapshot, ready: booted },
+        window.location.origin
+      );
+      return;
+    }
+    if (data.type === "chili-assistant-apply") {
+      if (typeof data.data !== "string" || !data.data) {
+        return;
+      }
+      try {
+        applyGame(data.data);
+      } finally {
+        // The reload sets `applying`, so its own autosave is skipped. Schedule
+        // one after it finishes, even if a paint tool throws while reselecting.
+        scheduleSave();
+      }
+    }
+  });
 
   window.ChiliProjects = {
     save: save,
