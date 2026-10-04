@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { MarketplaceSales } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
+import { AuthService } from '../../core/services/auth.service';
 import { formatMoney, marketError } from './market-utils';
 
 @Component({
@@ -15,6 +16,7 @@ import { formatMoney, marketError } from './market-utils';
 })
 export class SalesComponent {
   private readonly api = inject(ApiService);
+  readonly auth = inject(AuthService);
   private readonly bannerHost = viewChild<ElementRef<HTMLElement>>('bannerHost');
   private readonly onboardingHost = viewChild<ElementRef<HTMLElement>>('onboardingHost');
   private readonly managementHost = viewChild<ElementRef<HTMLElement>>('managementHost');
@@ -28,6 +30,7 @@ export class SalesComponent {
   readonly busy = signal(false);
   readonly error = signal('');
   readonly connectError = signal('');
+  readonly sellerAgreed = signal(false);
   readonly money = formatMoney;
 
   constructor() {
@@ -40,7 +43,7 @@ export class SalesComponent {
       const desk = this.sales();
       const banner = this.bannerHost();
       const key = this.publishableKey();
-      if (!desk?.account.stripe_account_id || !banner || !key) {
+      if (!this.sellerTermsAccepted() || !desk?.account.stripe_account_id || !banner || !key) {
         return;
       }
       const mountKey = `${desk.account.stripe_account_id}:${desk.account.ready}:${key}`;
@@ -68,8 +71,38 @@ export class SalesComponent {
   }
 
   startPayouts(): void {
+    if (!this.sellerTermsAccepted()) {
+      if (!this.sellerAgreed()) {
+        this.error.set('Accept the marketplace seller terms before payout setup.');
+        return;
+      }
+      this.busy.set(true);
+      this.error.set('');
+      this.auth.acceptLegal({ seller_terms: true }).subscribe({
+        next: () => {
+          if (this.sales()?.account.stripe_account_id) {
+            this.reload();
+            return;
+          }
+          this.createAccount();
+        },
+        error: (err) => {
+          this.busy.set(false);
+          this.error.set(marketError(err, 'Could not save seller-term acceptance.'));
+        },
+      });
+      return;
+    }
     this.busy.set(true);
     this.error.set('');
+    this.createAccount();
+  }
+
+  private sellerTermsAccepted(): boolean {
+    return Boolean(this.auth.currentUser()?.seller_terms_accepted_at);
+  }
+
+  private createAccount(): void {
     this.api.createMarketplaceAccount().subscribe({
       next: () => this.reload(),
       error: (err) => {

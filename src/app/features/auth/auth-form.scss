@@ -55,3 +55,18 @@ textarea {
 .err {
   color: var(--chili-hot);
 }
+
+label.checks {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+label.checks a {
+  color: var(--phosphor);
+}

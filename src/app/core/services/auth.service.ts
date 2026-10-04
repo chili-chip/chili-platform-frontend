@@ -30,6 +30,7 @@ export class AuthService {
     email: string;
     password: string;
     bio?: string;
+    accept_terms: boolean;
   }) {
     return this.http
       .post<AuthResponse>(`${environment.apiUrl}/auth/register/`, payload)
@@ -48,6 +49,12 @@ export class AuthService {
   refreshProfile() {
     return this.http
       .get<UserProfile>(`${environment.apiUrl}/profiles/me/`)
+      .pipe(tap((user) => this.persistUser(user)));
+  }
+
+  acceptLegal(body: { terms?: boolean; seller_terms?: boolean }) {
+    return this.http
+      .post<UserProfile>(`${environment.apiUrl}/profiles/me/acceptance/`, body)
       .pipe(tap((user) => this.persistUser(user)));
   }
 

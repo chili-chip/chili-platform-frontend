@@ -290,6 +290,10 @@ td {
   font-size: 0.85rem;
 }
 
+.checks a {
+  color: var(--phosphor);
+}
+
 @media (max-width: 720px) {
   .intro,
   .hero,

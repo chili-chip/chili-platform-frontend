@@ -32,6 +32,7 @@ export class ListingComponent {
   readonly category = signal('puzzle');
   readonly tags = signal('');
   readonly description = signal('');
+  readonly sellerAgreed = signal(false);
 
   readonly gameId = computed(() => Number(this.query()?.get('game') || 0));
   readonly selected = computed(() => this.games().find((game) => game.id === this.gameId()) ?? null);
@@ -124,8 +125,36 @@ export class ListingComponent {
         .map((tag) => tag.trim())
         .filter(Boolean),
     };
+    const creating = !game.listing_slug;
+    if (creating && !this.sellerTermsAccepted()) {
+      if (!this.sellerAgreed()) {
+        this.error.set('Accept the marketplace seller terms before listing a game.');
+        return;
+      }
+      this.busy.set(true);
+      this.error.set('');
+      this.auth.acceptLegal({ seller_terms: true }).subscribe({
+        next: () => this.persistListing(game, body),
+        error: (err) => {
+          this.busy.set(false);
+          this.error.set(marketError(err, 'Could not save seller-term acceptance.'));
+        },
+      });
+      return;
+    }
     this.busy.set(true);
     this.error.set('');
+    this.persistListing(game, body);
+  }
+
+  private sellerTermsAccepted(): boolean {
+    return Boolean(this.auth.currentUser()?.seller_terms_accepted_at);
+  }
+
+  private persistListing(
+    game: GameProject,
+    body: { price_cents: number; category: string; description: string; tags: string[] },
+  ): void {
     const request = game.listing_slug
       ? this.api.updateMarketplaceListing(game.listing_slug, body)
       : this.api.createMarketplaceListing({ game: game.id, ...body });

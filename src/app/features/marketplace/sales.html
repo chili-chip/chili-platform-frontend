@@ -40,7 +40,25 @@
 
     <section class="stack">
       <h2>Payouts</h2>
-      @if (!desk.account.stripe_account_id) {
+      @if (!auth.currentUser()) {
+        <p class="muted">Loading account…</p>
+      } @else if (!auth.currentUser()?.seller_terms_accepted_at) {
+        <p class="muted">Accept the seller terms before payout setup. Buyers can already pay.</p>
+        <label class="checks">
+          <input
+            type="checkbox"
+            [checked]="sellerAgreed()"
+            (change)="sellerAgreed.set($any($event.target).checked)"
+          />
+          <span>
+            I agree to the
+            <a routerLink="/seller-terms" (click)="$event.stopPropagation()">marketplace seller terms</a>.
+          </span>
+        </label>
+        <button type="button" class="btn primary" [disabled]="busy()" (click)="startPayouts()">
+          {{ desk.account.stripe_account_id ? 'Continue' : 'Set up payouts' }}
+        </button>
+      } @else if (!desk.account.stripe_account_id) {
         <p class="muted">Buyers can already pay. Set up payouts when you want Chili to send the balance.</p>
         <button type="button" class="btn primary" [disabled]="busy()" (click)="startPayouts()">
           Set up payouts

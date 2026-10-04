@@ -72,6 +72,20 @@
           Description
           <textarea rows="4" [value]="description()" (input)="description.set($any($event.target).value)"></textarea>
         </label>
+        @if (!game.listing_slug && !auth.currentUser()?.seller_terms_accepted_at) {
+          <label class="checks">
+            <input
+              type="checkbox"
+              [checked]="sellerAgreed()"
+              (change)="sellerAgreed.set($any($event.target).checked)"
+            />
+            <span>
+              I agree to the
+              <a routerLink="/seller-terms" (click)="$event.stopPropagation()">marketplace seller terms</a>
+              before listing this game.
+            </span>
+          </label>
+        }
         <div class="tools">
           <button type="button" class="btn primary" [disabled]="busy()" (click)="save()">
             {{ game.listing_slug ? 'Update listing' : 'List game' }}
