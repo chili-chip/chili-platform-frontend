@@ -113,7 +113,7 @@ export class ListingComponent {
     }
     const cents = this.free() ? 0 : dollarsToCents(this.price());
     if (cents === null || (cents !== 0 && cents < 100)) {
-      this.error.set('Paid games must cost at least $1. Free listings are allowed.');
+      this.error.set('Paid games must cost at least €1. Free listings are allowed.');
       return;
     }
     const body = {
