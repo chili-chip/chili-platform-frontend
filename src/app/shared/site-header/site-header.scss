@@ -1,7 +1,10 @@
-.nav {
+.chrome {
   position: sticky;
   top: 0;
   z-index: 40;
+}
+
+.nav {
   display: grid;
   grid-template-columns: auto 1fr auto;
   gap: 1.5rem;
@@ -90,6 +93,25 @@
 
 .menu-toggle {
   display: none;
+}
+
+.verify {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem 0.75rem;
+  padding: 0.55rem 1.5rem;
+  background: color-mix(in srgb, var(--amber) 14%, var(--bg-1));
+  border-bottom: 1px solid color-mix(in srgb, var(--amber) 42%, var(--line));
+  font-size: 0.75rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.verify a {
+  color: var(--phosphor);
 }
 
 @media (max-width: 860px) {

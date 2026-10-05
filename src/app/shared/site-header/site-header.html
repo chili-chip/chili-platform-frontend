@@ -1,3 +1,4 @@
+<div class="chrome">
 <header class="nav" [class.is-open]="menuOpen()">
   <a routerLink="/" class="brand" (click)="closeMenu()">
     <span class="brand__mark" aria-hidden="true"></span>
@@ -35,3 +36,10 @@
     }
   </div>
 </header>
+@if (auth.isAuthenticated() && auth.currentUser()?.email_verified === false) {
+  <p class="verify" role="status">
+    Your account needs to be verified before you can post, publish, or check out.
+    <a routerLink="/verify-email">Send a new link</a>
+  </p>
+}
+</div>

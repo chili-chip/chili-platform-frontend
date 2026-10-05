@@ -13,13 +13,6 @@
     </a>
   </header>
 
-  @if (auth.isAuthenticated() && auth.currentUser()?.email_verified === false) {
-    <p class="lede">
-      Verify your email before listing a game.
-      <a routerLink="/verify-email">Send a new link</a>
-    </p>
-  }
-
   @if (error()) {
     <p class="err">{{ error() }}</p>
   }
