@@ -3,11 +3,12 @@ import { Component, computed, effect, inject, input, signal, untracked } from '@
 import { Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 
+import { marked } from 'marked';
+
 import { StoreProduct } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { CartService } from '../../core/services/cart.service';
-import { productBlurb, renderMarkdown } from './markdown';
-import { apiErrorMessage, productCover, productImages } from './store-utils';
+import { apiErrorMessage, productBlurb, productCover, productImages } from './store-utils';
 
 @Component({
   selector: 'app-product-detail',
@@ -30,7 +31,10 @@ export class ProductDetailComponent {
     const product = this.product();
     return product ? productBlurb(product) : '';
   });
-  readonly longHtml = computed(() => renderMarkdown(this.product()?.long_description || ''));
+  readonly longHtml = computed(() => {
+    const text = (this.product()?.long_description || '').trim();
+    return text ? marked.parse(text, { async: false }) : '';
+  });
   readonly gallery = computed(() => productImages(this.product()));
   readonly cover = computed(() => this.gallery()[this.selected()] || productCover(this.product()));
 

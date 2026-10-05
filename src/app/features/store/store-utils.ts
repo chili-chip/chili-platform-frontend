@@ -21,6 +21,13 @@ export function productCover(product: { images?: { url: string }[]; image_url?: 
   return productImages(product)[0] || '';
 }
 
+export function productBlurb(product: {
+  short_description?: string;
+  description?: string;
+}): string {
+  return (product.short_description || product.description || '').trim();
+}
+
 function looksLikeHtml(value: string): boolean {
   const head = value.trimStart().slice(0, 240).toLowerCase();
   return (

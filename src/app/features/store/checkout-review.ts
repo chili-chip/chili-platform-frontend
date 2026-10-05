@@ -5,8 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
-import { productBlurb } from './markdown';
-import { apiErrorMessage, productCover, unwrapList } from './store-utils';
+import { apiErrorMessage, productBlurb, productCover, unwrapList } from './store-utils';
 
 @Component({
   selector: 'app-checkout-review',
