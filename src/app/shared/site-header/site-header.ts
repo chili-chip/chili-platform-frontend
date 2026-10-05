@@ -21,4 +21,9 @@ export class SiteHeaderComponent {
   closeMenu(): void {
     this.menuOpen.set(false);
   }
+
+  signOut(): void {
+    this.closeMenu();
+    this.auth.logout();
+  }
 }

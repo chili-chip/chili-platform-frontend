@@ -64,6 +64,12 @@
   background: var(--bg-1);
   border: 1px solid var(--line);
   box-shadow: 8px 8px 0 rgba(255, 59, 59, 0.14);
+
+  @media (max-width: 860px) {
+    left: 0;
+    right: auto;
+    width: min(22rem, calc(100vw - 3rem));
+  }
 }
 
 .panel header {
