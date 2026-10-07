@@ -17,12 +17,23 @@ export interface UserProfile {
   username: string;
   email?: string;
   email_verified?: boolean;
+  display_name?: string;
   avatar_url: string;
   bio: string;
+  show_games?: boolean;
   terms_accepted_at?: string | null;
   privacy_accepted_at?: string | null;
   seller_terms_accepted_at?: string | null;
-  created_at: string;
+  created_at: string | null;
+}
+
+export interface UserSettings {
+  locale: string;
+  theme: 'system' | 'light' | 'dark';
+  newsletter_opt_in: boolean;
+  show_bio: boolean;
+  show_joined: boolean;
+  show_games: boolean;
 }
 
 export interface AuthTokens {
@@ -57,6 +68,7 @@ export interface ForumPost {
   author: {
     id: number;
     username: string;
+    display_name?: string;
     avatar_url: string;
   };
   category: number;
@@ -71,6 +83,7 @@ export interface ForumComment {
   author: {
     id: number;
     username: string;
+    display_name?: string;
     avatar_url: string;
   };
   content: string;

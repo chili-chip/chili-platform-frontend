@@ -1,0 +1,162 @@
+<section class="settings">
+  <p class="kicker">Account</p>
+  <h1>Settings</h1>
+  <nav class="jump" aria-label="Settings sections">
+    <a href="#profile">Profile</a>
+    <a href="#account">Account</a>
+    <a href="#preferences">Preferences</a>
+    <a href="#privacy">Privacy</a>
+  </nav>
+
+  @let user = auth.currentUser();
+
+  <article id="profile" class="card">
+    <h2>Profile</h2>
+    <div class="avatar-row">
+      @if (user?.avatar_url) {
+        <img class="avatar" [src]="user?.avatar_url" alt="Your avatar" width="72" height="72" />
+      } @else {
+        <span class="avatar avatar--empty" aria-hidden="true">{{ (user?.username ?? '?').charAt(0) }}</span>
+      }
+      <div class="avatar-actions">
+        <label class="btn ghost file">
+          {{ user?.avatar_url ? 'Change avatar' : 'Upload avatar' }}
+          <input type="file" accept="image/png,image/jpeg,image/webp" (change)="chooseAvatar($event)" [disabled]="busy() === 'avatar'" />
+        </label>
+        @if (user?.avatar_url) {
+          <button type="button" class="btn ghost" (click)="removeAvatar()" [disabled]="busy() === 'avatar'">Remove</button>
+        }
+      </div>
+    </div>
+    @if (status().avatar; as s) {
+      <p [class]="s.kind === 'ok' ? 'ok' : 'err'" role="status">{{ s.text }}</p>
+    }
+    @if (!user?.avatar_url || !user?.bio) {
+      <p class="hint">Add {{ !user?.avatar_url ? 'an avatar' : 'a bio' }} so people can recognise you in the community and marketplace.</p>
+    }
+
+    <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+      <label>
+        Username
+        <input [value]="user?.username ?? ''" disabled />
+      </label>
+      <label>
+        Display name
+        <input formControlName="display_name" maxlength="50" autocomplete="nickname" placeholder="Shown instead of your username" />
+      </label>
+      <label>
+        Bio
+        <textarea formControlName="bio" rows="4" maxlength="500"></textarea>
+        <span class="count">{{ profileForm.controls.bio.value.length }}/500</span>
+      </label>
+      @if (status().profile; as s) {
+        <p [class]="s.kind === 'ok' ? 'ok' : 'err'" role="status">{{ s.text }}</p>
+      }
+      <div class="actions">
+        <button class="btn primary" type="submit" [disabled]="busy() === 'profile' || profileForm.pristine">Save profile</button>
+        @if (user) {
+          <a class="link" [routerLink]="['/profile', user.username]">View public profile</a>
+        }
+      </div>
+    </form>
+  </article>
+
+  <article id="account" class="card">
+    <h2>Account</h2>
+    <p class="muted">
+      Email: {{ user?.email }}
+      @if (user?.email_verified === false) {
+        <span class="tag">Unverified</span> <a class="link" routerLink="/verify-email">Send a new link</a>
+      }
+    </p>
+    <form [formGroup]="emailForm" (ngSubmit)="changeEmail()">
+      <label>
+        New email
+        <input type="email" formControlName="new_email" autocomplete="off" />
+        @if (emailForm.controls.new_email.touched && emailForm.controls.new_email.invalid) {
+          <span class="err">Enter a valid email address.</span>
+        }
+      </label>
+      <label>
+        Current password
+        <input type="password" formControlName="password" autocomplete="off" />
+      </label>
+      @if (status().email; as s) {
+        <p [class]="s.kind === 'ok' ? 'ok' : 'err'" role="status">{{ s.text }}</p>
+      }
+      <div class="actions">
+        <button class="btn primary" type="submit" [disabled]="busy() === 'email'">Change email</button>
+      </div>
+    </form>
+
+    <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+      <label>
+        Current password
+        <input type="password" formControlName="current_password" autocomplete="current-password" />
+      </label>
+      <label>
+        New password
+        <input type="password" formControlName="new_password" autocomplete="new-password" />
+        @if (passwordForm.controls.new_password.touched && passwordForm.controls.new_password.invalid) {
+          <span class="err">Use at least 8 characters.</span>
+        }
+      </label>
+      @if (status().password; as s) {
+        <p [class]="s.kind === 'ok' ? 'ok' : 'err'" role="status">{{ s.text }}</p>
+      }
+      <div class="actions">
+        <button class="btn primary" type="submit" [disabled]="busy() === 'password'">Change password</button>
+      </div>
+    </form>
+  </article>
+
+  <form [formGroup]="preferencesForm" (ngSubmit)="savePreferences()">
+    <article id="preferences" class="card">
+      <h2>Preferences</h2>
+      <label>
+        Language
+        <select formControlName="locale">
+          <option value="en">English</option>
+          <option value="pl">Polski</option>
+        </select>
+      </label>
+      <label>
+        Appearance
+        <select formControlName="theme">
+          <option value="system">System</option>
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
+      </label>
+      <label class="checks">
+        <input type="checkbox" formControlName="newsletter_opt_in" />
+        <span>Send me the newsletter with product and platform news.</span>
+      </label>
+    </article>
+
+    <article id="privacy" class="card">
+      <h2>Privacy</h2>
+      <p class="muted">Choose what appears on your public profile. Orders and library are always private.</p>
+      <label class="checks">
+        <input type="checkbox" formControlName="show_bio" />
+        <span>Show my bio</span>
+      </label>
+      <label class="checks">
+        <input type="checkbox" formControlName="show_joined" />
+        <span>Show when I joined</span>
+      </label>
+      <label class="checks">
+        <input type="checkbox" formControlName="show_games" />
+        <span>Show my released games</span>
+      </label>
+      @if (status().preferences; as s) {
+        <p [class]="s.kind === 'ok' ? 'ok' : 'err'" role="status">{{ s.text }}</p>
+      }
+      <div class="actions">
+        <button class="btn primary" type="submit" [disabled]="busy() === 'preferences' || loading() || preferencesForm.pristine">
+          Save preferences
+        </button>
+      </div>
+    </article>
+  </form>
+</section>

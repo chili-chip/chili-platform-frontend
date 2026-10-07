@@ -157,6 +157,12 @@ export const routes: Routes = [
     title: 'Verify email',
   },
   {
+    path: 'confirm-email-change',
+    loadComponent: () =>
+      import('./features/auth/confirm-email-change').then((m) => m.ConfirmEmailChangeComponent),
+    title: 'Confirm new email',
+  },
+  {
     path: 'forgot-password',
     loadComponent: () =>
       import('./features/auth/forgot-password').then((m) => m.ForgotPasswordComponent),
@@ -167,6 +173,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/auth/reset-password').then((m) => m.ResetPasswordComponent),
     title: 'Reset password',
+  },
+  {
+    path: 'settings',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/settings/settings').then((m) => m.SettingsComponent),
+    title: 'Settings',
   },
   {
     path: 'profile/:username/listing',
