@@ -169,6 +169,12 @@ export const routes: Routes = [
     title: 'Reset password',
   },
   {
+    path: 'settings',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/settings/settings').then((m) => m.SettingsComponent),
+    title: 'Settings',
+  },
+  {
     path: 'profile/:username/listing',
     canActivate: [authGuard],
     loadComponent: () => import('./features/profile/listing').then((m) => m.ListingComponent),

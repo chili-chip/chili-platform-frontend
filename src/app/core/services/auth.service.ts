@@ -58,10 +58,28 @@ export class AuthService {
       .pipe(tap((user) => this.persistUser(user)));
   }
 
-  updateProfile(payload: Pick<UserProfile, 'bio' | 'avatar_url'>) {
+  updateProfile(payload: { display_name?: string; bio?: string }) {
     return this.http
-      .put<UserProfile>(`${environment.apiUrl}/profiles/me/`, payload)
+      .patch<UserProfile>(`${environment.apiUrl}/profiles/me/`, payload)
       .pipe(tap((user) => this.persistUser(user)));
+  }
+
+  uploadAvatar(image: string) {
+    return this.http
+      .post<UserProfile>(`${environment.apiUrl}/profiles/me/avatar/`, { image })
+      .pipe(tap((user) => this.persistUser(user)));
+  }
+
+  removeAvatar() {
+    return this.http
+      .delete<UserProfile>(`${environment.apiUrl}/profiles/me/avatar/`)
+      .pipe(tap((user) => this.persistUser(user)));
+  }
+
+  changePassword(payload: { current_password: string; new_password: string }) {
+    return this.http
+      .post<AuthTokens & { detail: string }>(`${environment.apiUrl}/auth/password/change/`, payload)
+      .pipe(tap((tokens) => this.storeTokens(tokens)));
   }
 
   refreshAccessToken(): Observable<string> {

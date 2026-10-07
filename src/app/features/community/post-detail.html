@@ -6,7 +6,7 @@
       <span class="badge">{{ thread.category_detail?.name }}</span>
       <h1>{{ thread.title }}</h1>
       <p class="meta">
-        <a [routerLink]="['/profile', thread.author.username]">{{ thread.author.username }}</a>
+        <a [routerLink]="['/profile', thread.author.username]">{{ thread.author.display_name || thread.author.username }}</a>
         · {{ thread.created_at | date: 'medium' }}
       </p>
       <p class="body">{{ thread.content }}</p>
@@ -18,7 +18,7 @@
     @for (comment of comments(); track comment.id) {
       <li>
         <strong>
-          <a [routerLink]="['/profile', comment.author.username]">{{ comment.author.username }}</a>
+          <a [routerLink]="['/profile', comment.author.username]">{{ comment.author.display_name || comment.author.username }}</a>
         </strong>
         <time>{{ comment.created_at | date: 'short' }}</time>
         <p>{{ comment.content }}</p>

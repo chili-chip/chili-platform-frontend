@@ -1,12 +1,26 @@
 <section class="page">
   @if (profile(); as user) {
     <div class="hero">
-      <div class="avatar">{{ user.username.charAt(0) }}</div>
+      <div class="avatar">
+        @if (user.avatar_url) {
+          <img [src]="user.avatar_url" [alt]="user.username + ' avatar'" />
+        } @else {
+          {{ user.username.charAt(0) }}
+        }
+      </div>
       <div>
         <p class="kicker">Player</p>
-        <h1>{{ user.username }}</h1>
-        <p class="bio">{{ user.bio || 'This chili has not written a bio yet.' }}</p>
-        <p class="meta">Joined {{ user.created_at | date: 'mediumDate' }}</p>
+        <h1>{{ user.display_name || user.username }}</h1>
+        @if (user.display_name) {
+          <p class="meta">&#64;{{ user.username }}</p>
+        }
+        <p class="bio">{{ user.bio || (isOwn() ? 'Add a bio in your settings.' : 'This chili has not written a bio yet.') }}</p>
+        @if (user.created_at) {
+          <p class="meta">Joined {{ user.created_at | date: 'mediumDate' }}</p>
+        }
+        @if (isOwn()) {
+          <p class="meta"><a routerLink="/settings">Edit profile and settings</a></p>
+        }
       </div>
     </div>
   }

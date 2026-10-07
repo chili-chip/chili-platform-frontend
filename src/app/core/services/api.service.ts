@@ -21,12 +21,21 @@ import {
   StoreOrder,
   StoreProduct,
   UserProfile,
+  UserSettings,
 } from '../models/platform';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private readonly http = inject(HttpClient);
   private readonly base = environment.apiUrl;
+
+  getSettings() {
+    return this.http.get<UserSettings>(`${this.base}/profiles/me/settings/`);
+  }
+
+  updateSettings(payload: Partial<UserSettings>) {
+    return this.http.patch<UserSettings>(`${this.base}/profiles/me/settings/`, payload);
+  }
 
   listCategories() {
     return this.http.get<Paginated<ForumCategory> | ForumCategory[]>(
