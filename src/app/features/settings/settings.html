@@ -19,12 +19,12 @@
         <span class="avatar avatar--empty" aria-hidden="true">{{ (user?.username ?? '?').charAt(0) }}</span>
       }
       <div class="avatar-actions">
-        <label class="btn file">
+        <label class="btn ghost file">
           {{ user?.avatar_url ? 'Change avatar' : 'Upload avatar' }}
           <input type="file" accept="image/png,image/jpeg,image/webp" (change)="chooseAvatar($event)" [disabled]="busy() === 'avatar'" />
         </label>
         @if (user?.avatar_url) {
-          <button type="button" class="btn" (click)="removeAvatar()" [disabled]="busy() === 'avatar'">Remove</button>
+          <button type="button" class="btn ghost" (click)="removeAvatar()" [disabled]="busy() === 'avatar'">Remove</button>
         }
       </div>
     </div>

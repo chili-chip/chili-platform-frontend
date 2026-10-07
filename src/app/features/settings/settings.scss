@@ -83,7 +83,11 @@ label.checks {
 }
 
 label.checks input {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
   margin-top: 0.2rem;
+  padding: 0;
 }
 
 .avatar-row {
