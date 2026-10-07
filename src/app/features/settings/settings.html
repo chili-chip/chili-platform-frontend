@@ -69,6 +69,26 @@
         <span class="tag">Unverified</span> <a class="link" routerLink="/verify-email">Send a new link</a>
       }
     </p>
+    <form [formGroup]="emailForm" (ngSubmit)="changeEmail()">
+      <label>
+        New email
+        <input type="email" formControlName="new_email" autocomplete="off" />
+        @if (emailForm.controls.new_email.touched && emailForm.controls.new_email.invalid) {
+          <span class="err">Enter a valid email address.</span>
+        }
+      </label>
+      <label>
+        Current password
+        <input type="password" formControlName="password" autocomplete="off" />
+      </label>
+      @if (status().email; as s) {
+        <p [class]="s.kind === 'ok' ? 'ok' : 'err'" role="status">{{ s.text }}</p>
+      }
+      <div class="actions">
+        <button class="btn primary" type="submit" [disabled]="busy() === 'email'">Change email</button>
+      </div>
+    </form>
+
     <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
       <label>
         Current password

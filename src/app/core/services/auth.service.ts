@@ -82,6 +82,24 @@ export class AuthService {
       .pipe(tap((tokens) => this.storeTokens(tokens)));
   }
 
+  requestEmailChange(payload: { new_email: string; password: string }) {
+    return this.http.post<{ detail: string }>(`${environment.apiUrl}/auth/email/change/`, payload);
+  }
+
+  confirmEmailChange(token: string) {
+    return this.http
+      .post<{ detail: string; email: string }>(`${environment.apiUrl}/auth/email/change/confirm/`, {
+        token,
+      })
+      .pipe(
+        tap(() => {
+          if (this.isAuthenticated()) {
+            this.refreshProfile().subscribe({ error: () => undefined });
+          }
+        }),
+      );
+  }
+
   refreshAccessToken(): Observable<string> {
     const refresh = localStorage.getItem(REFRESH_KEY);
     if (!refresh) {

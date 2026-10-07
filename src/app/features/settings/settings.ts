@@ -7,7 +7,7 @@ import { UserSettings } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 
-type Section = 'profile' | 'avatar' | 'password' | 'preferences';
+type Section = 'profile' | 'avatar' | 'email' | 'password' | 'preferences';
 type Status = { kind: 'ok' | 'error'; text: string } | null;
 
 const AVATAR_SIZE = 256;
@@ -31,6 +31,11 @@ export class SettingsComponent implements OnInit {
   readonly profileForm = this.fb.nonNullable.group({
     display_name: ['', [Validators.maxLength(50)]],
     bio: ['', [Validators.maxLength(500)]],
+  });
+
+  readonly emailForm = this.fb.nonNullable.group({
+    new_email: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.required],
   });
 
   readonly passwordForm = this.fb.nonNullable.group({
@@ -109,6 +114,22 @@ export class SettingsComponent implements OnInit {
     this.auth.removeAvatar().subscribe({
       next: () => this.report('avatar', 'ok', 'Avatar removed.'),
       error: (err) => this.report('avatar', 'error', describe(err, 'Could not remove your avatar.')),
+    });
+  }
+
+  changeEmail(): void {
+    if (this.emailForm.invalid) {
+      this.emailForm.markAllAsTouched();
+      return;
+    }
+    this.begin('email');
+    this.auth.requestEmailChange(this.emailForm.getRawValue()).subscribe({
+      next: () => {
+        const address = this.emailForm.controls.new_email.value;
+        this.emailForm.reset();
+        this.report('email', 'ok', `Check ${address} for a confirmation link.`);
+      },
+      error: (err) => this.report('email', 'error', describe(err, 'Could not change your email.')),
     });
   }
 

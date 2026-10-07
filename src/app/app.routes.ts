@@ -157,6 +157,12 @@ export const routes: Routes = [
     title: 'Verify email',
   },
   {
+    path: 'confirm-email-change',
+    loadComponent: () =>
+      import('./features/auth/confirm-email-change').then((m) => m.ConfirmEmailChangeComponent),
+    title: 'Confirm new email',
+  },
+  {
     path: 'forgot-password',
     loadComponent: () =>
       import('./features/auth/forgot-password').then((m) => m.ForgotPasswordComponent),
