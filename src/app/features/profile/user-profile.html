@@ -19,7 +19,7 @@
           <p class="meta">Joined {{ user.created_at | date: 'mediumDate' }}</p>
         }
         @if (isOwn()) {
-          <p class="meta"><a routerLink="/settings">Edit profile and settings</a></p>
+          <p><a class="btn ghost" routerLink="/settings">Settings</a></p>
         }
       </div>
     </div>
