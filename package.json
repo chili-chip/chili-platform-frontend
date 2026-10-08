@@ -5,7 +5,11 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "pages": "wrangler pages deploy dist/chili-platform/browser --project-name=chili-platform",
+    "build:dev": "ng build --configuration dev",
+    "build:prod": "ng build --configuration production",
+    "pages": "npm run pages:prod",
+    "pages:prod": "node scripts/check-branch.mjs main && npm run build:prod && npx wrangler pages deploy dist/chili-platform/browser --project-name=chili-platform --branch=main",
+    "pages:dev": "node scripts/check-branch.mjs dev && npm run build:dev && npx wrangler pages deploy dist/chili-platform/browser --project-name=chili-platform-dev --branch=dev",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
