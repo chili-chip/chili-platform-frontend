@@ -6,12 +6,165 @@
       <p class="lede">
         A pocket video game console with an unlimited number of worlds to explore.
       </p>
+      <p class="lede">
+        Chilichip makes the vgc zero, a handheld built around the RP2350. This platform is
+        where you buy the hardware, make games for it, sell them, and meet the people doing the same.
+      </p>
       <div class="cta-row">
         <button type="button" class="btn primary" disabled aria-describedby="buy-soon">Buy now</button>
         <p id="buy-soon" class="soon">Coming soon</p>
         <a routerLink="/creator" class="btn ghost">Try Web Creator</a>
       </div>
+      <p class="aside">
+        Specs, assembly guides, and the SDK are in the
+        <a [href]="docsUrl" target="_blank" rel="noopener noreferrer">docs on chilichip.eu ↗</a>
+      </p>
     </section>
+
+    <section class="block" aria-labelledby="next-steps">
+      <p class="kicker">Start here</p>
+      <h2 id="next-steps">Pick a way in.</h2>
+      <div class="steps">
+        @for (step of nextSteps; track step.title) {
+          <a class="card" [routerLink]="step.to">
+            <span class="idx">{{ step.kicker }}</span>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.copy }}</p>
+          </a>
+        }
+        <a class="card" [href]="discordUrl" target="_blank" rel="noopener noreferrer">
+          <span class="idx">Chat</span>
+          <h3>Join Discord ↗</h3>
+          <p>Ask questions, show what you built, and follow along day to day.</p>
+        </a>
+      </div>
+    </section>
+
+    @if (!gamesFailed()) {
+      <section class="block" aria-labelledby="featured-games">
+        <div class="head">
+          <div>
+            <p class="kicker">Marketplace</p>
+            <h2 id="featured-games">New games.</h2>
+          </div>
+          <a routerLink="/marketplace" class="more">All games →</a>
+        </div>
+        @if (games(); as rows) {
+          @if (rows.length) {
+            <ul class="game-grid tiles">
+              @for (listing of rows; track listing.id) {
+                <li>
+                  <app-game-tile
+                    [title]="listing.game.title"
+                    [cover]="listing.game.cover"
+                    [link]="['/marketplace', listing.slug]"
+                    [meta]="listing.category.name"
+                    [detail]="'by ' + listing.game.owner"
+                    [ratingAverage]="listing.rating_average"
+                    [ratingCount]="listing.rating_count"
+                    [foot]="priceLabel(listing.price_cents, listing.currency)"
+                  />
+                </li>
+              }
+            </ul>
+          } @else {
+            <div class="empty">
+              <p>No games are listed yet. The first one could be yours.</p>
+              <a routerLink="/creator" class="btn ghost">Make a game</a>
+            </div>
+          }
+        } @else {
+          <app-skeleton-grid [count]="2" label="Loading games" />
+        }
+      </section>
+    }
+
+    @if (!productsFailed()) {
+      <section class="block" aria-labelledby="store-callouts">
+        <div class="head">
+          <div>
+            <p class="kicker">Store</p>
+            <h2 id="store-callouts">Build your own.</h2>
+          </div>
+          <a routerLink="/store" class="more">Full store →</a>
+        </div>
+        @if (products(); as rows) {
+          @if (rows.length) {
+            <ul class="products">
+              @for (product of rows; track product.id) {
+                <li>
+                  <a class="product" [routerLink]="['/store', product.slug]">
+                    <div class="thumb">
+                      @if (cover(product); as src) {
+                        <img appMediaFade [src]="src" [alt]="product.name" />
+                      } @else {
+                        <span>{{ product.name.charAt(0) }}</span>
+                      }
+                    </div>
+                    <div class="info">
+                      <h3>{{ product.name }}</h3>
+                      @if (blurb(product); as text) {
+                        <p>{{ text }}</p>
+                      }
+                    </div>
+                    <strong class="price">
+                      {{ product.stock > 0 ? priceLabel(product.price_cents, product.currency) : 'Sold out' }}
+                    </strong>
+                  </a>
+                </li>
+              }
+            </ul>
+          } @else {
+            <div class="empty">
+              <p>Nothing is in stock right now. Check back soon, or ask on Discord.</p>
+            </div>
+          }
+        } @else {
+          <app-skeleton-rows [count]="3" label="Loading products" />
+        }
+      </section>
+    }
+
+    @if (!threadsFailed()) {
+      <section class="block" aria-labelledby="recent-threads">
+        <div class="head">
+          <div>
+            <p class="kicker">Community</p>
+            <h2 id="recent-threads">On the forum.</h2>
+          </div>
+          <a routerLink="/community" class="more">All threads →</a>
+        </div>
+        @if (threads(); as rows) {
+          @if (rows.length) {
+            <ul class="threads">
+              @for (post of rows; track post.id) {
+                <li>
+                  <a [routerLink]="['/community/post', post.id]">
+                    <span class="badge">{{ post.category_detail?.name ?? 'Forum' }}</span>
+                    <h3>{{ post.title }}</h3>
+                    <p>
+                      {{ post.author.display_name || post.author.username }} ·
+                      <time [attr.datetime]="post.created_at">{{ post.created_at | date: 'mediumDate' }}</time>
+                      · {{ post.comment_count ?? 0 }}
+                      {{ post.comment_count === 1 ? 'comment' : 'comments' }}
+                    </p>
+                  </a>
+                </li>
+              }
+            </ul>
+          } @else {
+            <div class="empty">
+              <p>No threads yet. Start the first one.</p>
+              <a [routerLink]="auth.isAuthenticated() ? '/community' : '/register'" class="btn ghost">
+                {{ auth.isAuthenticated() ? 'Open the forum' : 'Create an account' }}
+              </a>
+            </div>
+          }
+        } @else {
+          <app-skeleton-threads [count]="3" label="Loading threads" />
+        }
+      </section>
+    }
 
     <section class="block">
       <p class="kicker">The handheld</p>
@@ -24,6 +177,10 @@
           </li>
         }
       </ul>
+      <p class="aside">
+        Full specifications live in the
+        <a [href]="docsUrl" target="_blank" rel="noopener noreferrer">Chilichip docs ↗</a>
+      </p>
     </section>
 
     <section class="block">
@@ -49,18 +206,33 @@
       </div>
     </section>
 
-    <section class="block">
-      <p class="kicker">The platform</p>
-      <h2>Store, studio, and the people shipping games.</h2>
-      <div class="stack">
-        @for (pillar of pillars; track pillar.title) {
-          <a class="card" [routerLink]="pillar.to">
-            <span class="idx">{{ pillar.kicker }}</span>
-            <h3>{{ pillar.title }}</h3>
-            <p>{{ pillar.copy }}</p>
-          </a>
+    <section class="block" aria-labelledby="elsewhere">
+      <p class="kicker">Elsewhere</p>
+      <h2 id="elsewhere">Follow the build.</h2>
+      <ul class="links">
+        @for (social of socials; track social.url) {
+          <li>
+            <a [href]="social.url" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path [attr.d]="social.iconPath" fill="currentColor" />
+              </svg>
+              <span>{{ social.label }} ↗</span>
+            </a>
+          </li>
         }
-      </div>
+        <li>
+          <a [href]="docsUrl" target="_blank" rel="noopener noreferrer">
+            <span class="glyph" aria-hidden="true">?</span>
+            <span>Docs ↗</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/help">
+            <span class="glyph" aria-hidden="true">i</span>
+            <span>Help center</span>
+          </a>
+        </li>
+      </ul>
     </section>
   </div>
 
