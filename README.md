@@ -56,7 +56,9 @@ The landing hero loads `public/models/vgc-zero.glb`.
 | Build | `npm run build:prod` | `npm run build:dev` |
 | Deploy | `npm run pages:prod` | `npm run pages:dev` |
 
-Feature branches merge into `dev`, which deploys to dev. When dev looks right, merge `dev` into `main` to release it to production. Each deploy script refuses to run from the other environment's branch (on Cloudflare's git builds it reads `CF_PAGES_BRANCH`), builds with that environment's API URL, and uploads to its own Pages project. The `chili-platform-dev` project's production branch is `dev`. The API for each site is the matching backend Worker (see the backend README). `npm run build` still builds production, and `npm run pages` is an alias for `pages:prod`.
+Feature branches merge into `dev`, which deploys to dev. When dev looks right, merge `dev` into `main` to release it to production. Each deploy script refuses to run from the other environment's branch (on Cloudflare's git builds it reads `CF_PAGES_BRANCH`), builds with that environment's API URL, and uploads to its own Pages project. The `chili-platform-dev` project's production branch is `dev`.
+
+GitHub Actions (`.github/workflows/build.yml`) builds both configurations and runs the tests on every pull request and on pushes to `dev` and `main`. A push to `dev` then uploads the dev build to `chili-platform-dev`, which needs `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` repo secrets. Production is still deployed by the Pages git integration on `chili-platform`. The API for each site is the matching backend Worker (see the backend README). `npm run build` still builds production, and `npm run pages` is an alias for `pages:prod`.
 
 ---
 
