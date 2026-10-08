@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
+import { DOCS_URL } from '../../core/socials';
 import { CartPopupComponent } from '../cart-popup/cart-popup';
 import { ToastService } from '../../core/services/toast.service';
 
@@ -15,6 +16,7 @@ export class SiteHeaderComponent {
   private readonly toast = inject(ToastService);
   readonly auth = inject(AuthService);
   readonly menuOpen = signal(false);
+  readonly siteUrl = DOCS_URL;
 
   toggleMenu(): void {
     this.menuOpen.update((open) => !open);
