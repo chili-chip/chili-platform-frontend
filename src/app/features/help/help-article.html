@@ -1,0 +1,31 @@
+<section class="page help-article">
+  @if (article(); as item) {
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a routerLink="/help">Help</a>
+      <span aria-hidden="true">/</span>
+      <span>{{ topic()?.title }}</span>
+    </nav>
+    <h1>{{ item.title }}</h1>
+    <p class="lede">{{ item.summary }}</p>
+
+    <article class="body" [innerHTML]="html()" (click)="onBodyClick($event)"></article>
+
+    @if (related().length) {
+      <aside class="related" aria-label="Related articles">
+        <h2>Related</h2>
+        <ul>
+          @for (next of related(); track next.slug) {
+            <li>
+              <a [routerLink]="['/help', next.slug]">{{ next.title }}</a>
+            </li>
+          }
+        </ul>
+      </aside>
+    }
+    <p class="back"><a routerLink="/help">← All help articles</a></p>
+  } @else {
+    <h1>Article not found</h1>
+    <p class="lede">We could not find that help article. It may have moved or been removed.</p>
+    <p><a class="btn primary" routerLink="/help">Browse all help articles</a></p>
+  }
+</section>
