@@ -1,11 +1,19 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
+import { StoreDeliveryOption } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
-import { apiErrorMessage, productBlurb, productCover, unwrapList } from './store-utils';
+import {
+  apiErrorMessage,
+  deliveryFee,
+  deliveryWhere,
+  productBlurb,
+  productCover,
+  unwrapList,
+} from './store-utils';
 import { ToastService } from '../../core/services/toast.service';
 
 @Component({
@@ -25,8 +33,45 @@ export class CheckoutReviewComponent implements OnInit {
   readonly error = signal('');
   readonly blurb = productBlurb;
   readonly cover = productCover;
+  readonly where = deliveryWhere;
+
+  readonly deliveryOptions = signal<StoreDeliveryOption[]>([]);
+  readonly deliveryLoading = signal(true);
+  readonly deliverySlug = signal('');
+
+  readonly delivery = computed(() =>
+    this.deliveryOptions().find((option) => option.slug === this.deliverySlug()),
+  );
+
+  /** Fee in cents for the chosen option; null while nothing is chosen. */
+  readonly deliveryCents = computed(() => {
+    const option = this.delivery();
+    if (option) {
+      return deliveryFee(option, this.cart.totalCents());
+    }
+    return this.deliveryOptions().length ? null : 0;
+  });
+
+  fee(option: StoreDeliveryOption): number {
+    return deliveryFee(option, this.cart.totalCents());
+  }
+
+  readonly totalCents = computed(() => this.cart.totalCents() + (this.deliveryCents() ?? 0));
 
   ngOnInit(): void {
+    this.api.listDeliveryOptions().subscribe({
+      next: (rows) => {
+        this.deliveryOptions.set(rows);
+        if (rows.length) {
+          this.deliverySlug.set(rows[0].slug);
+        }
+        this.deliveryLoading.set(false);
+      },
+      error: () => {
+        this.deliveryOptions.set([]);
+        this.deliveryLoading.set(false);
+      },
+    });
     this.api.listProducts().subscribe({
       next: (payload) => this.cart.reconcile(unwrapList(payload)),
       error: () => undefined,
@@ -37,13 +82,17 @@ export class CheckoutReviewComponent implements OnInit {
     if (!this.cart.count() || this.paying()) {
       return;
     }
+    if (this.deliveryOptions().length && !this.delivery()) {
+      this.error.set('Choose a delivery option.');
+      return;
+    }
     if (!this.auth.isAuthenticated()) {
       void this.router.navigate(['/login'], { queryParams: { next: '/store/checkout' } });
       return;
     }
     this.paying.set(true);
     this.error.set('');
-    this.api.createCheckout(this.cart.checkoutPayload()).subscribe({
+    this.api.createCheckout(this.cart.checkoutPayload(), this.delivery()?.slug).subscribe({
       next: (session) => {
         window.location.assign(session.checkout_url);
       },

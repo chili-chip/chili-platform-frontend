@@ -159,6 +159,62 @@
   margin-bottom: 0.9rem;
 }
 
+.delivery {
+  margin: 0 0 1rem;
+  padding: 0;
+  border: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.delivery legend {
+  margin-bottom: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.option {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.6rem;
+  align-items: start;
+  padding: 0.65rem 0.7rem;
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+
+.option.is-on {
+  border-color: var(--chili);
+}
+
+.option input {
+  margin-top: 0.2rem;
+  accent-color: var(--chili);
+}
+
+.option-copy {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.option-name {
+  font-weight: 600;
+}
+
+.option-meta {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.option-price {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
 dl {
   margin: 0;
   display: grid;
@@ -177,6 +233,16 @@ dl div {
 
 dt {
   color: var(--muted);
+}
+
+dl .grand {
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.85rem;
+}
+
+dl .grand dd {
+  font-weight: 700;
 }
 
 .note,

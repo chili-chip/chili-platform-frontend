@@ -155,3 +155,11 @@ address {
   flex-wrap: wrap;
   gap: 0.7rem;
 }
+
+.total.delivery-line {
+  color: var(--muted);
+}
+
+.total.delivery-line + .total {
+  margin-top: 0.4rem;
+}
