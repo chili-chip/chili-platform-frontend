@@ -97,10 +97,21 @@ export interface StoreProductImage {
   sort_order: number;
 }
 
+export interface StoreCategory {
+  id: number;
+  name: string;
+  slug: string;
+  description: string;
+  sort_order: number;
+  product_count: number;
+}
+
 export interface StoreProduct {
   id: number;
   name: string;
   slug: string;
+  category?: string | null;
+  category_name?: string;
   short_description: string;
   long_description: string;
   description?: string;

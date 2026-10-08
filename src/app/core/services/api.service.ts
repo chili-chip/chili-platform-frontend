@@ -17,6 +17,7 @@ import {
   MarketplacePurchase,
   MarketplaceSales,
   MarketplaceTag,
+  StoreCategory,
   StoreCheckoutSession,
   StoreOrder,
   StoreProduct,
@@ -100,8 +101,20 @@ export class ApiService {
     return this.http.post<GameProject>(`${this.base}/games/`, payload);
   }
 
-  listProducts() {
-    return this.http.get<Paginated<StoreProduct> | StoreProduct[]>(`${this.base}/store/products/`);
+  listProducts(query: Record<string, string> = {}) {
+    let params = new HttpParams();
+    for (const [key, value] of Object.entries(query)) {
+      if (value) {
+        params = params.set(key, value);
+      }
+    }
+    return this.http.get<Paginated<StoreProduct> | StoreProduct[]>(`${this.base}/store/products/`, {
+      params,
+    });
+  }
+
+  listStoreCategories() {
+    return this.http.get<StoreCategory[]>(`${this.base}/store/categories/`);
   }
 
   getProduct(slug: string) {
