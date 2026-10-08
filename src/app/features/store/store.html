@@ -46,50 +46,87 @@
     </nav>
   }
 
-  <form class="filters" (submit)="$event.preventDefault()">
-    <label>
-      Min €
-      <input
-        type="number"
-        min="0"
-        step="0.01"
-        inputmode="decimal"
-        [value]="filters().min"
-        (change)="apply({ min: $any($event.target).value })"
-      />
-    </label>
-    <label>
-      Max €
-      <input
-        type="number"
-        min="0"
-        step="0.01"
-        inputmode="decimal"
-        [value]="filters().max"
-        (change)="apply({ max: $any($event.target).value })"
-      />
-    </label>
-    <label>
-      Sort
-      <select [value]="filters().sort" (change)="apply({ sort: $any($event.target).value })">
-        <option value="">Name</option>
-        <option value="price">Price, low to high</option>
-        <option value="-price">Price, high to low</option>
-        <option value="newest">Newest</option>
-      </select>
-    </label>
-    <label class="toggle">
-      <input
-        type="checkbox"
-        [checked]="!!filters().stock"
-        (change)="apply({ stock: $any($event.target).checked ? '1' : '' })"
-      />
-      In stock only
-    </label>
+  <div class="toolbar">
+    <button
+      type="button"
+      class="btn ghost filter-btn"
+      aria-haspopup="dialog"
+      (click)="openFilters(filterDialog)"
+    >
+      Filters
+      @if (activeFilterCount()) {
+        <span class="filter-count">{{ activeFilterCount() }}</span>
+      }
+    </button>
     @if (filtered()) {
-      <button type="button" class="btn ghost" (click)="clear()">Clear filters</button>
+      <button type="button" class="clear-link" (click)="clear()">Clear all</button>
     }
-  </form>
+  </div>
+
+  <dialog
+    #filterDialog
+    class="filter-dialog"
+    aria-labelledby="store-filters-title"
+    (click)="backdropClose($event, filterDialog)"
+  >
+    <form class="filter-panel" method="dialog" (submit)="applyFilters(filterDialog)">
+      <header>
+        <h2 id="store-filters-title">Filters</h2>
+        <button type="button" class="close" aria-label="Close filters" (click)="filterDialog.close()">
+          ×
+        </button>
+      </header>
+      <fieldset class="price">
+        <legend>Price (€)</legend>
+        <label>
+          Min
+          <input
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            [value]="draftFilters().min"
+            (input)="patchDraft({ min: $any($event.target).value })"
+          />
+        </label>
+        <label>
+          Max
+          <input
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            [value]="draftFilters().max"
+            (input)="patchDraft({ max: $any($event.target).value })"
+          />
+        </label>
+      </fieldset>
+      <label class="toggle">
+        <input
+          type="checkbox"
+          [checked]="!!draftFilters().stock"
+          (change)="patchDraft({ stock: $any($event.target).checked ? '1' : '' })"
+        />
+        In stock only
+      </label>
+      <label>
+        Sort by
+        <select
+          [value]="draftFilters().sort"
+          (change)="patchDraft({ sort: $any($event.target).value })"
+        >
+          <option value="">Name</option>
+          <option value="price">Price, low to high</option>
+          <option value="-price">Price, high to low</option>
+          <option value="newest">Newest</option>
+        </select>
+      </label>
+      <footer>
+        <button type="button" class="btn ghost" (click)="resetDraft()">Reset</button>
+        <button type="submit" class="btn primary">Show results</button>
+      </footer>
+    </form>
+  </dialog>
 
   @if (activeCategory()?.description; as blurb) {
     <p class="category-blurb">{{ blurb }}</p>

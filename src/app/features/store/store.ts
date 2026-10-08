@@ -64,6 +64,19 @@ export class StoreComponent implements OnInit {
     return !!(q || category || min || max || stock);
   });
 
+  /** Modal edits stay here until the shopper presses "Show results". */
+  readonly draftFilters = signal<Pick<StoreFilters, 'min' | 'max' | 'stock' | 'sort'>>({
+    min: '',
+    max: '',
+    stock: '',
+    sort: '',
+  });
+
+  readonly activeFilterCount = computed(() => {
+    const { min, max, stock, sort } = this.filters();
+    return [min || max, stock, sort].filter((value) => !!value).length;
+  });
+
   readonly activeCategory = computed(() =>
     this.categories().find((item) => item.slug === this.filters().category),
   );
@@ -100,6 +113,32 @@ export class StoreComponent implements OnInit {
       queryParams[key] = value || null;
     }
     void this.router.navigate(['/store'], { queryParams });
+  }
+
+  openFilters(dialog: HTMLDialogElement): void {
+    const { min, max, stock, sort } = this.filters();
+    this.draftFilters.set({ min, max, stock, sort });
+    dialog.showModal();
+  }
+
+  patchDraft(patch: Partial<StoreFilters>): void {
+    this.draftFilters.update((current) => ({ ...current, ...patch }));
+  }
+
+  resetDraft(): void {
+    this.draftFilters.set({ min: '', max: '', stock: '', sort: '' });
+  }
+
+  applyFilters(dialog: HTMLDialogElement): void {
+    this.apply(this.draftFilters());
+    dialog.close();
+  }
+
+  /** Clicks on the dialog element itself land on the backdrop, outside the panel. */
+  backdropClose(event: MouseEvent, dialog: HTMLDialogElement): void {
+    if (event.target === dialog) {
+      dialog.close();
+    }
   }
 
   clear(): void {
