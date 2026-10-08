@@ -6,6 +6,7 @@ import { RouterLink } from '@angular/router';
 import { UserSettings } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { ToastService } from '../../core/services/toast.service';
 import { SpinnerComponent } from '../../shared/loading';
 
 type Section = 'profile' | 'avatar' | 'email' | 'password' | 'preferences';
@@ -21,6 +22,7 @@ const AVATAR_MAX_FILE = 8 * 1024 * 1024;
   styleUrl: './settings.scss',
 })
 export class SettingsComponent implements OnInit {
+  private readonly toast = inject(ToastService);
   private readonly api = inject(ApiService);
   private readonly fb = inject(FormBuilder);
   readonly auth = inject(AuthService);
@@ -169,6 +171,11 @@ export class SettingsComponent implements OnInit {
   private report(section: Section, kind: 'ok' | 'error', text: string): void {
     this.busy.set(null);
     this.status.update((all) => ({ ...all, [section]: { kind, text } }));
+    if (kind === 'ok') {
+      this.toast.success(text);
+    } else {
+      this.toast.error(text);
+    }
   }
 }
 

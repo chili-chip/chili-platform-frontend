@@ -1,12 +1,29 @@
 <footer class="foot">
-  <p>© {{ year }} Chili Platform · vgc zero · edge-native retro</p>
-  <nav>
-    <a routerLink="/store">Store</a>
-    <a routerLink="/community">Forums</a>
-    <a routerLink="/creator">Creator</a>
-    <a routerLink="/help">Help</a>
-    <a routerLink="/terms">Terms</a>
-    <a routerLink="/privacy">Privacy</a>
-    <a routerLink="/seller-terms">Seller terms</a>
+  <div class="row">
+    <p>© {{ year }} Chili Platform · vgc zero · edge-native retro</p>
+    <nav aria-label="Footer">
+      <a routerLink="/store">Store</a>
+      <a routerLink="/community">Forums</a>
+      <a routerLink="/creator">Creator</a>
+      <a routerLink="/help">Help</a>
+      <a routerLink="/terms">Terms</a>
+      <a routerLink="/privacy">Privacy</a>
+      <a routerLink="/seller-terms">Seller terms</a>
+    </nav>
+  </div>
+  <nav class="socials" aria-label="Social links">
+    @for (social of socials; track social.url) {
+      <a
+        [href]="social.url"
+        target="_blank"
+        rel="noopener noreferrer"
+        [attr.aria-label]="social.label + ' (opens in a new tab)'"
+        [attr.title]="social.label"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path [attr.d]="social.iconPath" fill="currentColor" />
+        </svg>
+      </a>
+    }
   </nav>
 </footer>

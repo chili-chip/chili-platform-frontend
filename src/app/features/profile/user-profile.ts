@@ -6,6 +6,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { GameProject, MarketplacePurchase, StoreOrder, UserProfile } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { ToastService } from '../../core/services/toast.service';
 import { GameTileComponent } from '../../shared/game-tile/game-tile';
 import { SkeletonGridComponent, SkeletonRowsComponent } from '../../shared/loading';
 import { formatPrice, marketError } from '../marketplace/market-utils';
@@ -29,6 +30,7 @@ type LibraryShelf = 'bought' | 'mine';
   styleUrl: './user-profile.scss',
 })
 export class UserProfileComponent {
+  private readonly toast = inject(ToastService);
   private readonly api = inject(ApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -132,8 +134,15 @@ export class UserProfileComponent {
     }
     this.error.set('');
     this.api.releaseGame(game.id).subscribe({
-      next: () => this.projects.update((list) => list.filter((item) => item.id !== game.id)),
-      error: (err) => this.error.set(marketError(err, 'Could not release this project.')),
+      next: () => {
+        this.projects.update((list) => list.filter((item) => item.id !== game.id));
+        this.toast.success(`Released ${game.title}.`);
+      },
+      error: (err) => {
+        const message = marketError(err, 'Could not release this project.');
+        this.error.set(message);
+        this.toast.error(message);
+      },
     });
   }
 
@@ -144,7 +153,11 @@ export class UserProfileComponent {
       return;
     }
     this.api.deleteGame(game.id).subscribe({
-      next: () => this.projects.update((list) => list.filter((item) => item.id !== game.id)),
+      next: () => {
+        this.projects.update((list) => list.filter((item) => item.id !== game.id));
+        this.toast.success(`Removed ${game.title}.`);
+      },
+      error: (err) => this.toast.error(marketError(err, 'Could not remove this game.')),
     });
   }
 
