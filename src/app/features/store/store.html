@@ -3,7 +3,7 @@
     <div>
       <p class="kicker">Chilichip</p>
       <h1>Store</h1>
-      <p class="lede">Kits, shells, and parts for the vgc zero. Pay with Stripe Checkout — test cards welcome.</p>
+      <p class="lede">Kits, shells, and parts for the vgc zero handheld, with secure checkout powered by Stripe.</p>
     </div>
     @if (!auth.isAuthenticated()) {
       <a routerLink="/login" [queryParams]="{ next: '/store/checkout' }" class="btn ghost">Sign in to buy</a>

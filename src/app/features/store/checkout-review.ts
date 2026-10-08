@@ -39,6 +39,8 @@ export class CheckoutReviewComponent implements OnInit {
   readonly deliveryOptions = signal<StoreDeliveryOption[]>([]);
   readonly deliveryLoading = signal(true);
   readonly deliverySlug = signal('');
+  /** True when Stripe runs on test keys, so the test-card hint is shown. */
+  readonly stripeTestMode = signal(false);
 
   /** Options that suit every physical item; null when the cart is all digital. */
   private readonly allowed = computed(() =>
@@ -75,6 +77,10 @@ export class CheckoutReviewComponent implements OnInit {
   readonly totalCents = computed(() => this.cart.totalCents() + (this.deliveryCents() ?? 0));
 
   ngOnInit(): void {
+    this.api.marketplaceConfig().subscribe({
+      next: (config) => this.stripeTestMode.set((config.stripe_publishable_key ?? '').startsWith('pk_test_')),
+      error: () => this.stripeTestMode.set(false),
+    });
     this.api.listDeliveryOptions().subscribe({
       next: (rows) => {
         this.deliveryOptions.set(rows);
@@ -96,7 +102,7 @@ export class CheckoutReviewComponent implements OnInit {
       return;
     }
     if (this.noSharedOption()) {
-      this.error.set('These items have no delivery option in common. Order them separately.');
+      this.error.set('These items cannot be delivered together. Please place a separate order for each.');
       return;
     }
     if (!this.auth.isAuthenticated()) {
@@ -111,7 +117,7 @@ export class CheckoutReviewComponent implements OnInit {
       },
       error: (err) => {
         this.paying.set(false);
-        const message = apiErrorMessage(err, 'Checkout failed. Try again in a moment.');
+        const message = apiErrorMessage(err, 'We could not start checkout. Please try again in a moment.');
         this.error.set(message);
         this.toast.error(message);
       },

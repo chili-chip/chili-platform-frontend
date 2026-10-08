@@ -42,7 +42,7 @@ export class CheckoutSuccessComponent {
       this.session_id() || this.route.snapshot.queryParamMap.get('session_id') || '';
     if (!sessionId) {
       this.loading.set(false);
-      this.error.set('Missing Checkout session. Return to the store and try again.');
+      this.error.set('This payment link is incomplete. Return to the store and try again.');
       return;
     }
     if (!this.auth.isAuthenticated()) {
@@ -62,7 +62,7 @@ export class CheckoutSuccessComponent {
       },
       error: (err) => {
         this.loading.set(false);
-        const message = apiErrorMessage(err, 'Could not confirm this payment.');
+        const message = apiErrorMessage(err, 'We could not confirm this payment.');
         this.error.set(message);
         this.toast.error(message);
       },

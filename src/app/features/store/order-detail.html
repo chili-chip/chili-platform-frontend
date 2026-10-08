@@ -15,13 +15,13 @@
     <h1>Order #{{ receipt.id }}</h1>
     <p class="lede">
       @if (justPaid()) {
-        Stripe captured the payment. Keep this page for your records.
+        Thank you, your payment was successful. You can find this order at any time under Orders on your profile.
       } @else if (receipt.status === 'paid') {
-        This hardware order is paid and waiting to ship.
+        This order is paid and being prepared for shipping.
       } @else if (receipt.status === 'fulfilled') {
         This order has been fulfilled.
       } @else if (receipt.status === 'pending') {
-        Payment is still pending. If you just paid, refresh in a moment.
+        Your payment is still processing. If you have just paid, refresh this page in a moment.
       } @else {
         This order is {{ receipt.status }}.
       }

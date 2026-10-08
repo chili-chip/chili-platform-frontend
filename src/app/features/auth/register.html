@@ -1,6 +1,6 @@
 <section class="auth">
   <p class="kicker">Account</p>
-  <h1>Join the scene</h1>
+  <h1>Create your account</h1>
   <form [formGroup]="form" (ngSubmit)="submit()">
     <label>
       Username
@@ -32,6 +32,6 @@
     }
     <button class="btn primary" type="submit">Create account</button>
   </form>
-  <p class="switch">Already playing? <a routerLink="/login" [queryParams]="next ? { next } : {}">Sign in</a></p>
-  <p class="switch"><a routerLink="/verify-email">Verify an email</a></p>
+  <p class="switch">Already have an account? <a routerLink="/login" [queryParams]="next ? { next } : {}">Sign in</a></p>
+  <p class="switch"><a routerLink="/verify-email">Resend verification email</a></p>
 </section>

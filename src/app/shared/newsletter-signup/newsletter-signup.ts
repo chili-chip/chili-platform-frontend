@@ -41,7 +41,7 @@ export class NewsletterSignupComponent {
           return;
         }
         this.error.set(
-          err.error?.email?.[0] || err.error?.detail || 'Could not subscribe right now.',
+          err.error?.email?.[0] || err.error?.detail || 'We could not subscribe you right now. Please try again later.',
         );
       },
     });
