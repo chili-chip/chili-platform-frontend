@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { SOCIAL_LINKS } from '../../core/socials';
+import { DOCS_URL, SOCIAL_LINKS } from '../../core/socials';
 
 @Component({
   selector: 'app-site-footer',
@@ -12,4 +12,5 @@ import { SOCIAL_LINKS } from '../../core/socials';
 export class SiteFooterComponent {
   readonly year = new Date().getFullYear();
   readonly socials = SOCIAL_LINKS;
+  readonly siteUrl = DOCS_URL;
 }
