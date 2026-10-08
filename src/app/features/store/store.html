@@ -58,6 +58,15 @@
         <span class="filter-count">{{ activeFilterCount() }}</span>
       }
     </button>
+    <label class="sort">
+      <span>Sort</span>
+      <select [value]="filters().sort" (change)="apply({ sort: $any($event.target).value })">
+        <option value="">Name</option>
+        <option value="price">Price, low to high</option>
+        <option value="-price">Price, high to low</option>
+        <option value="newest">Newest</option>
+      </select>
+    </label>
     @if (filtered()) {
       <button type="button" class="clear-link" (click)="clear()">Clear all</button>
     }
@@ -108,18 +117,6 @@
           (change)="patchDraft({ stock: $any($event.target).checked ? '1' : '' })"
         />
         In stock only
-      </label>
-      <label>
-        Sort by
-        <select
-          [value]="draftFilters().sort"
-          (change)="patchDraft({ sort: $any($event.target).value })"
-        >
-          <option value="">Name</option>
-          <option value="price">Price, low to high</option>
-          <option value="-price">Price, high to low</option>
-          <option value="newest">Newest</option>
-        </select>
       </label>
       <footer>
         <button type="button" class="btn ghost" (click)="resetDraft()">Reset</button>

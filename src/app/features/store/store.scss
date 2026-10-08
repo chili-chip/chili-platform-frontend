@@ -83,6 +83,7 @@ select {
 
 .toolbar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.8rem;
   margin-top: 1rem;
@@ -102,6 +103,16 @@ select {
   font-family: var(--font-mono);
   font-size: 0.7rem;
   text-align: center;
+}
+
+.sort {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .clear-link {

@@ -65,16 +65,15 @@ export class StoreComponent implements OnInit {
   });
 
   /** Modal edits stay here until the shopper presses "Show results". */
-  readonly draftFilters = signal<Pick<StoreFilters, 'min' | 'max' | 'stock' | 'sort'>>({
+  readonly draftFilters = signal<Pick<StoreFilters, 'min' | 'max' | 'stock'>>({
     min: '',
     max: '',
     stock: '',
-    sort: '',
   });
 
   readonly activeFilterCount = computed(() => {
-    const { min, max, stock, sort } = this.filters();
-    return [min || max, stock, sort].filter((value) => !!value).length;
+    const { min, max, stock } = this.filters();
+    return [min || max, stock].filter((value) => !!value).length;
   });
 
   readonly activeCategory = computed(() =>
@@ -116,8 +115,8 @@ export class StoreComponent implements OnInit {
   }
 
   openFilters(dialog: HTMLDialogElement): void {
-    const { min, max, stock, sort } = this.filters();
-    this.draftFilters.set({ min, max, stock, sort });
+    const { min, max, stock } = this.filters();
+    this.draftFilters.set({ min, max, stock });
     dialog.showModal();
   }
 
@@ -126,7 +125,7 @@ export class StoreComponent implements OnInit {
   }
 
   resetDraft(): void {
-    this.draftFilters.set({ min: '', max: '', stock: '', sort: '' });
+    this.draftFilters.set({ min: '', max: '', stock: '' });
   }
 
   applyFilters(dialog: HTMLDialogElement): void {
