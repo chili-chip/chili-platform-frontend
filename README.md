@@ -49,13 +49,14 @@ The landing hero loads `public/models/vgc-zero.glb`.
 
 | | Production | Dev |
 | --- | --- | --- |
+| Branch | `main` | `dev` |
 | Site | https://platform.chilichip.eu | https://platform-dev.chilichip.eu |
 | Pages project | `chili-platform` | `chili-platform-dev` |
 | API | `environment.prod.ts` | `environment.dev.ts` |
 | Build | `npm run build:prod` | `npm run build:dev` |
 | Deploy | `npm run pages:prod` | `npm run pages:dev` |
 
-Each deploy script builds with that environment's API URL and uploads to its own Pages project. The API for each site is the matching backend Worker (see the backend README). `npm run build` still builds production, and `npm run pages` is an alias for `pages:prod`.
+Feature branches merge into `dev`, which deploys to dev. When dev looks right, merge `dev` into `main` to release it to production. Each deploy script refuses to run from the other environment's branch (on Cloudflare's git builds it reads `CF_PAGES_BRANCH`), builds with that environment's API URL, and uploads to its own Pages project. The `chili-platform-dev` project's production branch is `dev`. The API for each site is the matching backend Worker (see the backend README). `npm run build` still builds production, and `npm run pages` is an alias for `pages:prod`.
 
 ---
 
