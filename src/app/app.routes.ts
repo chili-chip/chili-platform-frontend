@@ -123,6 +123,11 @@ export const routes: Routes = [
     title: 'Thread',
   },
   {
+    path: 'timeline',
+    loadComponent: () => import('./features/timeline/timeline').then((m) => m.TimelineComponent),
+    title: 'Timeline',
+  },
+  {
     path: 'terms',
     loadComponent: () =>
       import('./features/legal/legal-page').then((m) => m.TermsPageComponent),

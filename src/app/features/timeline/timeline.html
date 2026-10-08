@@ -1,0 +1,44 @@
+<section class="page">
+  <header class="intro">
+    <p class="kicker">Roadmap</p>
+    <h1>Timeline</h1>
+    <p class="lede">What is planned next and what has already shipped on the platform.</p>
+  </header>
+
+  <div class="filters" role="group" aria-label="Filter timeline">
+    @for (option of filters; track option.value) {
+      <button
+        type="button"
+        class="chip"
+        [class.is-on]="filter() === option.value"
+        [attr.aria-pressed]="filter() === option.value"
+        (click)="filter.set(option.value)"
+      >
+        {{ option.label }}
+      </button>
+    }
+  </div>
+
+  @if (entries().length) {
+    <ol class="timeline">
+      @for (entry of entries(); track entry.title) {
+        <li class="entry" [class.entry--plan]="entry.type === 'plan'">
+          <p class="meta">
+            <span class="badge">{{ entry.type === 'plan' ? 'Plan' : 'Release' }}</span>
+            <time [attr.datetime]="entry.date">
+              {{ entry.type === 'plan' ? 'Announced ' : ''
+              }}{{ entry.date | date: 'mediumDate' : 'UTC' }}
+            </time>
+          </p>
+          <h2>{{ entry.title }}</h2>
+          <p class="desc">{{ entry.description }}</p>
+          @if (entry.link; as link) {
+            <a [href]="link.url" target="_blank" rel="noopener noreferrer">{{ link.label }} ↗</a>
+          }
+        </li>
+      }
+    </ol>
+  } @else {
+    <p class="empty">Nothing to show here yet.</p>
+  }
+</section>
