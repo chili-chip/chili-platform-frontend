@@ -7,6 +7,7 @@ import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
 import {
+  allowedDeliveryOptions,
   apiErrorMessage,
   deliveryFee,
   deliveryWhere,
@@ -39,17 +40,32 @@ export class CheckoutReviewComponent implements OnInit {
   readonly deliveryLoading = signal(true);
   readonly deliverySlug = signal('');
 
-  readonly delivery = computed(() =>
-    this.deliveryOptions().find((option) => option.slug === this.deliverySlug()),
+  /** Options that suit every physical item; null when the cart is all digital. */
+  private readonly allowed = computed(() =>
+    allowedDeliveryOptions(
+      this.deliveryOptions(),
+      this.cart.items().map((line) => line.product),
+    ),
+  );
+  readonly digitalOnly = computed(() => this.allowed() === null);
+  readonly availableOptions = computed(() => this.allowed() ?? []);
+  /** Options exist, but none suits every item in the cart. */
+  readonly noSharedOption = computed(
+    () => !this.digitalOnly() && !!this.deliveryOptions().length && !this.availableOptions().length,
   );
 
-  /** Fee in cents for the chosen option; null while nothing is chosen. */
+  readonly delivery = computed<StoreDeliveryOption | undefined>(() => {
+    const options = this.availableOptions();
+    return options.find((option) => option.slug === this.deliverySlug()) ?? options[0];
+  });
+
+  /** Fee in cents for the chosen option; null when no option can be chosen. */
   readonly deliveryCents = computed(() => {
     const option = this.delivery();
     if (option) {
       return deliveryFee(option, this.cart.totalCents());
     }
-    return this.deliveryOptions().length ? null : 0;
+    return this.noSharedOption() ? null : 0;
   });
 
   fee(option: StoreDeliveryOption): number {
@@ -62,9 +78,6 @@ export class CheckoutReviewComponent implements OnInit {
     this.api.listDeliveryOptions().subscribe({
       next: (rows) => {
         this.deliveryOptions.set(rows);
-        if (rows.length) {
-          this.deliverySlug.set(rows[0].slug);
-        }
         this.deliveryLoading.set(false);
       },
       error: () => {
@@ -82,8 +95,8 @@ export class CheckoutReviewComponent implements OnInit {
     if (!this.cart.count() || this.paying()) {
       return;
     }
-    if (this.deliveryOptions().length && !this.delivery()) {
-      this.error.set('Choose a delivery option.');
+    if (this.noSharedOption()) {
+      this.error.set('These items have no delivery option in common. Order them separately.');
       return;
     }
     if (!this.auth.isAuthenticated()) {

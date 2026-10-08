@@ -121,6 +121,10 @@ export interface StoreProduct {
   images?: StoreProductImage[];
   image_url?: string;
   stock: number;
+  /** Delivered digitally; digital-only orders skip delivery. */
+  is_digital?: boolean;
+  /** Delivery option slugs this product ships with. Empty allows every active option. */
+  delivery_options?: string[];
   is_active: boolean;
   created_at: string;
   updated_at: string;

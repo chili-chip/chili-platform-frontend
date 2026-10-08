@@ -43,6 +43,11 @@
         <p class="stock" [class.is-low]="item.stock > 0 && item.stock < 8">
           {{ item.stock < 1 ? 'Sold out' : item.stock + ' in stock' }}
         </p>
+        @if (item.is_digital) {
+          <p class="delivery">Digital delivery, nothing ships</p>
+        } @else if (shipsWith().length) {
+          <p class="delivery">Delivery: {{ shipsWith().join(' · ') }}</p>
+        }
         <div class="buy">
           <strong>{{ item.price_cents / 100 | currency: item.currency.toUpperCase() }}</strong>
           <button type="button" class="btn primary" [disabled]="item.stock < 1" (click)="addToCart()">

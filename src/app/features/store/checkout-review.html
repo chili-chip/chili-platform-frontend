@@ -31,6 +31,9 @@
             <div class="copy">
               <p class="sku">{{ line.product.sku || line.product.slug }}</p>
               <h2><a [routerLink]="['/store', line.product.slug]">{{ line.product.name }}</a></h2>
+              @if (line.product.is_digital) {
+                <p class="tag">Digital delivery</p>
+              }
               <p class="desc">{{ blurb(line.product) }}</p>
               <div class="row">
                 <div class="qty">
@@ -59,16 +62,20 @@
         <h2>Stripe Checkout</h2>
         @if (deliveryLoading()) {
           <p class="note">Loading delivery options…</p>
-        } @else if (deliveryOptions().length) {
+        } @else if (digitalOnly()) {
+          <p class="digital-note">Digital delivery. Nothing ships, so there is no delivery fee.</p>
+        } @else if (noSharedOption()) {
+          <p class="err clash">These items have no delivery option in common. Order them separately.</p>
+        } @else if (availableOptions().length) {
           <fieldset class="delivery">
             <legend>Delivery</legend>
-            @for (option of deliveryOptions(); track option.slug) {
-              <label class="option" [class.is-on]="deliverySlug() === option.slug">
+            @for (option of availableOptions(); track option.slug) {
+              <label class="option" [class.is-on]="delivery()?.slug === option.slug">
                 <input
                   type="radio"
                   name="delivery"
                   [value]="option.slug"
-                  [checked]="deliverySlug() === option.slug"
+                  [checked]="delivery()?.slug === option.slug"
                   (change)="deliverySlug.set(option.slug)"
                 />
                 <span class="option-copy">
@@ -107,7 +114,9 @@
             <dt>Delivery</dt>
             <dd>
               @if (deliveryCents() === null) {
-                Choose above
+                Unavailable
+              } @else if (digitalOnly()) {
+                Digital
               } @else if (deliveryCents() === 0) {
                 Free
               } @else {
@@ -122,7 +131,9 @@
         </dl>
         <p class="note">
           Test card <code>4242 4242 4242 4242</code> · any future date · any CVC.
-          @if (delivery()?.requires_address === false) {
+          @if (digitalOnly()) {
+            No address needed for digital items.
+          } @else if (delivery()?.requires_address === false) {
             No address needed for pickup.
           } @else {
             Address is collected by Stripe.
@@ -135,7 +146,7 @@
           <button
             type="button"
             class="btn primary pay-btn"
-            [disabled]="paying() || deliveryLoading()"
+            [disabled]="paying() || deliveryLoading() || noSharedOption()"
             (click)="pay()"
           >
             {{ paying() ? 'Redirecting…' : 'Pay with Stripe' }}
