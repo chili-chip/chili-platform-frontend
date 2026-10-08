@@ -1,3 +1,6 @@
+/** Hardware specs, assembly, and technical docs live on the Chilichip site, not the platform. */
+export const DOCS_URL = 'https://chilichip.eu';
+
 export interface SocialLink {
   /** Used as the accessible name and tooltip. */
   label: string;
