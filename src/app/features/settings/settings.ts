@@ -6,6 +6,7 @@ import { RouterLink } from '@angular/router';
 import { UserSettings } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { ToastService } from '../../core/services/toast.service';
 import { SpinnerComponent } from '../../shared/loading';
 
 type Section = 'profile' | 'avatar' | 'email' | 'password' | 'preferences';
@@ -13,7 +14,6 @@ type Status = { kind: 'ok' | 'error'; text: string } | null;
 
 const AVATAR_SIZE = 256;
 const AVATAR_MAX_FILE = 8 * 1024 * 1024;
-import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-settings',

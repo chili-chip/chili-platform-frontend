@@ -84,7 +84,7 @@
   function notify(kind, message) {
     if (window.parent && window.parent !== window) {
       window.parent.postMessage({ type: "chili-toast", kind: kind, message: message }, window.location.origin);
-    } else if (kind === "error") {
+    } else {
       window.alert(message);
     }
   }

@@ -6,6 +6,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { GameProject, MarketplacePurchase, StoreOrder, UserProfile } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { ToastService } from '../../core/services/toast.service';
 import { GameTileComponent } from '../../shared/game-tile/game-tile';
 import { SkeletonGridComponent, SkeletonRowsComponent } from '../../shared/loading';
 import { formatPrice, marketError } from '../marketplace/market-utils';
@@ -13,7 +14,6 @@ import { shippingSummary, unwrapList } from '../store/store-utils';
 
 type ProfileTab = 'orders' | 'library' | 'projects';
 type LibraryShelf = 'bought' | 'mine';
-import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-user-profile',
