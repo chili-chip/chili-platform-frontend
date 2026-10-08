@@ -13,6 +13,7 @@ type Status = { kind: 'ok' | 'error'; text: string } | null;
 
 const AVATAR_SIZE = 256;
 const AVATAR_MAX_FILE = 8 * 1024 * 1024;
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-settings',
@@ -21,6 +22,7 @@ const AVATAR_MAX_FILE = 8 * 1024 * 1024;
   styleUrl: './settings.scss',
 })
 export class SettingsComponent implements OnInit {
+  private readonly toast = inject(ToastService);
   private readonly api = inject(ApiService);
   private readonly fb = inject(FormBuilder);
   readonly auth = inject(AuthService);
@@ -169,6 +171,11 @@ export class SettingsComponent implements OnInit {
   private report(section: Section, kind: 'ok' | 'error', text: string): void {
     this.busy.set(null);
     this.status.update((all) => ({ ...all, [section]: { kind, text } }));
+    if (kind === 'ok') {
+      this.toast.success(text);
+    } else {
+      this.toast.error(text);
+    }
   }
 }
 

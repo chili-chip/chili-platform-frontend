@@ -7,6 +7,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { MediaFadeDirective, SkeletonDetailComponent, SpinnerComponent } from '../../shared/loading';
 import { downloadBitsy } from '../play/bitsy-file';
 import { formatPrice, marketError } from './market-utils';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-game-page',
@@ -15,6 +16,7 @@ import { formatPrice, marketError } from './market-utils';
   styleUrl: './market.scss',
 })
 export class GamePageComponent implements OnInit {
+  private readonly toast = inject(ToastService);
   private readonly api = inject(ApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -85,10 +87,13 @@ export class GamePageComponent implements OnInit {
         this.starHover.set(0);
         this.pickedStars.set(0);
         this.comment.set('');
+        this.toast.success('Thanks, your rating was saved.');
       },
       error: (err) => {
         this.savingRating.set(false);
-        this.error.set(marketError(err, 'Could not save your rating.'));
+        const message = marketError(err, 'Could not save your rating.');
+        this.error.set(message);
+        this.toast.error(message);
       },
     });
   }
@@ -115,6 +120,7 @@ export class GamePageComponent implements OnInit {
     this.api.checkoutListing(listing.slug).subscribe({
       next: (result) => {
         if (result.free || !result.checkout_url) {
+          this.toast.success('Added to your library.');
           const name = this.auth.currentUser()?.username;
           void this.router.navigate(['/profile', name], {
             queryParams: { tab: 'library', shelf: 'bought' },
@@ -125,7 +131,9 @@ export class GamePageComponent implements OnInit {
       },
       error: (err) => {
         this.buying.set(false);
-        this.error.set(marketError(err, 'Could not start checkout.'));
+        const message = marketError(err, 'Could not start checkout.');
+        this.error.set(message);
+        this.toast.error(message);
       },
     });
   }

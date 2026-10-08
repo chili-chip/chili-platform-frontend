@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-verify-email',
@@ -10,6 +11,7 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrl: './auth-form.scss',
 })
 export class VerifyEmailComponent implements OnInit {
+  private readonly toast = inject(ToastService);
   readonly auth = inject(AuthService);
   private readonly route = inject(ActivatedRoute);
 
@@ -28,6 +30,7 @@ export class VerifyEmailComponent implements OnInit {
       next: () => {
         this.busy.set(false);
         this.message.set('Email verified. You can post, publish, and check out.');
+        this.toast.success('Email verified.');
         this.error.set('');
         if (this.auth.isAuthenticated()) {
           this.auth.refreshProfile().subscribe({ error: () => undefined });
@@ -47,6 +50,7 @@ export class VerifyEmailComponent implements OnInit {
       next: (response) => {
         this.busy.set(false);
         this.message.set(response.detail);
+        this.toast.success('Verification email sent.');
       },
       error: (err: { error?: { detail?: string } }) => {
         this.busy.set(false);

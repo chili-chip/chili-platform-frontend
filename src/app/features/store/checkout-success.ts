@@ -6,6 +6,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
 import { SpinnerComponent } from '../../shared/loading';
 import { apiErrorMessage } from './store-utils';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-checkout-success',
@@ -14,6 +15,7 @@ import { apiErrorMessage } from './store-utils';
   styleUrl: './checkout.scss',
 })
 export class CheckoutSuccessComponent {
+  private readonly toast = inject(ToastService);
   private readonly api = inject(ApiService);
   private readonly auth = inject(AuthService);
   private readonly cart = inject(CartService);
@@ -52,6 +54,7 @@ export class CheckoutSuccessComponent {
     this.api.confirmCheckout(sessionId).subscribe({
       next: (order) => {
         this.cart.clear();
+        this.toast.success('Payment confirmed. Thank you for your order!');
         void this.router.navigate(['/store/orders', order.id], {
           replaceUrl: true,
           queryParams: { paid: '1' },
@@ -59,7 +62,9 @@ export class CheckoutSuccessComponent {
       },
       error: (err) => {
         this.loading.set(false);
-        this.error.set(apiErrorMessage(err, 'Could not confirm this payment.'));
+        const message = apiErrorMessage(err, 'Could not confirm this payment.');
+        this.error.set(message);
+        this.toast.error(message);
       },
     });
   }

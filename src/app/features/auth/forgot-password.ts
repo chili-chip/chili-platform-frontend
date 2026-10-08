@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -11,6 +12,7 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrl: './auth-form.scss',
 })
 export class ForgotPasswordComponent {
+  private readonly toast = inject(ToastService);
   private readonly auth = inject(AuthService);
   private readonly fb = inject(FormBuilder);
 
@@ -30,6 +32,7 @@ export class ForgotPasswordComponent {
     this.auth.requestPasswordReset(this.form.getRawValue().email).subscribe({
       next: (response) => {
         this.message.set(response.detail);
+        this.toast.success('Reset email sent. Check your inbox.');
       },
       error: (err: { error?: { detail?: string } }) => {
         this.error.set(err.error?.detail || 'Could not send the reset email.');

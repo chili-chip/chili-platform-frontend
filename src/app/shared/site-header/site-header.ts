@@ -3,6 +3,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
 import { CartPopupComponent } from '../cart-popup/cart-popup';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-site-header',
@@ -11,6 +12,7 @@ import { CartPopupComponent } from '../cart-popup/cart-popup';
   styleUrl: './site-header.scss',
 })
 export class SiteHeaderComponent {
+  private readonly toast = inject(ToastService);
   readonly auth = inject(AuthService);
   readonly menuOpen = signal(false);
 
@@ -25,5 +27,6 @@ export class SiteHeaderComponent {
   signOut(): void {
     this.closeMenu();
     this.auth.logout();
+    this.toast.success('Signed out.');
   }
 }

@@ -13,6 +13,7 @@ import { shippingSummary, unwrapList } from '../store/store-utils';
 
 type ProfileTab = 'orders' | 'library' | 'projects';
 type LibraryShelf = 'bought' | 'mine';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -29,6 +30,7 @@ type LibraryShelf = 'bought' | 'mine';
   styleUrl: './user-profile.scss',
 })
 export class UserProfileComponent {
+  private readonly toast = inject(ToastService);
   private readonly api = inject(ApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -132,8 +134,15 @@ export class UserProfileComponent {
     }
     this.error.set('');
     this.api.releaseGame(game.id).subscribe({
-      next: () => this.projects.update((list) => list.filter((item) => item.id !== game.id)),
-      error: (err) => this.error.set(marketError(err, 'Could not release this project.')),
+      next: () => {
+        this.projects.update((list) => list.filter((item) => item.id !== game.id));
+        this.toast.success(`Released ${game.title}.`);
+      },
+      error: (err) => {
+        const message = marketError(err, 'Could not release this project.');
+        this.error.set(message);
+        this.toast.error(message);
+      },
     });
   }
 
@@ -144,7 +153,11 @@ export class UserProfileComponent {
       return;
     }
     this.api.deleteGame(game.id).subscribe({
-      next: () => this.projects.update((list) => list.filter((item) => item.id !== game.id)),
+      next: () => {
+        this.projects.update((list) => list.filter((item) => item.id !== game.id));
+        this.toast.success(`Removed ${game.title}.`);
+      },
+      error: (err) => this.toast.error(marketError(err, 'Could not remove this game.')),
     });
   }
 
