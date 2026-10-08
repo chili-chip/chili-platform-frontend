@@ -1,15 +1,24 @@
 import { Injectable } from '@angular/core';
 
-import { CACHE_TTL_MS, TIMELINE_LABEL, TIMELINE_REPOS, TimelineRepo } from './timeline-config';
-
-export type TimelineType = 'plan' | 'release';
+import {
+  AREA_LABEL_PREFIX,
+  AREAS,
+  CACHE_TTL_MS,
+  IN_PROGRESS_LABEL,
+  TIMELINE_LABEL,
+  TIMELINE_REPOS,
+  TimelineRepo,
+  TimelineStatus,
+} from './timeline-config';
 
 export interface TimelineEntry {
-  type: TimelineType;
+  status: TimelineStatus;
+  /** Area value from `AREAS`, when the item has one. */
+  area?: string;
   title: string;
-  /** ISO date-time. Releases: when it shipped. Plans: when the issue was opened. */
+  /** ISO date-time. Shipped: when it shipped. Otherwise: when it was opened. */
   date: string;
-  /** Repository label, e.g. "Platform". */
+  /** Repository label, e.g. "Web". */
   source: string;
   link: { label: string; url: string };
 }
@@ -28,16 +37,19 @@ interface GithubIssue {
   title: string;
   html_url: string;
   state: 'open' | 'closed';
+  state_reason?: string | null;
   created_at: string;
+  closed_at?: string | null;
+  labels: (string | { name?: string })[];
   pull_request?: { merged_at: string | null };
 }
 
 const API = 'https://api.github.com';
-const CACHE_KEY = 'chili.timeline.v2';
+const CACHE_KEY = 'chili.timeline.v3';
 
 /**
  * Builds the timeline from GitHub: published releases, plus pull requests and issues that carry
- * `TIMELINE_LABEL` (merged pull requests as releases, open issues as plans).
+ * `TIMELINE_LABEL`. See `timeline-config.ts` for how status and area are worked out.
  *
  * Uses `fetch` rather than `HttpClient` on purpose: the app's auth interceptor adds the user's
  * login token to every `HttpClient` request, and it must never be sent to GitHub.
@@ -72,7 +84,8 @@ export class TimelineService {
         continue;
       }
       entries.push({
-        type: 'release',
+        status: 'shipped',
+        area: areaFromTag(item.tag_name),
         title: item.name || item.tag_name,
         date: item.published_at,
         source: repo.label,
@@ -81,23 +94,31 @@ export class TimelineService {
     }
 
     for (const item of labeled) {
+      const names = labelNames(item);
+      let status: TimelineStatus | null = null;
+      let date = item.created_at;
       if (item.pull_request) {
         if (item.pull_request.merged_at) {
-          entries.push({
-            type: 'release',
-            title: item.title,
-            date: item.pull_request.merged_at,
-            source: repo.label,
-            link: { label: `Pull request #${item.number}`, url: item.html_url },
-          });
+          status = 'shipped';
+          date = item.pull_request.merged_at;
+        } else if (item.state === 'open') {
+          status = 'in-progress';
         }
       } else if (item.state === 'open') {
+        status = names.includes(IN_PROGRESS_LABEL) ? 'in-progress' : 'planned';
+      } else if (item.state_reason === 'completed' && item.closed_at) {
+        status = 'shipped';
+        date = item.closed_at;
+      }
+      if (status) {
+        const kind = item.pull_request ? 'Pull request' : 'Issue';
         entries.push({
-          type: 'plan',
+          status,
+          area: areaFromLabels(names),
           title: item.title,
-          date: item.created_at,
+          date,
           source: repo.label,
-          link: { label: `Issue #${item.number}`, url: item.html_url },
+          link: { label: `${kind} #${item.number}`, url: item.html_url },
         });
       }
     }
@@ -136,4 +157,25 @@ export class TimelineService {
       // Storage can be unavailable (private mode, quota); the timeline still works without it.
     }
   }
+}
+
+function labelNames(item: GithubIssue): string[] {
+  return item.labels.map((label) => (typeof label === 'string' ? label : (label.name ?? '')));
+}
+
+function areaFromLabels(names: string[]): string | undefined {
+  for (const name of names) {
+    if (name.startsWith(AREA_LABEL_PREFIX)) {
+      const value = name.slice(AREA_LABEL_PREFIX.length).trim().toLowerCase();
+      if (AREAS.some((area) => area.value === value)) {
+        return value;
+      }
+    }
+  }
+  return undefined;
+}
+
+function areaFromTag(tag: string): string | undefined {
+  const prefix = tag.toLowerCase().split(/[-/_]/)[0];
+  return AREAS.some((area) => area.value === prefix) ? prefix : undefined;
 }
