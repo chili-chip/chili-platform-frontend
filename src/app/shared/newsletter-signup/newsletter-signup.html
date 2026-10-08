@@ -1,0 +1,19 @@
+<form class="signup" [formGroup]="form" (ngSubmit)="submit()">
+  <label for="newsletter-email">Newsletter: games, hardware, and platform news</label>
+  <div class="fields">
+    <input
+      id="newsletter-email"
+      type="email"
+      formControlName="email"
+      autocomplete="email"
+      placeholder="you@example.com"
+    />
+    <button class="btn" type="submit" [disabled]="busy()">Subscribe</button>
+  </div>
+  @if (message()) {
+    <p class="note" role="status">{{ message() }}</p>
+  }
+  @if (error()) {
+    <p class="err" role="alert">{{ error() }}</p>
+  }
+</form>

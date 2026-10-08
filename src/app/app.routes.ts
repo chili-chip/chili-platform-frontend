@@ -174,6 +174,20 @@ export const routes: Routes = [
     title: 'Confirm new email',
   },
   {
+    path: 'newsletter/confirm',
+    loadComponent: () =>
+      import('./features/newsletter/newsletter-link').then((m) => m.NewsletterLinkComponent),
+    data: { action: 'confirm' },
+    title: 'Confirm newsletter',
+  },
+  {
+    path: 'newsletter/unsubscribe',
+    loadComponent: () =>
+      import('./features/newsletter/newsletter-link').then((m) => m.NewsletterLinkComponent),
+    data: { action: 'unsubscribe' },
+    title: 'Unsubscribe',
+  },
+  {
     path: 'forgot-password',
     loadComponent: () =>
       import('./features/auth/forgot-password').then((m) => m.ForgotPasswordComponent),

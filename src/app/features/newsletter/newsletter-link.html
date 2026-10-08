@@ -1,0 +1,14 @@
+<section class="auth">
+  <p class="kicker">Newsletter</p>
+  <h1>{{ copy.title }}</h1>
+  @if (busy()) {
+    <p class="note">{{ copy.busy }}</p>
+  }
+  @if (message()) {
+    <p>{{ message() }}</p>
+  }
+  @if (error()) {
+    <p class="err">{{ error() }}</p>
+  }
+  <p class="switch"><a routerLink="/">Back to Chili Platform</a></p>
+</section>
