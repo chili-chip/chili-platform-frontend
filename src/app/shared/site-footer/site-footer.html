@@ -1,11 +1,21 @@
 <footer class="foot">
   <p>© {{ year }} Chili Platform · vgc zero · edge-native retro</p>
-  <nav>
+  <nav aria-label="Footer">
     <a routerLink="/store">Store</a>
     <a routerLink="/community">Forums</a>
     <a routerLink="/creator">Creator</a>
     <a routerLink="/terms">Terms</a>
     <a routerLink="/privacy">Privacy</a>
     <a routerLink="/seller-terms">Seller terms</a>
+    @for (social of socials; track social.url) {
+      <a
+        class="social"
+        [href]="social.url"
+        target="_blank"
+        rel="noopener noreferrer"
+        [attr.aria-label]="social.label + ' (opens in a new tab)'"
+        >{{ social.label }}</a
+      >
+    }
   </nav>
 </footer>
