@@ -7,6 +7,7 @@ import { ForumCategory, ForumPost, Paginated } from '../../core/models/platform'
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SkeletonThreadsComponent, SpinnerComponent } from '../../shared/loading';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-community',
@@ -15,6 +16,7 @@ import { SkeletonThreadsComponent, SpinnerComponent } from '../../shared/loading
   styleUrl: './community.scss',
 })
 export class CommunityComponent implements OnInit {
+  private readonly toast = inject(ToastService);
   private readonly api = inject(ApiService);
   private readonly fb = inject(FormBuilder);
   readonly auth = inject(AuthService);
@@ -62,9 +64,11 @@ export class CommunityComponent implements OnInit {
         this.form.reset({ title: '', category: 0, content: '' });
         this.showComposer.set(false);
         this.publishing.set(false);
+        this.toast.success('Post published.');
       },
       error: () => {
         this.error.set('Could not publish. Check the fields and try again.');
+        this.toast.error('Could not publish your post. Check the fields and try again.');
         this.publishing.set(false);
       },
     });

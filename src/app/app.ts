@@ -8,6 +8,7 @@ import { LegalPromptComponent } from './features/legal/legal-prompt';
 import { RouteProgressComponent } from './shared/loading';
 import { SiteFooterComponent } from './shared/site-footer/site-footer';
 import { SiteHeaderComponent } from './shared/site-header/site-header';
+import { ToastHostComponent } from './shared/toast/toast-host';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ import { SiteHeaderComponent } from './shared/site-header/site-header';
     SiteHeaderComponent,
     SiteFooterComponent,
     LegalPromptComponent,
+    ToastHostComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',

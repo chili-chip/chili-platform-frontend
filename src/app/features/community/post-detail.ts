@@ -11,6 +11,7 @@ import {
   SkeletonRowsComponent,
   SpinnerComponent,
 } from '../../shared/loading';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-post-detail',
@@ -26,6 +27,7 @@ import {
   styleUrl: './post-detail.scss',
 })
 export class PostDetailComponent implements OnInit {
+  private readonly toast = inject(ToastService);
   private readonly api = inject(ApiService);
   private readonly fb = inject(FormBuilder);
   readonly auth = inject(AuthService);
@@ -69,8 +71,12 @@ export class PostDetailComponent implements OnInit {
         this.comments.update((current) => [...current, comment]);
         this.form.reset({ content: '' });
         this.posting.set(false);
+        this.toast.success('Reply posted.');
       },
-      error: () => this.posting.set(false),
+      error: () => {
+        this.posting.set(false);
+        this.toast.error('Could not post your reply. Try again.');
+      },
     });
   }
 }

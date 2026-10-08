@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -11,6 +12,7 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrl: './auth-form.scss',
 })
 export class ResetPasswordComponent {
+  private readonly toast = inject(ToastService);
   private readonly auth = inject(AuthService);
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
@@ -40,7 +42,10 @@ export class ResetPasswordComponent {
     }
     this.error.set('');
     this.auth.confirmPasswordReset({ uid: this.uid, token: this.token, password }).subscribe({
-      next: (response) => this.message.set(response.detail),
+      next: (response) => {
+        this.message.set(response.detail);
+        this.toast.success('Password updated. You can sign in now.');
+      },
       error: (err: { error?: { detail?: string; password?: string[] } }) => {
         const passwordError = err.error?.password;
         if (Array.isArray(passwordError) && passwordError.length) {
