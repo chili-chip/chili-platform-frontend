@@ -11,7 +11,7 @@
 <ng-template #face>
   <div class="shot">
     @if (cover()) {
-      <img [src]="cover()" [alt]="title()" />
+      <img appMediaFade [src]="cover()" [alt]="title()" />
     } @else {
       <span>{{ title().charAt(0) }}</span>
     }

@@ -6,8 +6,7 @@
   }
 
   @if (loading()) {
-    <h1>Loading order</h1>
-    <p class="lede">Fetching the latest status from the store…</p>
+    <app-skeleton-article label="Loading order" />
   } @else if (error()) {
     <h1>Order unavailable</h1>
     <p class="err">{{ error() }}</p>

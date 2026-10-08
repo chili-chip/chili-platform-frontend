@@ -1,7 +1,9 @@
 <section class="page">
   <a routerLink="/community" class="back">← All threads</a>
 
-  @if (post(); as thread) {
+  @if (postLoading()) {
+    <app-skeleton-article label="Loading thread" />
+  } @else if (post(); as thread) {
     <article class="post">
       <span class="badge">{{ thread.category_detail?.name }}</span>
       <h1>{{ thread.title }}</h1>
@@ -14,6 +16,9 @@
   }
 
   <h2>Comments</h2>
+  @if (commentsLoading()) {
+    <app-skeleton-rows [count]="3" label="Loading comments" />
+  } @else {
   <ul class="comments">
     @for (comment of comments(); track comment.id) {
       <li>
@@ -27,11 +32,17 @@
       <li class="empty">No replies yet.</li>
     }
   </ul>
+  }
 
   @if (auth.isAuthenticated()) {
     <form [formGroup]="form" (ngSubmit)="submit()">
       <textarea formControlName="content" rows="4" placeholder="Reply to this thread"></textarea>
-      <button class="btn primary" type="submit">Comment</button>
+      <button class="btn primary" type="submit" [disabled]="posting()">
+        @if (posting()) {
+          <app-spinner />
+        }
+        Comment
+      </button>
     </form>
   } @else {
     <a routerLink="/login" class="btn ghost">Sign in to comment</a>

@@ -3,7 +3,9 @@
 
   @if (loading()) {
     <h1>Confirming payment</h1>
-    <p class="lede">Syncing your Stripe session with the store…</p>
+    <p class="lede" role="status">
+      <app-spinner /> Syncing your Stripe session with the store…
+    </p>
   } @else if (error()) {
     <h1>Could not confirm</h1>
     <p class="err">{{ error() }}</p>

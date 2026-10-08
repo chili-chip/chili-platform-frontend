@@ -2,7 +2,7 @@
   <a routerLink="/store" class="back">← Store</a>
 
   @if (loading()) {
-    <p class="empty">Loading product…</p>
+    <app-skeleton-detail label="Loading product" />
   } @else if (error()) {
     <h1>Product unavailable</h1>
     <p class="err">{{ error() }}</p>
@@ -12,7 +12,7 @@
       <div class="gallery">
         <div class="shot">
           @if (cover(); as src) {
-            <img [src]="src" [alt]="item.name" />
+            <img appMediaFade [src]="src" [alt]="item.name" />
           } @else {
             <span>{{ item.name.charAt(0) }}</span>
           }
@@ -27,7 +27,7 @@
                   [attr.aria-label]="'Picture ' + (i + 1)"
                   (click)="selected.set(i)"
                 >
-                  <img [src]="url" alt="" />
+                  <img appMediaFade [src]="url" alt="" />
                 </button>
               </li>
             }

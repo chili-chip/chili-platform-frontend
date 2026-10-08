@@ -4,12 +4,13 @@ import { RouterLink } from '@angular/router';
 import { GameProject } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { SkeletonComponent, SpinnerComponent } from '../../shared/loading';
 import { marketError } from '../marketplace/market-utils';
 import { downloadBitsy, loadCitsyPlayer } from './bitsy-file';
 
 @Component({
   selector: 'app-play',
-  imports: [RouterLink],
+  imports: [RouterLink, SkeletonComponent, SpinnerComponent],
   templateUrl: './play.html',
   styleUrl: './play.scss',
 })
@@ -19,6 +20,8 @@ export class PlayComponent implements OnDestroy {
   readonly id = input.required<string>();
   readonly game = signal<GameProject | null>(null);
   readonly loading = signal(true);
+  /** True while the citsy runtime downloads and boots, after the game data arrived. */
+  readonly playerLoading = signal(false);
   readonly error = signal('');
   private readonly canvas = viewChild<ElementRef<HTMLCanvasElement>>('screen');
   private startedFor = '';
@@ -63,6 +66,7 @@ export class PlayComponent implements OnDestroy {
       this.startedFor = token;
       const node = canvas.nativeElement;
       const data = game.data;
+      this.playerLoading.set(true);
       void loadCitsyPlayer()
         .then((player) => {
           if (!this.alive || this.startedFor !== token) {
@@ -70,8 +74,10 @@ export class PlayComponent implements OnDestroy {
           }
           player.stop();
           player.start(node, data);
+          this.playerLoading.set(false);
         })
         .catch((err: unknown) => {
+          this.playerLoading.set(false);
           this.error.set(err instanceof Error ? err.message : 'Could not start the player.');
         });
     });

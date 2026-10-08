@@ -1,3 +1,13 @@
 @if (editorSrc(); as src) {
-  <iframe class="creator-frame" title="Chili game creator" [src]="src"></iframe>
+  <iframe
+    class="creator-frame"
+    title="Chili game creator"
+    [src]="src"
+    (load)="editorLoading.set(false)"
+  ></iframe>
+}
+@if (editorLoading()) {
+  <div class="creator-loading">
+    <app-spinner label="Loading the editor" [block]="true" />
+  </div>
 }

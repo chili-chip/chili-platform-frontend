@@ -6,11 +6,12 @@ import { StoreProduct } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
+import { MediaFadeDirective, SkeletonGridComponent } from '../../shared/loading';
 import { unwrapList, productCover } from './store-utils';
 
 @Component({
   selector: 'app-store',
-  imports: [CurrencyPipe, RouterLink],
+  imports: [CurrencyPipe, MediaFadeDirective, RouterLink, SkeletonGridComponent],
   templateUrl: './store.html',
   styleUrl: './store.scss',
 })

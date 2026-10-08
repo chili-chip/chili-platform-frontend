@@ -31,11 +31,29 @@ h1 {
   font-size: 0.82rem;
 }
 
+.stage,
+.screen {
+  width: min(512px, 100%);
+  margin-top: 1.2rem;
+}
+
+.stage {
+  position: relative;
+}
+
+.stage-loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #000;
+  color: var(--phosphor);
+}
+
 canvas {
   display: block;
-  width: min(512px, 100%);
+  width: 100%;
   height: auto;
-  margin-top: 1.2rem;
   background: #000;
   border: 1px solid var(--line);
   image-rendering: pixelated;

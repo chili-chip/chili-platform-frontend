@@ -2,7 +2,9 @@
   <p class="kicker">Marketplace</p>
   @if (loading()) {
     <h1>Confirming payment</h1>
-    <p class="lede">Checking the card charge with Chili…</p>
+    <p class="lede" role="status">
+      <app-spinner /> Checking the card charge with Chili…
+    </p>
   } @else if (purchase(); as game) {
     <h1>{{ game.title }} is in your library</h1>
     <p class="lede">The charge is on Chili. The creator is credited after the hold.</p>

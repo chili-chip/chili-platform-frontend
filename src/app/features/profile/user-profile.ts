@@ -7,6 +7,7 @@ import { GameProject, MarketplacePurchase, StoreOrder, UserProfile } from '../..
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { GameTileComponent } from '../../shared/game-tile/game-tile';
+import { SkeletonGridComponent, SkeletonRowsComponent } from '../../shared/loading';
 import { formatPrice, marketError } from '../marketplace/market-utils';
 import { shippingSummary, unwrapList } from '../store/store-utils';
 
@@ -15,7 +16,15 @@ type LibraryShelf = 'bought' | 'mine';
 
 @Component({
   selector: 'app-user-profile',
-  imports: [CurrencyPipe, DatePipe, GameTileComponent, RouterLink, TitleCasePipe],
+  imports: [
+    CurrencyPipe,
+    DatePipe,
+    GameTileComponent,
+    RouterLink,
+    SkeletonGridComponent,
+    SkeletonRowsComponent,
+    TitleCasePipe,
+  ],
   templateUrl: './user-profile.html',
   styleUrl: './user-profile.scss',
 })

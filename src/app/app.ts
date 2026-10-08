@@ -5,12 +5,19 @@ import { filter, map } from 'rxjs';
 
 import { AuthService } from './core/services/auth.service';
 import { LegalPromptComponent } from './features/legal/legal-prompt';
+import { RouteProgressComponent } from './shared/loading';
 import { SiteFooterComponent } from './shared/site-footer/site-footer';
 import { SiteHeaderComponent } from './shared/site-header/site-header';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, SiteHeaderComponent, SiteFooterComponent, LegalPromptComponent],
+  imports: [
+    RouterOutlet,
+    RouteProgressComponent,
+    SiteHeaderComponent,
+    SiteFooterComponent,
+    LegalPromptComponent,
+  ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

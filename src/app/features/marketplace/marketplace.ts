@@ -14,7 +14,7 @@ import { formatPrice, marketError } from './market-utils';
 
 @Component({
   selector: 'app-marketplace',
-  imports: [GameTileComponent, RouterLink],
+  imports: [GameTileComponent, RouterLink, SkeletonGridComponent],
   templateUrl: './marketplace.html',
   styleUrl: './market.scss',
 })

@@ -5,12 +5,13 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { GameProject, MarketplaceCategory } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { SkeletonRowsComponent } from '../../shared/loading';
 import { dollarsToCents, marketError } from '../marketplace/market-utils';
 import { unwrapList } from '../store/store-utils';
 
 @Component({
   selector: 'app-listing',
-  imports: [RouterLink],
+  imports: [RouterLink, SkeletonRowsComponent],
   templateUrl: './listing.html',
   styleUrl: '../marketplace/market.scss',
 })

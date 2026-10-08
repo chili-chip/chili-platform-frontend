@@ -54,12 +54,20 @@
         <p class="err">{{ error() }}</p>
       }
       <div class="cta-row">
-        <button class="btn primary" type="submit">Publish</button>
+        <button class="btn primary" type="submit" [disabled]="publishing()">
+          @if (publishing()) {
+            <app-spinner />
+          }
+          Publish
+        </button>
         <button class="btn ghost" type="button" (click)="showComposer.set(false)">Cancel</button>
       </div>
     </form>
   }
 
+  @if (loading()) {
+    <app-skeleton-threads label="Loading threads" />
+  } @else {
   <ul class="feed">
     @for (post of posts(); track post.id) {
       <li>
@@ -81,4 +89,5 @@
       <li class="empty">No threads yet. Be the first spark in this board.</li>
     }
   </ul>
+  }
 </section>

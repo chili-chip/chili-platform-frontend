@@ -74,7 +74,7 @@
   }
 
   @if (loading()) {
-    <p class="empty">Loading games…</p>
+    <app-skeleton-grid variant="game" label="Loading games" />
   } @else {
     <ul class="game-grid">
       @for (listing of listings(); track listing.id) {

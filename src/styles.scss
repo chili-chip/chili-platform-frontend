@@ -108,3 +108,35 @@ a.btn.ghost:hover {
   padding: 1rem 1.1rem;
   color: var(--muted);
 }
+
+/* Loading UI (see app/shared/loading) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+img.media-fade {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+img.media-fade.is-loaded {
+  opacity: 1;
+}
+
+.btn app-spinner {
+  margin-right: 0.55rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  img.media-fade {
+    transition: none;
+  }
+}
