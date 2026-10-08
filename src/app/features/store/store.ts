@@ -190,7 +190,7 @@ export class StoreComponent implements OnInit {
           }
           this.loading.set(false);
           this.loadingMore.set(false);
-          this.error.set(apiErrorMessage(err, 'Could not load the catalog. Is the API running?'));
+          this.error.set(apiErrorMessage(err, 'We could not load the store right now. Please try again shortly.'));
         },
       });
   }

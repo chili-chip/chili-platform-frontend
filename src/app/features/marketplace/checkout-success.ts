@@ -40,7 +40,7 @@ export class MarketplaceCheckoutSuccessComponent {
     const sessionId = this.route.snapshot.queryParamMap.get('session_id') ?? '';
     if (!sessionId) {
       this.loading.set(false);
-      this.error.set('Missing Checkout session.');
+      this.error.set('This payment link is incomplete. Return to the marketplace and try again.');
       return;
     }
     if (!this.auth.isAuthenticated()) {
@@ -57,7 +57,7 @@ export class MarketplaceCheckoutSuccessComponent {
       },
       error: (err) => {
         this.loading.set(false);
-        const message = marketError(err, 'Could not confirm this payment.');
+        const message = marketError(err, 'We could not confirm this payment.');
         this.error.set(message);
         this.toast.error(message);
       },

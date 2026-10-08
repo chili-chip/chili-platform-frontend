@@ -74,7 +74,7 @@ export class SalesComponent {
   startPayouts(): void {
     if (!this.sellerTermsAccepted()) {
       if (!this.sellerAgreed()) {
-        this.error.set('Accept the marketplace seller terms before payout setup.');
+        this.error.set('Accept the marketplace seller terms to set up payouts.');
         return;
       }
       this.busy.set(true);
@@ -89,7 +89,7 @@ export class SalesComponent {
         },
         error: (err) => {
           this.busy.set(false);
-          this.error.set(marketError(err, 'Could not save seller-term acceptance.'));
+          this.error.set(marketError(err, 'Could not save your acceptance of the seller terms.'));
         },
       });
       return;
@@ -134,7 +134,7 @@ export class SalesComponent {
     const key = this.publishableKey();
     if (!key) {
       this.mounting = false;
-      this.connectError.set('Add STRIPE_PUBLISHABLE_KEY to show payout setup.');
+      this.connectError.set('Payout setup is temporarily unavailable. Please try again later.');
       return;
     }
     try {

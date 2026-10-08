@@ -3,11 +3,11 @@
   @if (loading()) {
     <h1>Confirming payment</h1>
     <p class="lede" role="status">
-      <app-spinner /> Checking the card charge with Chili…
+      <app-spinner /> Confirming your payment…
     </p>
   } @else if (purchase(); as game) {
     <h1>{{ game.title }} is in your library</h1>
-    <p class="lede">The charge is on Chili. The creator is credited after the hold.</p>
+    <p class="lede">Thank you for your purchase. The game is ready to play from your library.</p>
     <p class="tools">
       <a
         class="btn primary"
@@ -19,7 +19,7 @@
       <a routerLink="/marketplace" class="btn ghost">Keep browsing</a>
     </p>
   } @else {
-    <h1>Could not confirm</h1>
+    <h1>We could not confirm your payment</h1>
     <p class="err">{{ error() }}</p>
     <a routerLink="/marketplace" class="btn ghost">Back to the marketplace</a>
   }

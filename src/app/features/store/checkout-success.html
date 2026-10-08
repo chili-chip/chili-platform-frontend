@@ -4,10 +4,10 @@
   @if (loading()) {
     <h1>Confirming payment</h1>
     <p class="lede" role="status">
-      <app-spinner /> Syncing your Stripe session with the store…
+      <app-spinner /> Confirming your payment…
     </p>
   } @else if (error()) {
-    <h1>Could not confirm</h1>
+    <h1>We could not confirm your payment</h1>
     <p class="err">{{ error() }}</p>
     <a routerLink="/store" class="btn ghost">Back to store</a>
   }

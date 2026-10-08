@@ -70,7 +70,7 @@
             </button>
           </div>
         }
-        <p class="lede">{{ item.description || 'No description yet.' }}</p>
+        <p class="lede">{{ item.description || 'No description provided.' }}</p>
         <div class="tags">
           @for (tag of item.tags; track tag) {
             <a class="tag" [routerLink]="['/marketplace']" [queryParams]="{ tag }">{{ tag }}</a>
@@ -134,9 +134,9 @@
         </div>
         <h1>{{ copy.title }}</h1>
         @if (!copy.released) {
-          <p class="lede">This is still a project.</p>
+          <p class="lede">This game has not been released yet.</p>
         } @else {
-          <p class="lede">This game is not listed.</p>
+          <p class="lede">This game is not available in the marketplace.</p>
         }
         <div class="buy">
           @if (inLibrary()) {

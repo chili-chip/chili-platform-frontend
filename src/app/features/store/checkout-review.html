@@ -3,18 +3,18 @@
   <header class="intro">
     <div>
       <p class="kicker">Checkout</p>
-      <h1>Review your kit</h1>
+      <h1>Review your order</h1>
       <p class="lede">
-        Confirm quantities and delivery here. Stripe collects payment and the address on the next
-        screen.
+        Check your items and choose a delivery method. You will complete payment securely with
+        Stripe on the next step.
       </p>
     </div>
   </header>
 
   @if (!cart.count()) {
     <div class="empty">
-      <p>Your cart is empty. Grab a kit or shell first.</p>
-      <a routerLink="/store" class="btn primary">Open store</a>
+      <p>Your cart is empty. Browse the store to find kits, shells, and parts.</p>
+      <a routerLink="/store" class="btn primary">Browse the store</a>
     </div>
   } @else {
     <div class="layout">
@@ -58,14 +58,14 @@
       </ul>
 
       <aside class="pay">
-        <p class="kicker">Pay</p>
-        <h2>Stripe Checkout</h2>
+        <p class="kicker">Checkout</p>
+        <h2>Order summary</h2>
         @if (deliveryLoading()) {
           <p class="note">Loading delivery options…</p>
         } @else if (digitalOnly()) {
-          <p class="digital-note">Digital delivery. Nothing ships, so there is no delivery fee.</p>
+          <p class="digital-note">Digital items are delivered online, so there is no delivery fee.</p>
         } @else if (noSharedOption()) {
-          <p class="err clash">These items have no delivery option in common. Order them separately.</p>
+          <p class="err clash">These items cannot be delivered together. Please place a separate order for each.</p>
         } @else if (availableOptions().length) {
           <fieldset class="delivery">
             <legend>Delivery</legend>
@@ -130,15 +130,19 @@
           </div>
         </dl>
         <p class="note">
-          Test card <code>4242 4242 4242 4242</code> · any future date · any CVC.
           @if (digitalOnly()) {
-            No address needed for digital items.
+            No shipping address is needed for digital items.
           } @else if (delivery()?.requires_address === false) {
-            No address needed for pickup.
+            No shipping address is needed for pickup.
           } @else {
-            Address is collected by Stripe.
+            You will enter your shipping address with your payment details.
           }
         </p>
+        @if (stripeTestMode()) {
+          <p class="note">
+            Test mode: use card <code>4242 4242 4242 4242</code> with any future date and any CVC.
+          </p>
+        }
         @if (error()) {
           <p class="err">{{ error() }}</p>
         }
@@ -149,14 +153,14 @@
             [disabled]="paying() || deliveryLoading() || noSharedOption()"
             (click)="pay()"
           >
-            {{ paying() ? 'Redirecting…' : 'Pay with Stripe' }}
+            {{ paying() ? 'Redirecting…' : 'Continue to payment' }}
           </button>
         } @else {
           <a routerLink="/login" [queryParams]="{ next: '/store/checkout' }" class="btn primary pay-btn">
             Sign in to pay
           </a>
         }
-        <a routerLink="/store" class="ghost-link">Return to catalog</a>
+        <a routerLink="/store" class="ghost-link">Continue shopping</a>
       </aside>
     </div>
   }

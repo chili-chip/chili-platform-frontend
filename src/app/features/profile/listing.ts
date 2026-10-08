@@ -140,7 +140,7 @@ export class ListingComponent {
         next: () => this.persistListing(game, body),
         error: (err) => {
           this.busy.set(false);
-          this.error.set(marketError(err, 'Could not save seller-term acceptance.'));
+          this.error.set(marketError(err, 'Could not save your acceptance of the seller terms.'));
         },
       });
       return;

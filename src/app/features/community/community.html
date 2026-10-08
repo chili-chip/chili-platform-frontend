@@ -3,11 +3,11 @@
     <div>
       <p class="kicker">Forums</p>
       <h1>Community</h1>
-      <p class="lede">Hardware threads, game-dev logs, and marketplace talk for the vgc zero scene.</p>
+      <p class="lede">Discuss the hardware, share your development progress, and talk games with the vgc zero community.</p>
     </div>
     @if (auth.isAuthenticated()) {
       <button type="button" class="btn primary" (click)="showComposer.set(!showComposer())">
-        Create New Post
+        New post
       </button>
     } @else {
       <a routerLink="/login" class="btn ghost">Sign in to post</a>
@@ -40,7 +40,7 @@
       <label>
         Category
         <select formControlName="category">
-          <option [ngValue]="0" disabled>Select a board</option>
+          <option [ngValue]="0" disabled>Select a category</option>
           @for (category of categories(); track category.id) {
             <option [ngValue]="category.id">{{ category.name }}</option>
           }

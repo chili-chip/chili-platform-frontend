@@ -14,7 +14,7 @@
         @if (user.display_name) {
           <p class="meta">&#64;{{ user.username }}</p>
         }
-        <p class="bio">{{ user.bio || (isOwn() ? 'Add a bio in your settings.' : 'This chili has not written a bio yet.') }}</p>
+        <p class="bio">{{ user.bio || (isOwn() ? 'Add a bio in your settings.' : 'This user has not added a bio yet.') }}</p>
         @if (user.created_at) {
           <p class="meta">Joined {{ user.created_at | date: 'mediumDate' }}</p>
         }

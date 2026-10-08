@@ -113,16 +113,12 @@ Each section saves on its own, and a message tells you whether the save worked.
 ## Place an order
 
 1. Open the [Store](/store) and add what you want to your cart.
-2. Open your cart and choose **Review order**. Confirm the quantities here.
+2. Open your cart and choose **Review order**. Check the quantities and choose a delivery method.
 3. Sign in if you are asked to. You need a verified account to check out.
-4. Pay on the next screen. **Stripe Checkout** collects your payment and your shipping details.
+4. Pay on the next screen. **Stripe Checkout** securely collects your payment details and, if your order ships, your shipping address.
 5. When the payment goes through, you land on your order page.
 
 If you cancel at Stripe, the charge is not completed and your cart is still there.
-
-## Test payments
-
-While payments are in test mode, Stripe's test card number \`4242 4242 4242 4242\` works with any future expiry date and any three-digit security code. No real money moves in test mode. Once payments are live, use a real card.
 
 ## Something went wrong
 

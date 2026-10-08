@@ -4,8 +4,9 @@
       <p class="kicker">Creator</p>
       <h1>Sales</h1>
       <p class="lede">
-        Chili keeps 20% plus estimated card processing. Payouts start at €20 after a 7-day hold.
-        Sales count before you set up payouts.
+        Chili Platform keeps a 20% fee plus estimated card processing costs. Earnings are held for
+        7 days, then paid out once your available balance reaches €20. Sales are recorded even
+        before you set up payouts.
       </p>
     </div>
     <a routerLink="/marketplace" class="btn ghost">Marketplace</a>
@@ -20,11 +21,11 @@
   } @else if (sales(); as desk) {
     <div class="panels">
       <article class="panel">
-        <span class="muted">In hold</span>
+        <span class="muted">On hold</span>
         <strong>{{ money(desk.balance.held_cents) }}</strong>
       </article>
       <article class="panel">
-        <span class="muted">Cleared</span>
+        <span class="muted">Available</span>
         <strong>{{ money(desk.balance.available_cents) }}</strong>
       </article>
       <article class="panel">
@@ -35,7 +36,7 @@
     @if (desk.payout.blocked_reason) {
       <p class="muted">{{ desk.payout.blocked_reason }}</p>
     } @else if (desk.payout.transferred) {
-      <p class="muted">Sent {{ money(desk.payout.amount_cents) }}.</p>
+      <p class="muted">{{ money(desk.payout.amount_cents) }} has been sent to your payout account.</p>
     }
 
     <section class="stack">
@@ -43,7 +44,7 @@
       @if (!auth.currentUser()) {
         <p class="muted"><app-spinner label="Loading account" /> Loading account…</p>
       } @else if (!auth.currentUser()?.seller_terms_accepted_at) {
-        <p class="muted">Accept the seller terms before payout setup. Buyers can already pay.</p>
+        <p class="muted">Accept the seller terms to set up payouts. Buyers can purchase your games in the meantime.</p>
         <label class="checks">
           <input
             type="checkbox"
@@ -59,14 +60,14 @@
           {{ desk.account.stripe_account_id ? 'Continue' : 'Set up payouts' }}
         </button>
       } @else if (!desk.account.stripe_account_id) {
-        <p class="muted">Buyers can already pay. Set up payouts when you want Chili to send the balance.</p>
+        <p class="muted">Buyers can already purchase your games. Set up payouts to receive your earnings.</p>
         <button type="button" class="btn primary" [disabled]="busy()" (click)="startPayouts()">
           Set up payouts
         </button>
       } @else {
         <p class="muted">
-          Transfers {{ desk.account.transfers_status || 'pending' }} ·
-          payouts {{ desk.account.payouts_status || 'pending' }}
+          Transfers: {{ desk.account.transfers_status || 'pending' }} ·
+          Payouts: {{ desk.account.payouts_status || 'pending' }}
         </p>
         @if (connectError()) {
           <p class="err">{{ connectError() }}</p>
@@ -83,7 +84,7 @@
     <section class="stack">
       <h2>Sales</h2>
       @if (!desk.sales.length) {
-        <p class="empty">No sales yet. Earnings show up here, including before payout setup.</p>
+        <p class="empty">No sales yet. Your earnings will appear here, even before you set up payouts.</p>
       } @else {
         <table>
           <thead>
@@ -105,7 +106,7 @@
                 <td>
                   {{ sale.status }}
                   @if (sale.available_at) {
-                    <div class="muted">clears {{ sale.available_at | date: 'mediumDate' }}</div>
+                    <div class="muted">Available {{ sale.available_at | date: 'mediumDate' }}</div>
                   }
                 </td>
               </tr>

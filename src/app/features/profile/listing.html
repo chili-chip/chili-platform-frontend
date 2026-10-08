@@ -4,8 +4,8 @@
       <p class="kicker">Marketplace</p>
       <h1>Listing</h1>
       <p class="lede">
-        Choose a released game and publish it. A project cannot be sold. Releasing keeps the Bitsy
-        file and leaves the game off this page until you list it.
+        Choose one of your released games to list in the marketplace. Unreleased projects cannot be
+        listed, and released games stay out of the marketplace until you publish a listing here.
       </p>
     </div>
     <a class="btn ghost" [routerLink]="['/profile', username()]" [queryParams]="{ tab: 'library', shelf: 'mine' }">
@@ -20,7 +20,7 @@
   @if (loading()) {
     <app-skeleton-rows [count]="2" label="Loading games" />
   } @else if (!games().length) {
-    <p class="empty">Release a project before listing. The Bitsy file stays on the game.</p>
+    <p class="empty">You do not have any released games yet. Release a project first, then come back to list it.</p>
     <p class="tools">
       <a class="btn ghost" [routerLink]="['/profile', username()]" [queryParams]="{ tab: 'projects' }">Projects</a>
     </p>
