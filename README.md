@@ -45,10 +45,17 @@ npm start                 # http://localhost:4200
 
 The landing hero loads `public/models/vgc-zero.glb`.
 
-```bash
-npm run build
-npx wrangler pages deploy dist/chili-platform/browser --project-name=chili-platform
-```
+## Environments
+
+| | Production | Dev |
+| --- | --- | --- |
+| Site | https://platform.chilichip.eu | https://platform-dev.chilichip.eu |
+| Pages project | `chili-platform` | `chili-platform-dev` |
+| API | `environment.prod.ts` | `environment.dev.ts` |
+| Build | `npm run build:prod` | `npm run build:dev` |
+| Deploy | `npm run pages:prod` | `npm run pages:dev` |
+
+Each deploy script builds with that environment's API URL and uploads to its own Pages project. The API for each site is the matching backend Worker (see the backend README). `npm run build` still builds production, and `npm run pages` is an alias for `pages:prod`.
 
 ---
 
