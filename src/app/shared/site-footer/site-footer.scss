@@ -1,6 +1,6 @@
 .foot {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   gap: 1rem;
   padding: 1.4rem 1.5rem 2rem;
   border-top: 1px solid var(--line);
@@ -9,6 +9,12 @@
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 nav {
@@ -26,8 +32,22 @@ a:hover {
   color: var(--phosphor);
 }
 
+.socials {
+  gap: 1.1rem;
+  justify-content: flex-end;
+}
+
+.socials a {
+  display: inline-flex;
+}
+
+.socials svg {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
 @media (max-width: 720px) {
-  .foot {
+  .row {
     flex-direction: column;
   }
 }
