@@ -6,6 +6,7 @@ import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
 import { apiErrorMessage, productBlurb, productCover, unwrapList } from './store-utils';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-checkout-review',
@@ -14,6 +15,7 @@ import { apiErrorMessage, productBlurb, productCover, unwrapList } from './store
   styleUrl: './checkout-review.scss',
 })
 export class CheckoutReviewComponent implements OnInit {
+  private readonly toast = inject(ToastService);
   private readonly api = inject(ApiService);
   private readonly router = inject(Router);
   readonly auth = inject(AuthService);
@@ -47,7 +49,9 @@ export class CheckoutReviewComponent implements OnInit {
       },
       error: (err) => {
         this.paying.set(false);
-        this.error.set(apiErrorMessage(err, 'Checkout failed. Try again in a moment.'));
+        const message = apiErrorMessage(err, 'Checkout failed. Try again in a moment.');
+        this.error.set(message);
+        this.toast.error(message);
       },
     });
   }

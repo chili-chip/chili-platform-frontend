@@ -1,11 +1,13 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 
+import { ToastService } from './toast.service';
 import { CartLine, StoreProduct } from '../models/platform';
 
 const STORAGE_KEY = 'chili.cart';
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
+  private readonly toast = inject(ToastService);
   readonly items = signal<CartLine[]>(this.read());
   readonly count = computed(() => this.items().reduce((sum, line) => sum + line.quantity, 0));
   readonly totalCents = computed(() =>
@@ -43,6 +45,7 @@ export class CartService {
     });
     this.persist();
     this.show();
+    this.toast.success(`Added ${product.name} to your cart.`);
   }
 
   setQuantity(productId: number, quantity: number): void {
@@ -60,8 +63,12 @@ export class CartService {
   }
 
   remove(productId: number): void {
+    const removed = this.items().find((line) => line.product.id === productId);
     this.items.update((current) => current.filter((line) => line.product.id !== productId));
     this.persist();
+    if (removed) {
+      this.toast.success(`Removed ${removed.product.name} from your cart.`);
+    }
   }
 
   clear(): void {

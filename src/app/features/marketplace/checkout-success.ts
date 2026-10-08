@@ -6,6 +6,7 @@ import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SpinnerComponent } from '../../shared/loading';
 import { marketError } from './market-utils';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-marketplace-checkout-success',
@@ -14,6 +15,7 @@ import { marketError } from './market-utils';
   styleUrl: './market.scss',
 })
 export class MarketplaceCheckoutSuccessComponent {
+  private readonly toast = inject(ToastService);
   private readonly api = inject(ApiService);
   readonly auth = inject(AuthService);
   private readonly router = inject(Router);
@@ -51,10 +53,13 @@ export class MarketplaceCheckoutSuccessComponent {
       next: (purchase) => {
         this.purchase.set(purchase);
         this.loading.set(false);
+        this.toast.success('Payment confirmed. The game is in your library.');
       },
       error: (err) => {
         this.loading.set(false);
-        this.error.set(marketError(err, 'Could not confirm this payment.'));
+        const message = marketError(err, 'Could not confirm this payment.');
+        this.error.set(message);
+        this.toast.error(message);
       },
     });
   }

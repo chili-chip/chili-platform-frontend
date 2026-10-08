@@ -4,6 +4,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 import { environment } from '../../../environments/environment';
 import { SpinnerComponent } from '../../shared/loading';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-creator',
@@ -12,6 +13,7 @@ import { SpinnerComponent } from '../../shared/loading';
   styleUrl: './creator.scss',
 })
 export class CreatorComponent implements OnDestroy {
+  private readonly toast = inject(ToastService);
   private readonly router = inject(Router);
   private readonly sanitizer = inject(DomSanitizer);
   readonly projectId = input<string>();
@@ -44,7 +46,17 @@ export class CreatorComponent implements OnDestroy {
     if (event.origin !== window.location.origin) {
       return;
     }
-    const data = event.data as { type?: string; id?: number };
+    const data = event.data as { type?: string; id?: number; kind?: string; message?: string };
+    if (data?.type === 'chili-toast' && typeof data.message === 'string') {
+      if (data.kind === 'error') {
+        this.toast.error(data.message);
+      } else if (data.kind === 'info') {
+        this.toast.info(data.message);
+      } else {
+        this.toast.success(data.message);
+      }
+      return;
+    }
     if (data?.type === 'chili-project-removed' || data?.type === 'chili-project-new') {
       this.loadedFor = '';
       void this.router.navigate(['/creator'], { replaceUrl: true });

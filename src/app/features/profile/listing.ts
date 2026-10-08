@@ -8,6 +8,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { SkeletonRowsComponent } from '../../shared/loading';
 import { dollarsToCents, marketError } from '../marketplace/market-utils';
 import { unwrapList } from '../store/store-utils';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-listing',
@@ -16,6 +17,7 @@ import { unwrapList } from '../store/store-utils';
   styleUrl: '../marketplace/market.scss',
 })
 export class ListingComponent {
+  private readonly toast = inject(ToastService);
   private readonly api = inject(ApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -161,12 +163,15 @@ export class ListingComponent {
       : this.api.createMarketplaceListing({ game: game.id, ...body });
     request.subscribe({
       next: () => {
+        this.toast.success(game.listing_slug ? 'Listing updated.' : 'Game listed in the marketplace.');
         this.filledSlug = '';
         this.reload(this.username());
       },
       error: (err) => {
         this.busy.set(false);
-        this.error.set(marketError(err, 'Could not save this listing.'));
+        const message = marketError(err, 'Could not save this listing.');
+        this.error.set(message);
+        this.toast.error(message);
       },
     });
   }
@@ -180,12 +185,15 @@ export class ListingComponent {
     this.error.set('');
     this.api.deleteMarketplaceListing(slug).subscribe({
       next: () => {
+        this.toast.success('Game unlisted.');
         this.resetForm();
         this.reload(this.username());
       },
       error: (err) => {
         this.busy.set(false);
-        this.error.set(marketError(err, 'Could not unlist that game.'));
+        const message = marketError(err, 'Could not unlist that game.');
+        this.error.set(message);
+        this.toast.error(message);
       },
     });
   }

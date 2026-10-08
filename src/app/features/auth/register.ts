@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-register',
@@ -12,6 +13,7 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrl: './auth-form.scss',
 })
 export class RegisterComponent {
+  private readonly toast = inject(ToastService);
   private readonly auth = inject(AuthService);
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
@@ -46,7 +48,10 @@ export class RegisterComponent {
         accept_terms: value.acceptTerms,
       })
       .subscribe({
-        next: () => void this.router.navigate(['/verify-email']),
+        next: () => {
+          this.toast.success('Account created. Check your email to verify it.');
+          void this.router.navigate(['/verify-email']);
+        },
         error: (err: HttpErrorResponse) => {
           const accepted = err.error?.accept_terms;
           if (Array.isArray(accepted) && typeof accepted[0] === 'string') {
