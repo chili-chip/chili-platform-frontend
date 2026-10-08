@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 
 import { marked } from 'marked';
 
-import { StoreProduct } from '../../core/models/platform';
+import { StoreDeliveryOption, StoreProduct } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { CartService } from '../../core/services/cart.service';
 import { MediaFadeDirective, SkeletonDetailComponent } from '../../shared/loading';
@@ -27,6 +27,19 @@ export class ProductDetailComponent {
   readonly loading = signal(true);
   readonly error = signal('');
   readonly selected = signal(0);
+  readonly deliveryOptions = signal<StoreDeliveryOption[]>([]);
+
+  /** Names of the delivery options this product ships with. */
+  readonly shipsWith = computed(() => {
+    const product = this.product();
+    if (!product || product.is_digital) {
+      return [];
+    }
+    const limits = product.delivery_options ?? [];
+    return this.deliveryOptions()
+      .filter((option) => !limits.length || limits.includes(option.slug))
+      .map((option) => option.name);
+  });
 
   readonly blurb = computed(() => {
     const product = this.product();
@@ -40,6 +53,10 @@ export class ProductDetailComponent {
   readonly cover = computed(() => this.gallery()[this.selected()] || productCover(this.product()));
 
   constructor() {
+    this.api.listDeliveryOptions().subscribe({
+      next: (rows) => this.deliveryOptions.set(rows),
+      error: () => undefined,
+    });
     effect(() => {
       const slug = this.slug();
       untracked(() => this.load(slug));

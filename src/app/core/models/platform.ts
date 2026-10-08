@@ -121,6 +121,10 @@ export interface StoreProduct {
   images?: StoreProductImage[];
   image_url?: string;
   stock: number;
+  /** Delivered digitally; digital-only orders skip delivery. */
+  is_digital?: boolean;
+  /** Delivery option slugs this product ships with. Empty allows every active option. */
+  delivery_options?: string[];
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -138,12 +142,30 @@ export interface StoreOrderItem {
   line_total_cents: number;
 }
 
+export interface StoreDeliveryOption {
+  id: number;
+  name: string;
+  slug: string;
+  description: string;
+  estimate: string;
+  price_cents: number;
+  free_over_cents: number | null;
+  countries: string[];
+  requires_address: boolean;
+  is_active: boolean;
+  sort_order: number;
+}
+
 export interface StoreOrder {
   id: number;
   status: StoreOrderStatus;
   shipping_status?: StoreShippingStatus;
   currency: string;
   total_cents: number;
+  items_cents?: number;
+  delivery_option?: string | null;
+  delivery_name?: string;
+  delivery_cents?: number;
   stripe_checkout_session_id: string | null;
   customer_email: string;
   shipping_name: string;

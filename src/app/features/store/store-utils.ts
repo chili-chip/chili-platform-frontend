@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { Paginated, StoreOrder } from '../../core/models/platform';
+import { Paginated, StoreDeliveryOption, StoreOrder } from '../../core/models/platform';
 
 export function unwrapList<T>(payload: Paginated<T> | T[]): T[] {
   return Array.isArray(payload) ? payload : (payload.results ?? []);
@@ -138,3 +138,40 @@ function countryName(code: string | undefined): string {
   return COUNTRY_NAMES[trimmed] || trimmed;
 }
 
+
+/** Fee for an option given the items subtotal: free at or above `free_over_cents`. */
+export function deliveryFee(option: StoreDeliveryOption, subtotalCents: number): number {
+  if (option.free_over_cents !== null && subtotalCents >= option.free_over_cents) {
+    return 0;
+  }
+  return option.price_cents;
+}
+
+/**
+ * Active options every physical product allows, or null when nothing ships
+ * (only digital items). Mirrors the backend rule.
+ */
+export function allowedDeliveryOptions(
+  options: StoreDeliveryOption[],
+  products: { is_digital?: boolean; delivery_options?: string[] }[],
+): StoreDeliveryOption[] | null {
+  const physical = products.filter((product) => !product.is_digital);
+  if (!physical.length) {
+    return null;
+  }
+  return options.filter((option) =>
+    physical.every(
+      (product) => !product.delivery_options?.length || product.delivery_options.includes(option.slug),
+    ),
+  );
+}
+
+export function deliveryWhere(option: StoreDeliveryOption): string {
+  if (!option.requires_address) {
+    return 'Pickup, no address needed';
+  }
+  if (!option.countries.length) {
+    return 'Ships across the EU';
+  }
+  return 'Ships to ' + option.countries.map((code) => countryName(code)).join(', ');
+}

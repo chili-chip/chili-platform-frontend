@@ -19,6 +19,7 @@ import {
   MarketplaceTag,
   StoreCategory,
   StoreCheckoutSession,
+  StoreDeliveryOption,
   StoreOrder,
   StoreProduct,
   UserProfile,
@@ -121,8 +122,16 @@ export class ApiService {
     return this.http.get<StoreProduct>(`${this.base}/store/products/${slug}/`);
   }
 
-  createCheckout(items: { product: number; quantity: number }[]) {
-    return this.http.post<StoreCheckoutSession>(`${this.base}/store/checkout/`, { items });
+  listDeliveryOptions() {
+    return this.http.get<StoreDeliveryOption[]>(`${this.base}/store/delivery-options/`);
+  }
+
+  createCheckout(items: { product: number; quantity: number }[], deliveryOption?: string) {
+    const body: { items: typeof items; delivery_option?: string } = { items };
+    if (deliveryOption) {
+      body.delivery_option = deliveryOption;
+    }
+    return this.http.post<StoreCheckoutSession>(`${this.base}/store/checkout/`, body);
   }
 
   confirmCheckout(sessionId: string) {
