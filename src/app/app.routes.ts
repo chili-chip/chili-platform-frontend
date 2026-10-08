@@ -123,6 +123,17 @@ export const routes: Routes = [
     title: 'Thread',
   },
   {
+    path: 'help',
+    loadComponent: () => import('./features/help/help').then((m) => m.HelpComponent),
+    title: 'Help',
+  },
+  {
+    path: 'help/:slug',
+    loadComponent: () =>
+      import('./features/help/help-article').then((m) => m.HelpArticleComponent),
+    title: 'Help',
+  },
+  {
     path: 'terms',
     loadComponent: () =>
       import('./features/legal/legal-page').then((m) => m.TermsPageComponent),

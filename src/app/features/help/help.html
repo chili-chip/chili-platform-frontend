@@ -1,0 +1,65 @@
+<section class="page">
+  <header class="intro">
+    <p class="kicker">Help</p>
+    <h1>Help center</h1>
+    <p class="lede">
+      Answers about your account, the store, the marketplace, the creator, and the forum.
+    </p>
+  </header>
+
+  <form class="search" role="search" (submit)="$event.preventDefault()">
+    <input
+      type="search"
+      [value]="query()"
+      (input)="query.set($any($event.target).value)"
+      placeholder="Search help articles"
+      aria-label="Search help articles"
+    />
+  </form>
+
+  @if (results(); as found) {
+    @if (found.length) {
+      <ul class="results" aria-label="Search results">
+        @for (article of found; track article.slug) {
+          <li>
+            <a [routerLink]="['/help', article.slug]">
+              <span class="topic">{{ topicTitle(article) }}</span>
+              <strong>{{ article.title }}</strong>
+              <span class="summary">{{ article.summary }}</span>
+            </a>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="empty" role="status">
+        No articles match “{{ query() }}”. Try fewer or different words.
+      </p>
+    }
+  } @else {
+    @for (group of groups(); track group.topic.slug) {
+      <section class="group">
+        <h2>{{ group.topic.title }}</h2>
+        <p class="group-summary">{{ group.topic.summary }}</p>
+        <ul class="list">
+          @for (article of group.articles; track article.slug) {
+            <li>
+              <a [routerLink]="['/help', article.slug]">
+                <strong>{{ article.title }}</strong>
+                <span class="summary">{{ article.summary }}</span>
+              </a>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+  }
+
+  <aside class="more">
+    <h2>Still need help?</h2>
+    <p>
+      Ask in the Chilichip
+      <a [href]="discordUrl" target="_blank" rel="noopener noreferrer">Discord</a>
+      or in the <a routerLink="/community">forum</a>.
+    </p>
+  </aside>
+</section>
