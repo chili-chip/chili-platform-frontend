@@ -10,6 +10,125 @@
     }
   </header>
 
+  <form class="search" role="search" (submit)="$event.preventDefault(); search()">
+    <input
+      type="search"
+      [value]="draft()"
+      (input)="draft.set($any($event.target).value)"
+      placeholder="Search parts, boards, SKUs"
+      aria-label="Search the store"
+    />
+    <button type="submit" class="btn primary">Search</button>
+  </form>
+
+  @if (categories().length) {
+    <nav class="chips" aria-label="Store categories">
+      <button
+        type="button"
+        class="chip"
+        [class.is-on]="!filters().category"
+        [attr.aria-pressed]="!filters().category"
+        (click)="apply({ category: '' })"
+      >
+        All
+      </button>
+      @for (item of categories(); track item.slug) {
+        <button
+          type="button"
+          class="chip"
+          [class.is-on]="filters().category === item.slug"
+          [attr.aria-pressed]="filters().category === item.slug"
+          (click)="apply({ category: item.slug })"
+        >
+          {{ item.name }} <span class="count">{{ item.product_count }}</span>
+        </button>
+      }
+    </nav>
+  }
+
+  <div class="toolbar">
+    <button
+      type="button"
+      class="btn ghost filter-btn"
+      aria-haspopup="dialog"
+      (click)="openFilters(filterDialog)"
+    >
+      Filters
+      @if (activeFilterCount()) {
+        <span class="filter-count">{{ activeFilterCount() }}</span>
+      }
+    </button>
+    <label class="sort">
+      <span>Sort</span>
+      <select [value]="filters().sort" (change)="apply({ sort: $any($event.target).value })">
+        <option value="">Name</option>
+        <option value="price">Price, low to high</option>
+        <option value="-price">Price, high to low</option>
+        <option value="newest">Newest</option>
+      </select>
+    </label>
+    @if (filtered()) {
+      <button type="button" class="clear-link" (click)="clear()">Clear all</button>
+    }
+  </div>
+
+  <dialog
+    #filterDialog
+    class="filter-dialog"
+    aria-labelledby="store-filters-title"
+    (click)="backdropClose($event, filterDialog)"
+  >
+    <form class="filter-panel" method="dialog" (submit)="applyFilters(filterDialog)">
+      <header>
+        <h2 id="store-filters-title">Filters</h2>
+        <button type="button" class="close" aria-label="Close filters" (click)="filterDialog.close()">
+          ×
+        </button>
+      </header>
+      <fieldset class="price">
+        <legend>Price (€)</legend>
+        <label>
+          Min
+          <input
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            [value]="draftFilters().min"
+            (input)="patchDraft({ min: $any($event.target).value })"
+          />
+        </label>
+        <label>
+          Max
+          <input
+            type="number"
+            min="0"
+            step="0.01"
+            inputmode="decimal"
+            [value]="draftFilters().max"
+            (input)="patchDraft({ max: $any($event.target).value })"
+          />
+        </label>
+      </fieldset>
+      <label class="toggle">
+        <input
+          type="checkbox"
+          [checked]="!!draftFilters().stock"
+          (change)="patchDraft({ stock: $any($event.target).checked ? '1' : '' })"
+        />
+        In stock only
+      </label>
+      <footer>
+        <button type="button" class="btn ghost" (click)="resetDraft()">Reset</button>
+        <button type="submit" class="btn primary">Show results</button>
+      </footer>
+    </form>
+  </dialog>
+
+  @if (activeCategory()?.description; as blurb) {
+    <p class="category-blurb">{{ blurb }}</p>
+  }
+
   @if (error()) {
     <p class="err">{{ error() }}</p>
   }
@@ -29,7 +148,7 @@
           </a>
           <div class="body">
             <div class="meta">
-              <span class="sku">{{ product.sku || product.slug }}</span>
+              <span class="sku">{{ product.category_name || product.sku || product.slug }}</span>
               <span class="stock" [class.is-low]="product.stock > 0 && product.stock < 8">
                 {{ product.stock < 1 ? 'Sold out' : product.stock + ' in stock' }}
               </span>
@@ -50,8 +169,22 @@
           </div>
         </li>
       } @empty {
-        <li class="empty">No products yet.</li>
+        <li class="empty">
+          @if (filtered()) {
+            No products match these filters.
+            <button type="button" class="btn ghost" (click)="clear()">Show everything</button>
+          } @else {
+            No products yet.
+          }
+        </li>
       }
     </ul>
+    @if (hasMore()) {
+      <p class="more">
+        <button type="button" class="btn ghost" [disabled]="loadingMore()" (click)="loadMore()">
+          {{ loadingMore() ? 'Loading…' : 'More products' }}
+        </button>
+      </p>
+    }
   }
 </section>
