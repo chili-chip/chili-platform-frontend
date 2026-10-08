@@ -6,11 +6,12 @@ import { firstValueFrom } from 'rxjs';
 import { MarketplaceSales } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { SkeletonRowsComponent, SpinnerComponent } from '../../shared/loading';
 import { formatMoney, marketError } from './market-utils';
 
 @Component({
   selector: 'app-sales',
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink, DatePipe, SkeletonRowsComponent, SpinnerComponent],
   templateUrl: './sales.html',
   styleUrl: './market.scss',
 })

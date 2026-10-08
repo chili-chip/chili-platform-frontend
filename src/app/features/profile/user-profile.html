@@ -47,7 +47,7 @@
             <a routerLink="/store" class="btn ghost">Shop store</a>
           </header>
           @if (ordersLoading()) {
-            <p class="empty">Loading orders…</p>
+            <app-skeleton-rows [count]="3" label="Loading orders" />
           } @else {
             <ul>
               @for (order of orders(); track order.id) {
@@ -97,7 +97,7 @@
 
           @if (shelf() === 'bought') {
             @if (libraryLoading()) {
-              <p class="empty">Loading bought games…</p>
+              <app-skeleton-grid variant="game" [count]="4" label="Loading bought games" />
             } @else {
               <ul class="game-grid">
                 @for (purchase of purchases(); track purchase.id) {
@@ -116,7 +116,7 @@
               </ul>
             }
           } @else if (gamesLoading()) {
-            <p class="empty">Loading your games…</p>
+            <app-skeleton-grid variant="game" [count]="4" label="Loading your games" />
           } @else {
             <ul class="game-grid">
               @for (game of games(); track game.id) {
@@ -146,7 +146,7 @@
             <a routerLink="/creator" class="btn ghost">New game</a>
           </header>
           @if (gamesLoading()) {
-            <p class="empty">Loading projects…</p>
+            <app-skeleton-grid variant="game" [count]="4" label="Loading projects" />
           } @else {
             <ul class="game-grid">
               @for (game of projects(); track game.id) {
@@ -179,7 +179,7 @@
         </div>
       </header>
       @if (gamesLoading()) {
-        <p class="empty">Loading games…</p>
+        <app-skeleton-grid variant="game" [count]="4" label="Loading games" />
       } @else {
         <ul class="game-grid">
           @for (game of games(); track game.id) {

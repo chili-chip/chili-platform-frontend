@@ -2,12 +2,18 @@
   <p class="kicker"><a routerLink="/marketplace">Marketplace</a></p>
 
   @if (loading()) {
-    <p class="empty">Loading game…</p>
+    <app-skeleton-detail
+      label="Loading game"
+      coverHeight="220px"
+      columns="minmax(180px, 280px) 1fr"
+      gap="1.4rem"
+      [body]="false"
+    />
   } @else if (listing(); as item) {
     <div class="hero">
       <div class="cover">
         @if (item.game.cover) {
-          <img [src]="item.game.cover" [alt]="item.game.title" />
+          <img appMediaFade [src]="item.game.cover" [alt]="item.game.title" />
         } @else {
           <span>{{ item.game.title.charAt(0) }}</span>
         }
@@ -57,6 +63,9 @@
               [disabled]="pickedStars() < 1 || savingRating()"
               (click)="rate(item)"
             >
+              @if (savingRating()) {
+                <app-spinner />
+              }
               Rate
             </button>
           </div>
@@ -83,6 +92,9 @@
             </a>
           } @else if (!inLibrary()) {
             <button type="button" class="btn primary" [disabled]="buying()" (click)="buy(item)">
+              @if (buying()) {
+                <app-spinner />
+              }
               {{ item.price_cents === 0 ? 'Get' : 'Buy' }}
             </button>
           }
@@ -111,7 +123,7 @@
     <div class="hero">
       <div class="cover">
         @if (copy.cover) {
-          <img [src]="copy.cover" [alt]="copy.title" />
+          <img appMediaFade [src]="copy.cover" [alt]="copy.title" />
         } @else {
           <span>{{ copy.title.charAt(0) }}</span>
         }

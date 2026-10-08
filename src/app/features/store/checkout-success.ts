@@ -4,11 +4,12 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
+import { SpinnerComponent } from '../../shared/loading';
 import { apiErrorMessage } from './store-utils';
 
 @Component({
   selector: 'app-checkout-success',
-  imports: [RouterLink],
+  imports: [RouterLink, SpinnerComponent],
   templateUrl: './checkout-success.html',
   styleUrl: './checkout.scss',
 })

@@ -16,7 +16,7 @@
   }
 
   @if (loading()) {
-    <p class="empty">Loading sales…</p>
+    <app-skeleton-rows [count]="3" label="Loading sales" />
   } @else if (sales(); as desk) {
     <div class="panels">
       <article class="panel">
@@ -41,7 +41,7 @@
     <section class="stack">
       <h2>Payouts</h2>
       @if (!auth.currentUser()) {
-        <p class="muted">Loading account…</p>
+        <p class="muted"><app-spinner label="Loading account" /> Loading account…</p>
       } @else if (!auth.currentUser()?.seller_terms_accepted_at) {
         <p class="muted">Accept the seller terms before payout setup. Buyers can already pay.</p>
         <label class="checks">

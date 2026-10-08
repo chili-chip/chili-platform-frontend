@@ -8,11 +8,12 @@ import { marked } from 'marked';
 import { StoreProduct } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { CartService } from '../../core/services/cart.service';
+import { MediaFadeDirective, SkeletonDetailComponent } from '../../shared/loading';
 import { apiErrorMessage, productBlurb, productCover, productImages } from './store-utils';
 
 @Component({
   selector: 'app-product-detail',
-  imports: [CurrencyPipe, RouterLink],
+  imports: [CurrencyPipe, MediaFadeDirective, RouterLink, SkeletonDetailComponent],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.scss',
 })

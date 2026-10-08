@@ -2,9 +2,11 @@ import { NgTemplateOutlet } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { MediaFadeDirective } from '../loading';
+
 @Component({
   selector: 'app-game-tile',
-  imports: [NgTemplateOutlet, RouterLink],
+  imports: [MediaFadeDirective, NgTemplateOutlet, RouterLink],
   templateUrl: './game-tile.html',
   styleUrl: './game-tile.scss',
 })

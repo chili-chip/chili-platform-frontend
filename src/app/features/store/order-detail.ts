@@ -5,11 +5,12 @@ import { RouterLink } from '@angular/router';
 import { StoreOrder } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { SkeletonArticleComponent } from '../../shared/loading';
 import { apiErrorMessage, shippingAddressLines, shippingStatus } from './store-utils';
 
 @Component({
   selector: 'app-order-detail',
-  imports: [CurrencyPipe, DatePipe, RouterLink, TitleCasePipe],
+  imports: [CurrencyPipe, DatePipe, RouterLink, SkeletonArticleComponent, TitleCasePipe],
   templateUrl: './order-detail.html',
   styleUrl: './order-detail.scss',
 })

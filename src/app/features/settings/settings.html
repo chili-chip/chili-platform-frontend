@@ -113,6 +113,9 @@
   <form [formGroup]="preferencesForm" (ngSubmit)="savePreferences()">
     <article id="preferences" class="card">
       <h2>Preferences</h2>
+      @if (loading()) {
+        <p class="muted" role="status"><app-spinner /> Loading your preferences…</p>
+      }
       <label>
         Language
         <select formControlName="locale">

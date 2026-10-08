@@ -15,14 +15,14 @@
   }
 
   @if (loading()) {
-    <p class="empty">Loading catalog…</p>
+    <app-skeleton-grid variant="product" label="Loading catalog" />
   } @else {
     <ul class="catalog">
       @for (product of products(); track product.id) {
         <li class="card" [class.is-out]="product.stock < 1">
           <a class="shot" [routerLink]="['/store', product.slug]">
             @if (cover(product); as src) {
-              <img [src]="src" [alt]="product.name" />
+              <img appMediaFade [src]="src" [alt]="product.name" />
             } @else {
               <span>{{ product.name.charAt(0) }}</span>
             }

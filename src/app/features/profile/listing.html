@@ -18,7 +18,7 @@
   }
 
   @if (loading()) {
-    <p class="empty">Loading games…</p>
+    <app-skeleton-rows [count]="2" label="Loading games" />
   } @else if (!games().length) {
     <p class="empty">Release a project before listing. The Bitsy file stays on the game.</p>
     <p class="tools">

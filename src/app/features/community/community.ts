@@ -6,10 +6,11 @@ import { RouterLink } from '@angular/router';
 import { ForumCategory, ForumPost, Paginated } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
+import { SkeletonThreadsComponent, SpinnerComponent } from '../../shared/loading';
 
 @Component({
   selector: 'app-community',
-  imports: [DatePipe, ReactiveFormsModule, RouterLink],
+  imports: [DatePipe, ReactiveFormsModule, RouterLink, SkeletonThreadsComponent, SpinnerComponent],
   templateUrl: './community.html',
   styleUrl: './community.scss',
 })
@@ -23,6 +24,8 @@ export class CommunityComponent implements OnInit {
   readonly activeCategory = signal<string | undefined>(undefined);
   readonly showComposer = signal(false);
   readonly error = signal('');
+  readonly loading = signal(true);
+  readonly publishing = signal(false);
 
   readonly form = this.fb.nonNullable.group({
     title: ['', [Validators.required, Validators.maxLength(160)]],
@@ -48,21 +51,36 @@ export class CommunityComponent implements OnInit {
       this.form.markAllAsTouched();
       return;
     }
+    if (this.publishing()) {
+      return;
+    }
     this.error.set('');
+    this.publishing.set(true);
     this.api.createPost(this.form.getRawValue()).subscribe({
       next: (post) => {
         this.posts.update((current) => [post, ...current]);
         this.form.reset({ title: '', category: 0, content: '' });
         this.showComposer.set(false);
+        this.publishing.set(false);
       },
-      error: () => this.error.set('Could not publish. Check the fields and try again.'),
+      error: () => {
+        this.error.set('Could not publish. Check the fields and try again.');
+        this.publishing.set(false);
+      },
     });
   }
 
   private loadPosts(category?: string): void {
+    this.loading.set(true);
     this.api.listPosts(category).subscribe({
-      next: (payload) => this.posts.set(payload.results ?? []),
-      error: () => this.posts.set([]),
+      next: (payload) => {
+        this.posts.set(payload.results ?? []);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.posts.set([]);
+        this.loading.set(false);
+      },
     });
   }
 
