@@ -1,0 +1,82 @@
+<section class="page">
+  <header class="intro">
+    <p class="kicker">Roadmap</p>
+    <h1>Timeline</h1>
+    <p class="lede">What is planned, what is in progress, and what has already shipped.</p>
+  </header>
+
+  <div class="filters">
+    <div class="filter-row" role="group" aria-label="Filter by status">
+      @for (option of statuses; track option.value) {
+        <button
+          type="button"
+          class="chip"
+          [class.is-on]="status() === option.value"
+          [attr.aria-pressed]="status() === option.value"
+          (click)="status.set(option.value)"
+        >
+          {{ option.label }}
+        </button>
+      }
+    </div>
+    @if (areas().length) {
+      <div class="filter-row" role="group" aria-label="Filter by area">
+        <button
+          type="button"
+          class="chip"
+          [class.is-on]="area() === 'all'"
+          [attr.aria-pressed]="area() === 'all'"
+          (click)="area.set('all')"
+        >
+          All areas
+        </button>
+        @for (option of areas(); track option.value) {
+          <button
+            type="button"
+            class="chip"
+            [class.is-on]="area() === option.value"
+            [attr.aria-pressed]="area() === option.value"
+            (click)="area.set(option.value)"
+          >
+            {{ option.label }}
+          </button>
+        }
+      </div>
+    }
+  </div>
+
+  @if (loading()) {
+    <app-skeleton-rows [count]="4" [boxed]="false" label="Loading timeline" />
+  } @else if (failed()) {
+    <div class="empty" role="alert">
+      <p>Could not load the timeline from GitHub.</p>
+      <button type="button" class="btn ghost" (click)="load()">Try again</button>
+    </div>
+  } @else if (entries().length) {
+    <ol class="timeline">
+      @for (entry of entries(); track entry.link.url) {
+        <li class="entry entry--{{ entry.status }}">
+          <p class="meta">
+            <span class="badge">{{ statusLabel(entry.status) }}</span>
+            @if (entry.area) {
+              <span class="area">{{ areaLabel(entry.area) }}</span>
+            }
+            <span class="source">{{ entry.source }}</span>
+            <time [attr.datetime]="entry.date">
+              {{ entry.status === 'shipped' ? '' : 'Opened '
+              }}{{ entry.date | date: 'mediumDate' : 'UTC' }}
+            </time>
+          </p>
+          <h2>{{ entry.title }}</h2>
+          <a [href]="entry.link.url" target="_blank" rel="noopener noreferrer"
+            >{{ entry.link.label }} ↗</a
+          >
+        </li>
+      }
+    </ol>
+  } @else {
+    <p class="empty">
+      {{ filtering() ? 'Nothing matches these filters.' : 'Nothing to show here yet.' }}
+    </p>
+  }
+</section>
