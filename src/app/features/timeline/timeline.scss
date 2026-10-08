@@ -89,6 +89,10 @@
   color: var(--amber);
 }
 
+.source {
+  opacity: 0.8;
+}
+
 .entry h2 {
   margin: 0 0 0.3rem;
   font-family: var(--font-display);
@@ -112,6 +116,9 @@
 }
 
 .empty {
+  display: grid;
+  justify-items: start;
+  gap: 0.8rem;
   padding: 1.4rem;
   background: var(--bg-1);
   border: 1px solid var(--line);

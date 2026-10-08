@@ -19,19 +19,26 @@
     }
   </div>
 
-  @if (entries().length) {
+  @if (loading()) {
+    <app-skeleton-rows [count]="4" [boxed]="false" label="Loading timeline" />
+  } @else if (failed()) {
+    <div class="empty" role="alert">
+      <p>Could not load the timeline from GitHub.</p>
+      <button type="button" class="btn ghost" (click)="load()">Try again</button>
+    </div>
+  } @else if (entries().length) {
     <ol class="timeline">
-      @for (entry of entries(); track entry.title) {
+      @for (entry of entries(); track entry.link.url) {
         <li class="entry" [class.entry--plan]="entry.type === 'plan'">
           <p class="meta">
             <span class="badge">{{ entry.type === 'plan' ? 'Plan' : 'Release' }}</span>
+            <span class="source">{{ entry.source }}</span>
             <time [attr.datetime]="entry.date">
-              {{ entry.type === 'plan' ? 'Announced ' : ''
+              {{ entry.type === 'plan' ? 'Opened ' : ''
               }}{{ entry.date | date: 'mediumDate' : 'UTC' }}
             </time>
           </p>
           <h2>{{ entry.title }}</h2>
-          <p class="desc">{{ entry.description }}</p>
           @if (entry.link; as link) {
             <a [href]="link.url" target="_blank" rel="noopener noreferrer">{{ link.label }} ↗</a>
           }
