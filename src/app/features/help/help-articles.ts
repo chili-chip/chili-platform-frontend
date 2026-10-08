@@ -19,6 +19,9 @@ export interface HelpArticle {
 /** Platform user help, not the engineering docs: link out to chilichip.eu for hardware details. */
 export const DOCS_URL = 'https://chilichip.eu';
 
+/** Where to ask when an article does not answer the question. Same invite as the footer socials. */
+export const DISCORD_URL = 'https://discord.gg/xB9sPYKBZc';
+
 export const HELP_TOPICS: readonly HelpTopic[] = [
   { slug: 'getting-started', title: 'Getting started', summary: 'Your account and settings.' },
   { slug: 'store', title: 'Store and checkout', summary: 'Buying vgc zero hardware.' },

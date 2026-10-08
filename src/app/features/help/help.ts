@@ -1,7 +1,7 @@
 import { Component, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { HELP_ARTICLES, HELP_TOPICS, HelpArticle } from './help-articles';
+import { DISCORD_URL, HELP_ARTICLES, HELP_TOPICS, HelpArticle } from './help-articles';
 
 @Component({
   selector: 'app-help',
@@ -10,6 +10,7 @@ import { HELP_ARTICLES, HELP_TOPICS, HelpArticle } from './help-articles';
   styleUrl: './help.scss',
 })
 export class HelpComponent {
+  readonly discordUrl = DISCORD_URL;
   readonly query = signal('');
 
   /** Articles grouped by topic, in topic order. Empty topics are left out. */

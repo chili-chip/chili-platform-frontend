@@ -97,3 +97,30 @@
   border: 1px solid var(--line);
   color: var(--muted);
 }
+
+.more {
+  margin-top: 2.4rem;
+  padding-top: 1rem;
+  max-width: 46rem;
+  border-top: 1px solid var(--line);
+}
+
+.more h2 {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+}
+
+.more p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.more a {
+  color: var(--phosphor);
+  text-decoration: none;
+}
+
+.more a:hover {
+  text-decoration: underline;
+}

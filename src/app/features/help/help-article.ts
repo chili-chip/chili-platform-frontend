@@ -5,7 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { marked } from 'marked';
 import { map } from 'rxjs';
 
-import { HELP_ARTICLES, HELP_TOPICS, HelpArticle } from './help-articles';
+import { DISCORD_URL, HELP_ARTICLES, HELP_TOPICS, HelpArticle } from './help-articles';
 
 @Component({
   selector: 'app-help-article',
@@ -16,6 +16,8 @@ import { HELP_ARTICLES, HELP_TOPICS, HelpArticle } from './help-articles';
   encapsulation: ViewEncapsulation.None,
 })
 export class HelpArticleComponent {
+  readonly discordUrl = DISCORD_URL;
+
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly title = inject(Title);

@@ -25,6 +25,7 @@
 
 .help-article .crumbs a,
 .help-article .back a,
+.help-article .more a,
 .help-article .related a,
 .help-article .body a {
   color: var(--phosphor);
@@ -33,6 +34,7 @@
 
 .help-article .crumbs a:hover,
 .help-article .back a:hover,
+.help-article .more a:hover,
 .help-article .related a:hover,
 .help-article .body a:hover {
   text-decoration: underline;
@@ -95,4 +97,9 @@
   margin-top: 1.6rem;
   font-family: var(--font-mono);
   font-size: 0.75rem;
+}
+
+.help-article .more {
+  margin-top: 1.6rem;
+  color: var(--muted);
 }
