@@ -32,6 +32,7 @@ describe('MarkdownEditorComponent', () => {
     expect(editor).toBeDefined();
     expect(editor.value()).toBe('first');
     expect(el.querySelector('.editor-toolbar button.md-bold')).not.toBeNull();
+    expect(el.querySelector('.editor-toolbar button.md-side-by-side')).not.toBeNull();
 
     editor.value('**bold** reply');
     expect(fixture.componentInstance.control.value).toBe('**bold** reply');

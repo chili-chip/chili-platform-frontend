@@ -35,6 +35,18 @@ app-markdown-editor .CodeMirror .CodeMirror-placeholder {
   opacity: 0.7;
 }
 
+app-markdown-editor .cm-s-easymde .cm-header-1 {
+  font-size: 1.5em;
+}
+
+app-markdown-editor .cm-s-easymde .cm-header-2 {
+  font-size: 1.3em;
+}
+
+app-markdown-editor .cm-s-easymde .cm-header-3 {
+  font-size: 1.15em;
+}
+
 app-markdown-editor .cm-s-easymde .cm-link,
 app-markdown-editor .cm-s-easymde .cm-url {
   color: var(--phosphor);
@@ -83,4 +95,16 @@ app-markdown-editor .editor-preview,
 app-markdown-editor .editor-preview-side {
   background: var(--bg-1);
   color: var(--text);
+}
+
+app-markdown-editor .editor-preview-side {
+  border-color: var(--line);
+  border-radius: 0;
+}
+
+// EasyMDE only hides no-mobile separators; hide the split view button too.
+@media (max-width: 700px) {
+  app-markdown-editor .editor-toolbar button.no-mobile {
+    display: none;
+  }
 }
