@@ -12,6 +12,7 @@ import {
   SpinnerComponent,
 } from '../../shared/loading';
 import { MarkdownComponent } from '../../shared/markdown';
+import { MarkdownEditorComponent } from '../../shared/markdown-editor';
 import { ToastService } from '../../core/services/toast.service';
 
 @Component({
@@ -19,6 +20,7 @@ import { ToastService } from '../../core/services/toast.service';
   imports: [
     DatePipe,
     MarkdownComponent,
+    MarkdownEditorComponent,
     ReactiveFormsModule,
     RouterLink,
     SkeletonArticleComponent,

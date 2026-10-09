@@ -23,6 +23,12 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "allowedCommonJsDependencies": [
+              "easymde",
+              "codemirror",
+              "codemirror-spell-checker",
+              "marked"
+            ],
             "assets": [
               {
                 "glob": "**/*",

@@ -6,13 +6,14 @@ import { GameProject, MarketplaceCategory } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SkeletonRowsComponent } from '../../shared/loading';
+import { MarkdownEditorComponent } from '../../shared/markdown-editor';
 import { dollarsToCents, marketError } from '../marketplace/market-utils';
 import { unwrapList } from '../store/store-utils';
 import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-listing',
-  imports: [RouterLink, SkeletonRowsComponent],
+  imports: [MarkdownEditorComponent, RouterLink, SkeletonRowsComponent],
   templateUrl: './listing.html',
   styleUrl: '../marketplace/market.scss',
 })

@@ -7,11 +7,19 @@ import { ForumCategory, ForumPost, Paginated } from '../../core/models/platform'
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SkeletonThreadsComponent, SpinnerComponent } from '../../shared/loading';
+import { MarkdownEditorComponent } from '../../shared/markdown-editor';
 import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-community',
-  imports: [DatePipe, ReactiveFormsModule, RouterLink, SkeletonThreadsComponent, SpinnerComponent],
+  imports: [
+    DatePipe,
+    MarkdownEditorComponent,
+    ReactiveFormsModule,
+    RouterLink,
+    SkeletonThreadsComponent,
+    SpinnerComponent,
+  ],
   templateUrl: './community.html',
   styleUrl: './community.scss',
 })

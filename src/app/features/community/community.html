@@ -46,10 +46,10 @@
           }
         </select>
       </label>
-      <label>
-        Content
-        <textarea formControlName="content" rows="6"></textarea>
-      </label>
+      <div class="field">
+        <span>Content</span>
+        <app-markdown-editor formControlName="content" label="Thread content" minHeight="200px" />
+      </div>
       @if (error()) {
         <p class="err">{{ error() }}</p>
       }

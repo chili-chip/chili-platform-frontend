@@ -1,7 +1,11 @@
 .markdown {
-  display: block;
   line-height: 1.65;
   overflow-wrap: anywhere;
+}
+
+// Not on .markdown itself: the editor's preview panes share the class and start hidden.
+app-markdown {
+  display: block;
 }
 
 .markdown > :first-child {

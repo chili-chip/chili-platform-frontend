@@ -183,7 +183,8 @@
   font-size: 0.75rem;
 }
 
-label {
+label,
+.field {
   display: grid;
   gap: 0.35rem;
   font-size: 0.7rem;

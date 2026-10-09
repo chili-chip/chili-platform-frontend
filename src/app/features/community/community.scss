@@ -59,7 +59,8 @@
   margin-bottom: 1.4rem;
 }
 
-label {
+label,
+.field {
   display: grid;
   gap: 0.35rem;
   font-family: var(--font-mono);

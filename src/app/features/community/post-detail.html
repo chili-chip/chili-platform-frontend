@@ -36,7 +36,7 @@
 
   @if (auth.isAuthenticated()) {
     <form [formGroup]="form" (ngSubmit)="submit()">
-      <textarea formControlName="content" rows="4" placeholder="Reply to this thread"></textarea>
+      <app-markdown-editor formControlName="content" label="Reply" placeholder="Reply to this thread" />
       <button class="btn primary" type="submit" [disabled]="posting()">
         @if (posting()) {
           <app-spinner />

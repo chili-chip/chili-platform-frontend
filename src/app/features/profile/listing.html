@@ -61,10 +61,10 @@
           Tags
           <input [value]="tags()" (input)="tags.set($any($event.target).value)" placeholder="bitsy, maze" />
         </label>
-        <label>
-          Description
-          <textarea rows="4" [value]="description()" (input)="description.set($any($event.target).value)"></textarea>
-        </label>
+        <div class="field">
+          <span>Description</span>
+          <app-markdown-editor label="Description" [(value)]="description" />
+        </div>
         @if (!game.listing_slug && !auth.currentUser()?.seller_terms_accepted_at) {
           <label class="checks">
             <input
