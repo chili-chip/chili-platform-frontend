@@ -1,37 +1,24 @@
-<section class="page">
-  <header class="intro">
-    <div>
-      <p class="kicker">Creator</p>
-      <h1>Sales</h1>
-      <p class="lede">
-        Chili Platform keeps a 20% fee plus estimated card processing costs. Earnings are held for
-        7 days, then paid out once your available balance reaches €20. Sales are recorded even
-        before you set up payouts.
-      </p>
-    </div>
-    <a routerLink="/marketplace" class="btn ghost">Marketplace</a>
+<section uiPage>
+  <header uiPageHeader kicker="Creator" heading="Sales">
+    <p class="lede">
+      Chili Platform keeps a 20% fee plus estimated card processing costs. Earnings are held for
+      7 days, then paid out once your available balance reaches €20. Sales are recorded even
+      before you set up payouts.
+    </p>
+    <a uiPageActions uiButton="ghost" routerLink="/marketplace">Marketplace</a>
   </header>
 
   @if (error()) {
-    <p class="err">{{ error() }}</p>
+    <p uiNotice="error">{{ error() }}</p>
   }
 
   @if (loading()) {
     <app-skeleton-rows [count]="3" label="Loading sales" />
   } @else if (sales(); as desk) {
     <div class="panels">
-      <article class="panel">
-        <span class="muted">On hold</span>
-        <strong>{{ money(desk.balance.held_cents) }}</strong>
-      </article>
-      <article class="panel">
-        <span class="muted">Available</span>
-        <strong>{{ money(desk.balance.available_cents) }}</strong>
-      </article>
-      <article class="panel">
-        <span class="muted">Paid out</span>
-        <strong>{{ money(desk.balance.paid_out_cents) }}</strong>
-      </article>
+      <ui-stat uiCard pad="sm" label="On hold" [value]="money(desk.balance.held_cents)" />
+      <ui-stat uiCard pad="sm" label="Available" [value]="money(desk.balance.available_cents)" />
+      <ui-stat uiCard pad="sm" label="Paid out" [value]="money(desk.balance.paid_out_cents)" />
     </div>
     @if (desk.payout.blocked_reason) {
       <p class="muted">{{ desk.payout.blocked_reason }}</p>
@@ -45,8 +32,9 @@
         <p class="muted"><app-spinner label="Loading account" /> Loading account…</p>
       } @else if (!auth.currentUser()?.seller_terms_accepted_at) {
         <p class="muted">Accept the seller terms to set up payouts. Buyers can purchase your games in the meantime.</p>
-        <label class="checks">
+        <label uiChoice>
           <input
+            uiCheck
             type="checkbox"
             [checked]="sellerAgreed()"
             (change)="sellerAgreed.set($any($event.target).checked)"
@@ -56,12 +44,12 @@
             <a routerLink="/seller-terms" (click)="$event.stopPropagation()">marketplace seller terms</a>.
           </span>
         </label>
-        <button type="button" class="btn primary" [disabled]="busy()" (click)="startPayouts()">
+        <button type="button" uiButton [disabled]="busy()" (click)="startPayouts()">
           {{ desk.account.stripe_account_id ? 'Continue' : 'Set up payouts' }}
         </button>
       } @else if (!desk.account.stripe_account_id) {
         <p class="muted">Buyers can already purchase your games. Set up payouts to receive your earnings.</p>
-        <button type="button" class="btn primary" [disabled]="busy()" (click)="startPayouts()">
+        <button type="button" uiButton [disabled]="busy()" (click)="startPayouts()">
           Set up payouts
         </button>
       } @else {
@@ -70,7 +58,7 @@
           Payouts: {{ desk.account.payouts_status || 'pending' }}
         </p>
         @if (connectError()) {
-          <p class="err">{{ connectError() }}</p>
+          <p uiNotice="error">{{ connectError() }}</p>
         }
         <div #bannerHost class="mount"></div>
         @if (!desk.account.ready) {
@@ -84,9 +72,9 @@
     <section class="stack">
       <h2>Sales</h2>
       @if (!desk.sales.length) {
-        <p class="empty">No sales yet. Your earnings will appear here, even before you set up payouts.</p>
+        <p uiEmpty>No sales yet. Your earnings will appear here, even before you set up payouts.</p>
       } @else {
-        <table>
+        <table uiTable>
           <thead>
             <tr>
               <th>Game</th>
@@ -104,7 +92,7 @@
                 <td>{{ money(sale.price_cents, sale.currency) }}</td>
                 <td>{{ money(sale.creator_credit_cents, sale.currency) }}</td>
                 <td>
-                  {{ sale.status }}
+                  <span [uiBadge]="saleTone(sale.status)">{{ sale.status }}</span>
                   @if (sale.available_at) {
                     <div class="muted">Available {{ sale.available_at | date: 'mediumDate' }}</div>
                   }

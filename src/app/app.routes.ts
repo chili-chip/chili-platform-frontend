@@ -217,5 +217,11 @@ export const routes: Routes = [
       import('./features/profile/user-profile').then((m) => m.UserProfileComponent),
     title: 'Profile',
   },
+  {
+    path: 'dev/ui',
+    loadComponent: () =>
+      import('./features/ui-showcase/ui-showcase').then((m) => m.UiShowcaseComponent),
+    title: 'Components',
+  },
   { path: '**', redirectTo: '' },
 ];

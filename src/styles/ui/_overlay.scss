@@ -1,0 +1,124 @@
+// CDK overlay styles and the uiDialog look (panelClass / backdropClass set in provideUi()).
+@use '@angular/cdk';
+
+@include cdk.overlay();
+@include cdk.a11y-visually-hidden();
+
+.ui-dialog-backdrop {
+  background: var(--scrim);
+}
+
+.ui-dialog-panel {
+  max-width: calc(100vw - 2rem);
+  max-height: calc(100dvh - 2rem);
+}
+
+.ui-dialog {
+  display: grid;
+  gap: 1.1rem;
+  max-height: inherit;
+  overflow: auto;
+  padding: 1.2rem 1.3rem 1.3rem;
+  color: var(--text);
+  background: var(--surface);
+  border: var(--border);
+  box-shadow: var(--shadow-pop);
+}
+
+.ui-dialog__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.ui-dialog__header h2 {
+  font-size: var(--text-xl);
+}
+
+.ui-dialog__close {
+  margin: -0.35rem -0.4rem 0 0;
+  padding: 0 0.3rem;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--muted);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.ui-dialog__close:hover {
+  color: var(--text);
+}
+
+.ui-dialog__footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: var(--border);
+}
+
+// Anchored popover (cdkConnectedOverlay), e.g. the cart.
+.ui-popover {
+  width: min(22rem, calc(100vw - 2rem));
+  padding: 1.1rem;
+  color: var(--text);
+  background: var(--surface);
+  border: var(--border);
+  box-shadow: var(--shadow-pop);
+}
+
+.ui-popover-backdrop {
+  background: rgb(7 8 12 / 0.45);
+}
+
+// ui-quantity
+.ui-quantity {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.ui-quantity__step {
+  width: 1.6rem;
+  height: 1.6rem;
+  padding: 0;
+  color: var(--text);
+  background: var(--surface-sunken);
+  border: var(--border);
+  cursor: pointer;
+}
+
+.ui-quantity__step:hover:not(:disabled) {
+  border-color: var(--phosphor);
+}
+
+.ui-quantity__step:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ui-quantity__value {
+  min-width: 1.4rem;
+  text-align: center;
+}
+
+.ui-quantity__remove {
+  padding: 0 0.45rem;
+  font: inherit;
+  font-size: var(--text-sm);
+  color: var(--danger);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.ui-quantity__remove:hover {
+  text-decoration: underline;
+}
+
+// The dialog container takes focus on open; the dialog frame already shows where it is.
+.ui-dialog-panel .cdk-dialog-container:focus {
+  outline: none;
+}

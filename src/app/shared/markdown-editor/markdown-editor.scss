@@ -1,13 +1,12 @@
 // EasyMDE's base styles, then the site's dark theme on top.
 @use 'easymde/dist/easymde.min';
-// Preview uses the same styles as app-markdown, which may not be on the page yet.
-@use '../markdown/markdown';
+// The preview uses the global .ui-prose styles, like app-markdown.
 
 app-markdown-editor {
   display: block;
   text-transform: none;
   letter-spacing: normal;
-  font-size: 0.95rem;
+  font-size: var(--text-sm);
 }
 
 app-markdown-editor .EasyMDEContainer .CodeMirror {
@@ -27,7 +26,7 @@ app-markdown-editor .CodeMirror-focused .CodeMirror-selected,
 app-markdown-editor .CodeMirror-line::selection,
 app-markdown-editor .CodeMirror-line > span::selection,
 app-markdown-editor .CodeMirror-line > span > span::selection {
-  background: rgba(125, 255, 179, 0.18);
+  background: rgb(125 255 179 / 0.18);
 }
 
 app-markdown-editor .CodeMirror .CodeMirror-placeholder {
@@ -68,7 +67,7 @@ app-markdown-editor .editor-toolbar {
 app-markdown-editor .editor-toolbar button {
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: var(--text-xs);
   min-width: 30px;
   width: auto;
   padding: 0 6px;

@@ -7,15 +7,16 @@ import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SkeletonRowsComponent } from '../../shared/loading';
 import { MarkdownEditorComponent } from '../../shared/markdown-editor';
+import { UI } from '../../shared/ui';
 import { dollarsToCents, marketError } from '../marketplace/market-utils';
 import { unwrapList } from '../store/store-utils';
 import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-listing',
-  imports: [MarkdownEditorComponent, RouterLink, SkeletonRowsComponent],
+  imports: [UI, MarkdownEditorComponent, RouterLink, SkeletonRowsComponent],
   templateUrl: './listing.html',
-  styleUrl: '../marketplace/market.scss',
+  styleUrl: './listing.scss',
 })
 export class ListingComponent {
   private readonly toast = inject(ToastService);

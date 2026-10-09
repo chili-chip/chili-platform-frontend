@@ -1,51 +1,21 @@
-.page {
-  padding: 2.5rem 6vw 4rem;
-  max-width: 820px;
-}
-
-.back,
-.meta,
-time {
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-decoration: none;
-}
-
 .post {
-  margin: 1rem 0 2rem;
+  margin: var(--space-4) 0 var(--space-8);
 }
 
-h1,
-h2 {
-  font-family: var(--font-display);
+.post h1 {
+  margin-top: 0.6rem;
 }
 
-.body,
-.comments app-markdown {
-  line-height: 1.6;
+.post .meta {
+  margin-top: var(--space-2);
+}
+
+.meta a {
+  text-decoration: none;
 }
 
 .body {
   margin-top: 1.2rem;
-}
-
-.comments app-markdown {
-  margin-top: 0.5rem;
-}
-
-.badge {
-  display: inline-block;
-  margin-bottom: 0.6rem;
-  padding: 0.15rem 0.4rem;
-  background: var(--chili);
-  color: var(--bg-0);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
 }
 
 .comments {
@@ -55,20 +25,18 @@ h2 {
   gap: 0.8rem;
 }
 
-.comments li,
-form,
-.empty {
-  padding: 0.9rem;
-  border: 1px solid var(--line);
-  background: var(--bg-1);
+.comment-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: var(--space-2);
 }
 
-form {
-  display: grid;
-  gap: 0.7rem;
-  margin-top: 1rem;
+.comment-head a {
+  text-decoration: none;
 }
 
-a {
-  color: var(--phosphor);
+.reply {
+  margin-top: var(--space-4);
 }

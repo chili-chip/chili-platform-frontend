@@ -3,15 +3,16 @@ import { Component, effect, ElementRef, inject, signal, viewChild } from '@angul
 import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
-import { MarketplaceSales } from '../../core/models/platform';
+import { MarketplacePurchase, MarketplaceSales } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SkeletonRowsComponent, SpinnerComponent } from '../../shared/loading';
+import { UI, UiTone } from '../../shared/ui';
 import { formatMoney, marketError } from './market-utils';
 
 @Component({
   selector: 'app-sales',
-  imports: [RouterLink, DatePipe, SkeletonRowsComponent, SpinnerComponent],
+  imports: [UI, RouterLink, DatePipe, SkeletonRowsComponent, SpinnerComponent],
   templateUrl: './sales.html',
   styleUrl: './market.scss',
 })
@@ -33,6 +34,20 @@ export class SalesComponent {
   readonly connectError = signal('');
   readonly sellerAgreed = signal(false);
   readonly money = formatMoney;
+
+  saleTone(status: MarketplacePurchase['status']): UiTone {
+    switch (status) {
+      case 'paid':
+        return 'success';
+      case 'pending':
+        return 'warning';
+      case 'refunded':
+      case 'canceled':
+        return 'neutral';
+      default:
+        return 'danger';
+    }
+  }
 
   constructor() {
     this.api.marketplaceConfig().subscribe({

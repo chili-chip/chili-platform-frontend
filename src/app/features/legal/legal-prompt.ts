@@ -3,12 +3,12 @@ import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
+import { UiButton, UiCheck, UiChoice, UiDialog, UiNotice } from '../../shared/ui';
 
 @Component({
   selector: 'app-legal-prompt',
-  imports: [RouterLink],
+  imports: [RouterLink, UiButton, UiCheck, UiChoice, UiDialog, UiNotice],
   templateUrl: './legal-prompt.html',
-  styleUrl: './legal-prompt.scss',
 })
 export class LegalPromptComponent {
   private readonly auth = inject(AuthService);

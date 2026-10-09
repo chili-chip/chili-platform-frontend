@@ -5,10 +5,11 @@ import { AuthService } from '../../core/services/auth.service';
 import { DOCS_URL } from '../../core/socials';
 import { CartPopupComponent } from '../cart-popup/cart-popup';
 import { ToastService } from '../../core/services/toast.service';
+import { UiButton } from '../ui/button';
 
 @Component({
   selector: 'app-site-header',
-  imports: [RouterLink, RouterLinkActive, CartPopupComponent],
+  imports: [RouterLink, RouterLinkActive, CartPopupComponent, UiButton],
   templateUrl: './site-header.html',
   styleUrl: './site-header.scss',
 })

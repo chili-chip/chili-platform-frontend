@@ -1,4 +1,4 @@
-<section class="page">
+<section uiPage="narrow">
   <p class="kicker">Marketplace</p>
   @if (loading()) {
     <h1>Confirming payment</h1>
@@ -8,19 +8,19 @@
   } @else if (purchase(); as game) {
     <h1>{{ game.title }} is in your library</h1>
     <p class="lede">Thank you for your purchase. The game is ready to play from your library.</p>
-    <p class="tools">
+    <p class="ui-actions">
       <a
-        class="btn primary"
+        uiButton
         [routerLink]="['/profile', auth.currentUser()?.username]"
         [queryParams]="{ tab: 'library', shelf: 'bought' }"
       >
         Open library
       </a>
-      <a routerLink="/marketplace" class="btn ghost">Keep browsing</a>
+      <a routerLink="/marketplace" uiButton="ghost">Keep browsing</a>
     </p>
   } @else {
     <h1>We could not confirm your payment</h1>
-    <p class="err">{{ error() }}</p>
-    <a routerLink="/marketplace" class="btn ghost">Back to the marketplace</a>
+    <p uiNotice="error" class="lede">{{ error() }}</p>
+    <a routerLink="/marketplace" uiButton="ghost">Back to the marketplace</a>
   }
 </section>

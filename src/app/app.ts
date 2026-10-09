@@ -1,10 +1,10 @@
-import { Component, computed, inject } from '@angular/core';
+import type { DialogRef } from '@angular/cdk/dialog';
+import { Component, computed, effect, inject, Injector } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
 
 import { AuthService } from './core/services/auth.service';
-import { LegalPromptComponent } from './features/legal/legal-prompt';
 import { RouteProgressComponent } from './shared/loading';
 import { SiteFooterComponent } from './shared/site-footer/site-footer';
 import { SiteHeaderComponent } from './shared/site-header/site-header';
@@ -17,7 +17,6 @@ import { ToastHostComponent } from './shared/toast/toast-host';
     RouteProgressComponent,
     SiteHeaderComponent,
     SiteFooterComponent,
-    LegalPromptComponent,
     ToastHostComponent,
   ],
   templateUrl: './app.html',
@@ -26,6 +25,8 @@ import { ToastHostComponent } from './shared/toast/toast-host';
 export class App {
   private readonly router = inject(Router);
   private readonly auth = inject(AuthService);
+  private readonly injector = inject(Injector);
+  private legalPrompt: Promise<DialogRef<unknown, unknown>> | null = null;
 
   private readonly url = toSignal(
     this.router.events.pipe(
@@ -51,4 +52,29 @@ export class App {
     }
     return !user.terms_accepted_at || !user.privacy_accepted_at;
   });
+
+  constructor() {
+    // The legal prompt blocks the site until accepted, so it cannot be dismissed.
+    // Loaded on demand: most visits never need it.
+    effect(() => {
+      if (this.needsLegalAcceptance()) {
+        this.legalPrompt ??= this.openLegalPrompt();
+      } else if (this.legalPrompt) {
+        void this.legalPrompt.then((ref) => ref.close());
+        this.legalPrompt = null;
+      }
+    });
+  }
+
+  private async openLegalPrompt(): Promise<DialogRef<unknown, unknown>> {
+    const [{ UiDialogService }, { LegalPromptComponent }] = await Promise.all([
+      import('./shared/ui/dialog'),
+      import('./features/legal/legal-prompt'),
+    ]);
+    return this.injector.get(UiDialogService).open<unknown, unknown, unknown>(LegalPromptComponent, {
+      disableClose: true,
+      autoFocus: 'dialog',
+      width: '32rem',
+    });
+  }
 }

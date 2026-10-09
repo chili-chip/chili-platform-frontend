@@ -5,12 +5,13 @@ import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
 import { SpinnerComponent } from '../../shared/loading';
+import { UI } from '../../shared/ui';
 import { apiErrorMessage } from './store-utils';
 import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-checkout-success',
-  imports: [RouterLink, SpinnerComponent],
+  imports: [UI, RouterLink, SpinnerComponent],
   templateUrl: './checkout-success.html',
   styleUrl: './checkout.scss',
 })

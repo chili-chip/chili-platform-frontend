@@ -1,51 +1,43 @@
-<section class="page">
-  <header class="intro">
-    <div>
-      <p class="kicker">Digital carts</p>
-      <h1>Marketplace</h1>
-      <p class="lede">Games made by the community. Buy with a card, or add free games straight to your library.</p>
-    </div>
-    <div class="tools">
-      @if (auth.isAuthenticated()) {
-        <a routerLink="/marketplace/sales" class="btn primary">Your sales</a>
-      } @else {
-        <a routerLink="/login" [queryParams]="{ next: '/marketplace' }" class="btn ghost">Sign in to buy</a>
-      }
-    </div>
+<section uiPage>
+  <header uiPageHeader kicker="Digital carts" heading="Marketplace">
+    <p class="lede">Games made by the community. Buy with a card, or add free games straight to your library.</p>
+    @if (auth.isAuthenticated()) {
+      <a uiPageActions uiButton routerLink="/marketplace/sales">Your sales</a>
+    } @else {
+      <a uiPageActions uiButton="ghost" routerLink="/login" [queryParams]="{ next: '/marketplace' }">Sign in to buy</a>
+    }
   </header>
 
-  <form class="search" (submit)="$event.preventDefault(); search()">
+  <form class="ui-input-group search" role="search" (submit)="$event.preventDefault(); search()">
     <input
+      uiInput
       type="search"
       [value]="draft()"
       (input)="draft.set($any($event.target).value)"
       placeholder="Search games, tags, creators"
       aria-label="Search the marketplace"
     />
-    <button type="submit" class="btn primary">Search</button>
+    <button uiButton type="submit">Search</button>
   </form>
 
-  <div class="chips">
-    <button type="button" class="chip" [class.is-on]="!category()" (click)="apply({ category: '' })">All</button>
+  <div class="ui-chips filters" role="group" aria-label="Category">
+    <button uiChip type="button" [selected]="!category()" (click)="apply({ category: '' })">All</button>
     @for (item of categories(); track item.slug) {
-      <button
-        type="button"
-        class="chip"
-        [class.is-on]="category() === item.slug"
-        (click)="apply({ category: item.slug })"
-      >
+      <button uiChip type="button" [selected]="category() === item.slug" (click)="apply({ category: item.slug })">
         {{ item.name }}
       </button>
     }
   </div>
 
-  <div class="chips">
-    <button type="button" class="chip" [class.is-on]="!price()" (click)="apply({ price: '' })">Any price</button>
-    <button type="button" class="chip" [class.is-on]="price() === 'free'" (click)="apply({ price: 'free' })">Free</button>
-    <button type="button" class="chip" [class.is-on]="price() === 'paid'" (click)="apply({ price: 'paid' })">Paid</button>
-    <label class="checks">
-      Sort
-      <select [value]="sort()" (change)="apply({ sort: $any($event.target).value })">
+  <div class="ui-chips filters">
+    <span class="ui-chips" role="group" aria-label="Price">
+      <button uiChip type="button" [selected]="!price()" (click)="apply({ price: '' })">Any price</button>
+      <button uiChip type="button" [selected]="price() === 'free'" (click)="apply({ price: 'free' })">Free</button>
+      <button uiChip type="button" [selected]="price() === 'paid'" (click)="apply({ price: 'paid' })">Paid</button>
+    </span>
+    <label class="sort">
+      <span>Sort</span>
+      <select uiInput size="sm" [value]="sort()" (change)="apply({ sort: $any($event.target).value })">
         <option value="new">Newest</option>
         <option value="price_asc">Price, low</option>
         <option value="price_desc">Price, high</option>
@@ -55,12 +47,13 @@
   </div>
 
   @if (tags().length) {
-    <div class="tags">
+    <div class="ui-chips filters" role="group" aria-label="Tags">
       @for (item of tags(); track item.name) {
         <button
+          uiChip
           type="button"
           class="tag"
-          [class.is-on]="tag() === item.name"
+          [selected]="tag() === item.name"
           (click)="apply({ tag: tag() === item.name ? '' : item.name })"
         >
           {{ item.name }}
@@ -70,7 +63,7 @@
   }
 
   @if (error()) {
-    <p class="err">{{ error() }}</p>
+    <p uiNotice="error" class="err">{{ error() }}</p>
   }
 
   @if (loading()) {
@@ -92,12 +85,12 @@
           />
         </li>
       } @empty {
-        <li class="empty">No games match that filter.</li>
+        <li uiEmpty>No games match that filter.</li>
       }
     </ul>
     @if (hasMore()) {
-      <p class="tools">
-        <button type="button" class="btn ghost" (click)="loadMore()">More games</button>
+      <p class="more">
+        <button uiButton="ghost" type="button" (click)="loadMore()">More games</button>
       </p>
     }
   }

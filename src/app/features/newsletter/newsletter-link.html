@@ -1,14 +1,14 @@
-<section class="auth">
+<section uiPage="form" class="auth">
   <p class="kicker">Newsletter</p>
   <h1>{{ copy.title }}</h1>
   @if (busy()) {
-    <p class="note">{{ copy.busy }}</p>
+    <p uiNotice>{{ copy.busy }}</p>
   }
   @if (message()) {
-    <p>{{ message() }}</p>
+    <p uiNotice="success">{{ message() }}</p>
   }
   @if (error()) {
-    <p class="err">{{ error() }}</p>
+    <p uiNotice="error">{{ error() }}</p>
   }
   <p class="switch"><a routerLink="/">Back to Chili Platform</a></p>
 </section>

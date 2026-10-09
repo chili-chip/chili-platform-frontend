@@ -3,10 +3,11 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
+import { UI } from '../../shared/ui';
 
 @Component({
   selector: 'app-verify-email',
-  imports: [RouterLink],
+  imports: [UI, RouterLink],
   templateUrl: './verify-email.html',
   styleUrl: './auth-form.scss',
 })

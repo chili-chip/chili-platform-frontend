@@ -16,10 +16,11 @@ import {
   unwrapList,
 } from './store-utils';
 import { ToastService } from '../../core/services/toast.service';
+import { UI } from '../../shared/ui';
 
 @Component({
   selector: 'app-checkout-review',
-  imports: [CurrencyPipe, RouterLink],
+  imports: [UI, CurrencyPipe, RouterLink],
   templateUrl: './checkout-review.html',
   styleUrl: './checkout-review.scss',
 })

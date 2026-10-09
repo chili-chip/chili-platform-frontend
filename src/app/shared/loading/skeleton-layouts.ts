@@ -76,7 +76,7 @@ function placeholders(count: number): number[] {
       min-width: 0;
       background: var(--bg-1);
       border: 1px solid var(--line);
-      box-shadow: 6px 6px 0 rgba(255, 59, 59, 0.12);
+      box-shadow: var(--shadow-card);
     }
 
     .body {

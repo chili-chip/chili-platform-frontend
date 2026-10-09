@@ -1,5 +1,6 @@
+import { DialogRef } from '@angular/cdk/dialog';
 import { CurrencyPipe } from '@angular/common';
-import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal, TemplateRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -7,7 +8,8 @@ import { Paginated, StoreCategory, StoreProduct } from '../../core/models/platfo
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
-import { MediaFadeDirective, SkeletonGridComponent } from '../../shared/loading';
+import { SkeletonGridComponent } from '../../shared/loading';
+import { UI, UiDialogService } from '../../shared/ui';
 import { apiErrorMessage, productCover, unwrapList } from './store-utils';
 
 type StoreFilters = {
@@ -36,7 +38,7 @@ export function eurosToCents(value: string): string {
 
 @Component({
   selector: 'app-store',
-  imports: [CurrencyPipe, MediaFadeDirective, RouterLink, SkeletonGridComponent],
+  imports: [CurrencyPipe, RouterLink, SkeletonGridComponent, UI],
   templateUrl: './store.html',
   styleUrl: './store.scss',
 })
@@ -47,6 +49,8 @@ export class StoreComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   readonly auth = inject(AuthService);
   readonly cart = inject(CartService);
+  private readonly dialog = inject(UiDialogService);
+  private filterDialog: DialogRef | null = null;
 
   readonly categories = signal<StoreCategory[]>([]);
   readonly products = signal<StoreProduct[]>([]);
@@ -114,10 +118,10 @@ export class StoreComponent implements OnInit {
     void this.router.navigate(['/store'], { queryParams });
   }
 
-  openFilters(dialog: HTMLDialogElement): void {
+  openFilters(content: TemplateRef<unknown>): void {
     const { min, max, stock } = this.filters();
     this.draftFilters.set({ min, max, stock });
-    dialog.showModal();
+    this.filterDialog = this.dialog.open(content);
   }
 
   patchDraft(patch: Partial<StoreFilters>): void {
@@ -128,16 +132,9 @@ export class StoreComponent implements OnInit {
     this.draftFilters.set({ min: '', max: '', stock: '' });
   }
 
-  applyFilters(dialog: HTMLDialogElement): void {
+  applyFilters(): void {
     this.apply(this.draftFilters());
-    dialog.close();
-  }
-
-  /** Clicks on the dialog element itself land on the backdrop, outside the panel. */
-  backdropClose(event: MouseEvent, dialog: HTMLDialogElement): void {
-    if (event.target === dialog) {
-      dialog.close();
-    }
+    this.filterDialog?.close();
   }
 
   clear(): void {

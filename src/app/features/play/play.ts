@@ -5,12 +5,13 @@ import { GameProject } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SkeletonComponent, SpinnerComponent } from '../../shared/loading';
+import { UI } from '../../shared/ui';
 import { marketError } from '../marketplace/market-utils';
 import { downloadBitsy, loadCitsyPlayer } from './bitsy-file';
 
 @Component({
   selector: 'app-play',
-  imports: [RouterLink, SkeletonComponent, SpinnerComponent],
+  imports: [UI, RouterLink, SkeletonComponent, SpinnerComponent],
   templateUrl: './play.html',
   styleUrl: './play.scss',
 })

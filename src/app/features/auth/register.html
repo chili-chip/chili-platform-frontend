@@ -1,25 +1,25 @@
-<section class="auth">
+<section uiPage="form" class="auth">
   <p class="kicker">Account</p>
   <h1>Create your account</h1>
-  <form [formGroup]="form" (ngSubmit)="submit()">
-    <label>
+  <form class="ui-stack" [formGroup]="form" (ngSubmit)="submit()">
+    <label uiField>
       Username
-      <input formControlName="username" autocomplete="username" />
+      <input uiInput formControlName="username" autocomplete="username" />
     </label>
-    <label>
+    <label uiField>
       Email
-      <input type="email" formControlName="email" autocomplete="email" />
+      <input uiInput type="email" formControlName="email" autocomplete="email" />
     </label>
-    <label>
+    <label uiField>
       Password
-      <input type="password" formControlName="password" autocomplete="new-password" />
+      <input uiInput type="password" formControlName="password" autocomplete="new-password" />
     </label>
-    <label>
+    <label uiField>
       Bio
-      <textarea formControlName="bio" rows="3"></textarea>
+      <textarea uiInput formControlName="bio" rows="3"></textarea>
     </label>
-    <label class="checks">
-      <input type="checkbox" formControlName="acceptTerms" />
+    <label uiChoice>
+      <input uiCheck type="checkbox" formControlName="acceptTerms" />
       <span>
         I am able to enter a contract, and I agree to the
         <a routerLink="/terms" (click)="$event.stopPropagation()">terms of service</a>
@@ -28,9 +28,9 @@
       </span>
     </label>
     @if (error()) {
-      <p class="err">{{ error() }}</p>
+      <p uiNotice="error">{{ error() }}</p>
     }
-    <button class="btn primary" type="submit">Create account</button>
+    <button uiButton type="submit">Create account</button>
   </form>
   <p class="switch">Already have an account? <a routerLink="/login" [queryParams]="next ? { next } : {}">Sign in</a></p>
   <p class="switch"><a routerLink="/verify-email">Resend verification email</a></p>

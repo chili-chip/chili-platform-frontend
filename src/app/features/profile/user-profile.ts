@@ -9,8 +9,9 @@ import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
 import { GameTileComponent } from '../../shared/game-tile/game-tile';
 import { SkeletonGridComponent, SkeletonRowsComponent } from '../../shared/loading';
+import { UI } from '../../shared/ui';
 import { formatPrice, marketError } from '../marketplace/market-utils';
-import { shippingSummary, unwrapList } from '../store/store-utils';
+import { orderStatusTone, shippingSummary, unwrapList } from '../store/store-utils';
 
 type ProfileTab = 'orders' | 'library' | 'projects';
 type LibraryShelf = 'bought' | 'mine';
@@ -18,6 +19,7 @@ type LibraryShelf = 'bought' | 'mine';
 @Component({
   selector: 'app-user-profile',
   imports: [
+    UI,
     CurrencyPipe,
     DatePipe,
     GameTileComponent,
@@ -112,6 +114,7 @@ export class UserProfileComponent {
   }
 
   shipping = shippingSummary;
+  statusTone = orderStatusTone;
 
   selectTab(tab: ProfileTab): void {
     void this.router.navigate(['/profile', this.username()], {
