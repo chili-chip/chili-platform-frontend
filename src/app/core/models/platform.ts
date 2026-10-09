@@ -45,6 +45,33 @@ export interface AuthResponse extends AuthTokens {
   user: UserProfile;
 }
 
+export type SocialProviderId = 'github' | 'google';
+
+export interface SocialProvider {
+  provider: SocialProviderId;
+  label: string;
+}
+
+export interface SocialStart {
+  provider: SocialProviderId;
+  authorize_url: string;
+  redirect_uri: string;
+  state: string;
+}
+
+export interface SocialAccount {
+  provider: SocialProviderId;
+  login: string;
+  email: string;
+  created_at: string;
+  last_login_at: string | null;
+}
+
+/** Callback result: a session for sign-in, or the connected list for a link. */
+export type SocialCallbackResult =
+  | (AuthResponse & { created: boolean; linked?: undefined })
+  | { linked: true; social_accounts: SocialAccount[] };
+
 export interface Paginated<T> {
   count: number;
   next: string | null;

@@ -32,6 +32,7 @@
     }
     <button uiButton type="submit">Create account</button>
   </form>
+  <app-social-login [acceptTerms]="termsAccepted()" [next]="next" (termsRequired)="requireTerms()" />
   <p class="switch">Already have an account? <a routerLink="/login" [queryParams]="next ? { next } : {}">Sign in</a></p>
   <p class="switch"><a routerLink="/verify-email">Resend verification email</a></p>
 </section>
