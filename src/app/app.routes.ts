@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { authGuard } from './core/guards/auth.guard';
+import { unsavedWorkGuard } from './core/guards/unsaved-work.guard';
 
 export const routes: Routes = [
   {
@@ -101,12 +102,14 @@ export const routes: Routes = [
   {
     path: 'creator',
     canActivate: [authGuard],
+    canDeactivate: [unsavedWorkGuard],
     loadComponent: () => import('./features/creator/creator').then((m) => m.CreatorComponent),
     title: 'Web Creator',
   },
   {
     path: 'creator/:id',
     canActivate: [authGuard],
+    canDeactivate: [unsavedWorkGuard],
     loadComponent: () => import('./features/creator/creator').then((m) => m.CreatorComponent),
     title: 'Web Creator',
   },

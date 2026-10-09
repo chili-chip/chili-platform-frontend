@@ -5,6 +5,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { environment } from '../../../environments/environment';
 import { SpinnerComponent } from '../../shared/loading';
 import { ToastService } from '../../core/services/toast.service';
+import { LeaveCheck } from '../../core/guards/unsaved-work.guard';
 
 @Component({
   selector: 'app-creator',
@@ -12,7 +13,7 @@ import { ToastService } from '../../core/services/toast.service';
   templateUrl: './creator.html',
   styleUrl: './creator.scss',
 })
-export class CreatorComponent implements OnDestroy {
+export class CreatorComponent implements OnDestroy, LeaveCheck {
   private readonly toast = inject(ToastService);
   private readonly router = inject(Router);
   private readonly sanitizer = inject(DomSanitizer);
@@ -22,6 +23,8 @@ export class CreatorComponent implements OnDestroy {
   readonly editorLoading = signal(false);
   /** Project id already shown in the editor, so a route update does not reload it. */
   private loadedFor: string | null = null;
+  /** True while the editor reports edits that are not saved to the account yet. */
+  private unsavedWork = false;
 
   constructor() {
     effect(() => {
@@ -40,13 +43,39 @@ export class CreatorComponent implements OnDestroy {
     });
 
     window.addEventListener('message', this.onEditorMessage);
+    window.addEventListener('beforeunload', this.onBeforeUnload);
   }
+
+  /** Asks before leaving the creator with unsaved work. Moves between creator pages are the editor's own. */
+  canLeave(nextUrl: string): boolean {
+    if (!this.unsavedWork || nextUrl === '/creator' || nextUrl.startsWith('/creator/')) {
+      return true;
+    }
+    return window.confirm('Your latest changes to this game are not saved yet. Leave anyway?');
+  }
+
+  private readonly onBeforeUnload = (event: BeforeUnloadEvent) => {
+    if (this.unsavedWork) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+  };
 
   private readonly onEditorMessage = (event: MessageEvent) => {
     if (event.origin !== window.location.origin) {
       return;
     }
-    const data = event.data as { type?: string; id?: number; kind?: string; message?: string };
+    const data = event.data as {
+      type?: string;
+      id?: number;
+      kind?: string;
+      message?: string;
+      unsaved?: boolean;
+    };
+    if (data?.type === 'chili-save-state') {
+      this.unsavedWork = data.unsaved === true;
+      return;
+    }
     if (data?.type === 'chili-toast' && typeof data.message === 'string') {
       if (data.kind === 'error') {
         this.toast.error(data.message);
@@ -75,5 +104,6 @@ export class CreatorComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     window.removeEventListener('message', this.onEditorMessage);
+    window.removeEventListener('beforeunload', this.onBeforeUnload);
   }
 }
