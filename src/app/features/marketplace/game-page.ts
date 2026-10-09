@@ -5,13 +5,14 @@ import { GameProject, MarketplaceListing } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { MediaFadeDirective, SkeletonDetailComponent, SpinnerComponent } from '../../shared/loading';
+import { MarkdownComponent } from '../../shared/markdown';
 import { downloadBitsy } from '../play/bitsy-file';
 import { formatPrice, marketError } from './market-utils';
 import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-game-page',
-  imports: [MediaFadeDirective, RouterLink, SkeletonDetailComponent, SpinnerComponent],
+  imports: [MarkdownComponent, MediaFadeDirective, RouterLink, SkeletonDetailComponent, SpinnerComponent],
   templateUrl: './game-page.html',
   styleUrl: './market.scss',
 })

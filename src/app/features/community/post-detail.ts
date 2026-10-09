@@ -11,12 +11,16 @@ import {
   SkeletonRowsComponent,
   SpinnerComponent,
 } from '../../shared/loading';
+import { MarkdownComponent } from '../../shared/markdown';
+import { MarkdownEditorComponent } from '../../shared/markdown-editor';
 import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-post-detail',
   imports: [
     DatePipe,
+    MarkdownComponent,
+    MarkdownEditorComponent,
     ReactiveFormsModule,
     RouterLink,
     SkeletonArticleComponent,

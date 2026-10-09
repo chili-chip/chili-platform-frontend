@@ -24,9 +24,16 @@ h2 {
 }
 
 .body,
-.comments p {
-  white-space: pre-wrap;
+.comments app-markdown {
   line-height: 1.6;
+}
+
+.body {
+  margin-top: 1.2rem;
+}
+
+.comments app-markdown {
+  margin-top: 0.5rem;
 }
 
 .badge {
@@ -60,14 +67,6 @@ form {
   display: grid;
   gap: 0.7rem;
   margin-top: 1rem;
-}
-
-textarea {
-  font: inherit;
-  color: var(--text);
-  background: var(--bg-0);
-  border: 1px solid var(--line);
-  padding: 0.7rem;
 }
 
 a {
