@@ -57,8 +57,8 @@
       </div>
     </div>
 
-    @if (longHtml()) {
-      <article class="markdown" [innerHTML]="longHtml()"></article>
+    @if (item.long_description.trim()) {
+      <app-markdown class="long-copy" [text]="item.long_description" />
     }
   }
 </section>

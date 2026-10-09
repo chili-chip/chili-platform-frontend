@@ -11,7 +11,7 @@
         <a [routerLink]="['/profile', thread.author.username]">{{ thread.author.display_name || thread.author.username }}</a>
         · {{ thread.created_at | date: 'medium' }}
       </p>
-      <p class="body">{{ thread.content }}</p>
+      <app-markdown class="body" [text]="thread.content" [breaks]="true" />
     </article>
   }
 
@@ -26,7 +26,7 @@
           <a [routerLink]="['/profile', comment.author.username]">{{ comment.author.display_name || comment.author.username }}</a>
         </strong>
         <time>{{ comment.created_at | date: 'short' }}</time>
-        <p>{{ comment.content }}</p>
+        <app-markdown [text]="comment.content" [breaks]="true" />
       </li>
     } @empty {
       <li class="empty">No replies yet.</li>

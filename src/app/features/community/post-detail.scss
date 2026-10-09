@@ -24,9 +24,16 @@ h2 {
 }
 
 .body,
-.comments p {
-  white-space: pre-wrap;
+.comments app-markdown {
   line-height: 1.6;
+}
+
+.body {
+  margin-top: 1.2rem;
+}
+
+.comments app-markdown {
+  margin-top: 0.5rem;
 }
 
 .badge {

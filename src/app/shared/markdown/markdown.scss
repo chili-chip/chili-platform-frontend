@@ -1,0 +1,93 @@
+.markdown {
+  display: block;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.markdown > :first-child {
+  margin-top: 0;
+}
+
+.markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4 {
+  font-family: var(--font-display);
+  color: var(--text);
+  margin: 1.4rem 0 0.5rem;
+}
+
+.markdown p {
+  margin: 0 0 0.9rem;
+}
+
+.markdown ul,
+.markdown ol {
+  margin: 0 0 0.9rem;
+  padding-left: 1.2rem;
+}
+
+.markdown li {
+  margin: 0.25rem 0;
+}
+
+.markdown a {
+  color: var(--phosphor);
+}
+
+.markdown strong {
+  color: var(--text);
+}
+
+.markdown blockquote {
+  margin: 0 0 0.9rem;
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--line);
+}
+
+.markdown img {
+  max-width: 100%;
+  height: auto;
+}
+
+.markdown table {
+  border-collapse: collapse;
+  margin: 0 0 0.9rem;
+}
+
+.markdown th,
+.markdown td {
+  border: 1px solid var(--line);
+  padding: 0.3rem 0.6rem;
+  text-align: left;
+}
+
+.markdown code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--bg-0);
+  padding: 0.1em 0.35em;
+}
+
+.markdown pre {
+  background: var(--bg-0);
+  border: 1px solid var(--line);
+  padding: 0.9rem;
+  overflow: auto;
+  margin: 0 0 0.9rem;
+}
+
+.markdown pre code {
+  padding: 0;
+  background: none;
+}
+
+.markdown hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 1.4rem 0;
+}

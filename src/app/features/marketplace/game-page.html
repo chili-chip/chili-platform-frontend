@@ -70,7 +70,11 @@
             </button>
           </div>
         }
-        <p class="lede">{{ item.description || 'No description provided.' }}</p>
+        @if (item.description.trim()) {
+          <app-markdown class="lede" [text]="item.description" [breaks]="true" />
+        } @else {
+          <p class="lede">No description provided.</p>
+        }
         <div class="tags">
           @for (tag of item.tags; track tag) {
             <a class="tag" [routerLink]="['/marketplace']" [queryParams]="{ tag }">{{ tag }}</a>
