@@ -45,6 +45,10 @@ npm start                 # http://localhost:4200
 
 The landing hero loads `public/models/vgc-zero.glb`.
 
+## Creator
+
+The Bitsy editor and the citsy runtime live in [chili-chip/chili-creator](https://github.com/chili-chip/chili-creator). This app depends on a tagged release (`@chili-chip/creator` in `package.json`), and the build copies its `editor/` and `citsy/` folders to `/creator/editor` and `/creator/citsy`, so the editor runs on this site's origin and shares its sign-in. To ship a new editor release, bump the tag in `package.json` and run `npm install`.
+
 ## Environments
 
 | | Production | Dev |
