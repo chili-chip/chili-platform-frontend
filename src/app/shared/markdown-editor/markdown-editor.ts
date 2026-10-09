@@ -133,7 +133,8 @@ function toolbar(E: typeof EasyMDE): Toolbar {
     title: string,
     icon: string,
     noDisable = false,
-  ) => ({ name, action, title, icon, className: `md-${name}`, noDisable });
+    noMobile = false,
+  ) => ({ name, action, title, icon, className: `md-${name}`, noDisable, noMobile });
   return [
     button('bold', E.toggleBold, 'Bold (Ctrl-B)', '<b>B</b>'),
     button('italic', E.toggleItalic, 'Italic (Ctrl-I)', '<i>I</i>'),
@@ -147,5 +148,7 @@ function toolbar(E: typeof EasyMDE): Toolbar {
     button('code', E.toggleCodeBlock, 'Code (Ctrl-Alt-C)', '&lt;/&gt;'),
     '|',
     button('preview', E.togglePreview, 'Preview (Ctrl-P)', 'preview', true),
+    // Editor and preview next to each other. Hidden on phones, where there is no room.
+    button('side-by-side', E.toggleSideBySide, 'Split view (F9)', 'split', true, true),
   ];
 }
