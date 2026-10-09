@@ -93,7 +93,7 @@
   color: inherit;
   background: var(--bg-1);
   border: 1px solid var(--line);
-  box-shadow: 5px 5px 0 rgba(255, 59, 59, 0.12);
+  box-shadow: 5px 5px 0 color-mix(in srgb, var(--chili) 12%, transparent);
 }
 
 .card {

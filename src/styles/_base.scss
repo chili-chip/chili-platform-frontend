@@ -11,8 +11,8 @@ body {
   margin: 0;
   min-height: 100%;
   background:
-    radial-gradient(circle at top right, rgb(255 59 59 / 0.12), transparent 32%),
-    linear-gradient(180deg, #0b0d12, var(--bg-0) 28%);
+    radial-gradient(circle at top right, color-mix(in srgb, var(--chili) 12%, transparent), transparent 32%),
+    linear-gradient(180deg, var(--bg-top), var(--bg-0) 28%);
   color: var(--text);
   font-family: var(--font-mono);
 }
@@ -57,7 +57,7 @@ a {
 }
 
 ::selection {
-  background: rgb(125 255 179 / 0.25);
+  background: color-mix(in srgb, var(--phosphor) 25%, transparent);
 }
 
 // Small pixel-font label above a heading.

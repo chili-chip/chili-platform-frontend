@@ -77,11 +77,13 @@ export class UiDialog implements OnInit, OnDestroy {
   private readonly ref = inject(DialogRef, { optional: true });
 
   ngOnInit(): void {
-    this.container()?._addAriaLabelledBy(this.headingId);
+    // Deferred like MatDialogTitle: the container's host binding was already
+    // checked this cycle, so changing it now would throw NG0100 in dev mode.
+    Promise.resolve().then(() => this.container()?._addAriaLabelledBy(this.headingId));
   }
 
   ngOnDestroy(): void {
-    this.container()?._removeAriaLabelledBy(this.headingId);
+    Promise.resolve().then(() => this.container()?._removeAriaLabelledBy(this.headingId));
   }
 
   close(): void {

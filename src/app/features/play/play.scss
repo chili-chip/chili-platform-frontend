@@ -22,7 +22,7 @@
   inset: 0;
   display: grid;
   place-items: center;
-  background: #000;
+  background: var(--screen);
   color: var(--phosphor);
 }
 
@@ -30,7 +30,7 @@ canvas {
   display: block;
   width: 100%;
   height: auto;
-  background: #000;
+  background: var(--screen);
   border: var(--border);
   image-rendering: pixelated;
 }

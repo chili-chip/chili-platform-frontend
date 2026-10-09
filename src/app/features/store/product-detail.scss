@@ -37,7 +37,7 @@
 
 .thumbs button.is-on {
   border-color: var(--accent);
-  box-shadow: 3px 3px 0 rgb(255 59 59 / 0.25);
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--chili) 25%, transparent);
 }
 
 .thumbs img {

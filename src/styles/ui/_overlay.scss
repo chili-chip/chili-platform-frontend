@@ -70,7 +70,7 @@
 }
 
 .ui-popover-backdrop {
-  background: rgb(7 8 12 / 0.45);
+  background: color-mix(in srgb, var(--bg-0) 45%, transparent);
 }
 
 // ui-quantity

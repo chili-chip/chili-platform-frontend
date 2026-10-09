@@ -26,7 +26,7 @@ app-markdown-editor .CodeMirror-focused .CodeMirror-selected,
 app-markdown-editor .CodeMirror-line::selection,
 app-markdown-editor .CodeMirror-line > span::selection,
 app-markdown-editor .CodeMirror-line > span > span::selection {
-  background: rgb(125 255 179 / 0.18);
+  background: color-mix(in srgb, var(--phosphor) 18%, transparent);
 }
 
 app-markdown-editor .CodeMirror .CodeMirror-placeholder {

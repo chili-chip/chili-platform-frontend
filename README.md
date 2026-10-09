@@ -55,6 +55,8 @@ Pages are built from a small component library on top of the [Angular CDK](https
 
 Component stylesheets keep only page layout; buttons, inputs, cards, chips, badges and messages come from the library.
 
+`npm run lint:styles` runs Stylelint (also in CI). It rejects raw hex, `rgb()` and named colours outside `_tokens.scss`; use a token, or `color-mix()` on a token for a tint. The vgc zero illustration is the one exception.
+
 ## Creator
 
 The Bitsy editor and the citsy runtime live in [chili-chip/chili-creator](https://github.com/chili-chip/chili-creator). This app depends on a tagged release (`@chili-chip/creator` in `package.json`), and the build copies its `editor/` and `citsy/` folders to `/creator/editor` and `/creator/citsy`, so the editor runs on this site's origin and shares its sign-in. To ship a new editor release, bump the tag in `package.json` and run `npm install`.
