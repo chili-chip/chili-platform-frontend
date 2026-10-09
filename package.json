@@ -33,7 +33,7 @@
     "@angular/forms": "^20.3.0",
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
-    "@chili-chip/creator": "github:chili-chip/chili-creator#d1b64afb609e2406cc158193af15655e0b442991",
+    "@chili-chip/creator": "github:chili-chip/chili-creator#v0.1.0",
     "@stripe/connect-js": "^3.4.6",
     "marked": "^18.1.0",
     "rxjs": "~7.8.0",
