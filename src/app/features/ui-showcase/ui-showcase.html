@@ -1,0 +1,186 @@
+<section uiPage>
+  <header uiPageHeader kicker="Design system" heading="Components">
+    <p class="lede">
+      The building blocks every page uses. Tokens live in <code>src/styles/_tokens.scss</code>,
+      component styles in <code>src/styles/ui</code>, and the Angular side in
+      <code>src/app/shared/ui</code>.
+    </p>
+  </header>
+
+  <section class="block">
+    <h2>Colour</h2>
+    <ul class="swatches">
+      @for (name of colors; track name) {
+        <li>
+          <span class="swatch" [style.background]="'var(--' + name + ')'"></span>
+          <code>--{{ name }}</code>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <section class="block">
+    <h2>Type</h2>
+    <p class="kicker">Kicker (pixel font)</p>
+    <h1>Heading one</h1>
+    <h2>Heading two</h2>
+    <h3>Heading three</h3>
+    <p class="lede">Lede: the intro paragraph under a page title, in muted mono.</p>
+    <p class="meta">Meta: dates, SKUs and counts</p>
+    <ul class="sizes">
+      @for (size of sizes; track size) {
+        <li [style.font-size]="'var(--text-' + size + ')'"><code>--text-{{ size }}</code></li>
+      }
+    </ul>
+  </section>
+
+  <section class="block">
+    <h2>Buttons</h2>
+    <p class="muted">
+      <code>uiButton</code> on a button, link or label. Variants primary, ghost, subtle, danger and
+      text; sizes md, sm and icon; <code>block</code> fills the width.
+    </p>
+    <div class="ui-actions">
+      <button uiButton type="button">Primary</button>
+      <button uiButton="ghost" type="button">Ghost</button>
+      <button uiButton="subtle" type="button">Subtle</button>
+      <button uiButton="danger" type="button">Danger</button>
+      <button uiButton="text" type="button">Text</button>
+      <button uiButton type="button" disabled>Disabled</button>
+      <button uiButton type="button"><app-spinner /> Saving</button>
+    </div>
+    <div class="ui-actions">
+      <button uiButton size="sm" type="button">Small</button>
+      <button uiButton="ghost" size="sm" type="button">Small ghost</button>
+      <button uiButton="danger" size="sm" type="button">Remove</button>
+      <button uiButton="subtle" size="icon" type="button" aria-label="Close">×</button>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Forms</h2>
+    <form class="ui-stack form" (submit)="$event.preventDefault()">
+      <label uiField>
+        Text input
+        <input uiInput placeholder="Placeholder" />
+      </label>
+      <label uiField hint="Hints sit under the control.">
+        With a hint
+        <input uiInput value="Kacper" />
+      </label>
+      <label uiField error="Enter a valid email address.">
+        With an error
+        <input uiInput type="email" value="not-an-email" aria-invalid="true" />
+      </label>
+      <label uiField>
+        Select
+        <select uiInput>
+          <option>English</option>
+          <option>Polski</option>
+        </select>
+      </label>
+      <label uiField>
+        Textarea
+        <textarea uiInput rows="3"></textarea>
+      </label>
+      <label uiField>
+        Disabled
+        <input uiInput value="kacper" disabled />
+      </label>
+      <label uiChoice><input uiCheck type="checkbox" checked /> Checkbox</label>
+      <label uiChoice><input uiCheck type="radio" name="showcase-radio" checked /> Radio one</label>
+      <label uiChoice><input uiCheck type="radio" name="showcase-radio" /> Radio two</label>
+      <div class="ui-input-group">
+        <input uiInput type="search" placeholder="Input group" aria-label="Search" />
+        <button uiButton type="submit">Search</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="block">
+    <h2>Chips, badges and notices</h2>
+    <div class="ui-chips">
+      @for (item of ['all', 'kits', 'shells']; track item) {
+        <button uiChip type="button" [selected]="chip() === item" (click)="chip.set(item)">
+          {{ item }} <span class="ui-chip__count">3</span>
+        </button>
+      }
+    </div>
+    <div class="ui-actions">
+      <span uiBadge>Neutral</span>
+      <span uiBadge="accent">Accent</span>
+      <span uiBadge="success">Paid</span>
+      <span uiBadge="warning">Pending</span>
+      <span uiBadge="danger">Failed</span>
+      <span uiBadge outline>Digital delivery</span>
+      <span uiBadge="warning" outline>Unverified</span>
+    </div>
+    <p uiNotice>Info notice for neutral messages.</p>
+    <p uiNotice="success">Saved. Success notices confirm an action.</p>
+    <p uiNotice="error">Could not save that. Errors say what went wrong.</p>
+    <p uiNotice="warning" boxed>Boxed warning for drafts and important notes.</p>
+  </section>
+
+  <section class="block">
+    <h2>Surfaces</h2>
+    <div class="grid">
+      <div uiCard>Card</div>
+      <div uiCard elevated>Elevated card</div>
+      <a uiCard interactive href="#" (click)="$event.preventDefault()">Interactive card</a>
+      <div uiCard pad="none" elevated>
+        <ui-cover alt="Pepper Quest" />
+        <div class="cover-body">Card with a cover</div>
+      </div>
+    </div>
+    <div uiEmpty>
+      Nothing here yet.
+      <button uiButton="ghost" type="button">Make something</button>
+    </div>
+    <div class="ui-actions">
+      <ui-avatar name="kacper" />
+      <ui-avatar name="kacper" size="lg" />
+      <ui-stat uiCard pad="sm" label="Available" value="€15.00" />
+      <ui-quantity [value]="quantity()" [max]="5" label="kits" (valueChange)="quantity.set($event)" (remove)="quantity.set(0)" />
+    </div>
+    <table uiTable>
+      <thead>
+        <tr><th>Game</th><th>Price</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Pepper Quest</td><td>€3.00</td><td><span uiBadge="success">Paid</span></td></tr>
+        <tr><td>Free Fall</td><td>Free</td><td><span uiBadge="warning">Pending</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="block">
+    <h2>Overlays</h2>
+    <div class="ui-actions">
+      <button uiButton="ghost" type="button" (click)="open(sample)">Open dialog</button>
+      <button uiButton="ghost" type="button" (click)="toast.success('Saved.')">Success toast</button>
+      <button uiButton="ghost" type="button" (click)="toast.error('Something went wrong.')">Error toast</button>
+    </div>
+    <ng-template #sample>
+      <ui-dialog heading="Dialog">
+        <p class="muted">Opened with the CDK Dialog service. Focus is trapped and Escape closes it.</p>
+        <footer uiDialogFooter>
+          <button uiButton="ghost" type="button">Secondary</button>
+          <button uiButton type="button">Primary</button>
+        </footer>
+      </ui-dialog>
+    </ng-template>
+  </section>
+
+  <section class="block">
+    <h2>Prose</h2>
+    <div class="ui-prose prose">
+      <h2>Rendered markdown</h2>
+      <p>Long text uses <code>.ui-prose</code>, with <a href="#">links</a>, <strong>bold</strong> and lists:</p>
+      <ul>
+        <li>One</li>
+        <li>Two</li>
+      </ul>
+      <blockquote>A quote.</blockquote>
+    </div>
+  </section>
+</section>

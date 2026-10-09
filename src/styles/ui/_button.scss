@@ -1,0 +1,119 @@
+// uiButton directive: button[uiButton], a[uiButton], label[uiButton]
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 0.72rem 1rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.2;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition:
+    transform var(--duration-fast) var(--ease),
+    border-color var(--duration-fast) var(--ease),
+    color var(--duration-fast) var(--ease);
+}
+
+.ui-btn:not(:disabled, .is-disabled):hover {
+  transform: translate(-1px, -1px);
+}
+
+.ui-btn:disabled,
+.ui-btn.is-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.ui-btn--primary {
+  color: var(--on-accent);
+  background: var(--accent);
+  box-shadow: var(--shadow-button);
+}
+
+.ui-btn--ghost {
+  color: var(--phosphor);
+  border-color: color-mix(in srgb, var(--phosphor) 45%, transparent);
+}
+
+.ui-btn--ghost:not(:disabled):hover {
+  border-color: var(--phosphor);
+}
+
+.ui-btn--subtle {
+  border-color: var(--line);
+}
+
+.ui-btn--subtle:not(:disabled):hover,
+.ui-btn--subtle[aria-expanded='true'] {
+  border-color: var(--phosphor);
+}
+
+.ui-btn--danger {
+  color: var(--chili);
+  border-color: color-mix(in srgb, var(--chili) 55%, transparent);
+}
+
+.ui-btn--danger:not(:disabled):hover {
+  border-color: var(--chili);
+}
+
+// Looks like a link; for low-emphasis actions inside text and toolbars.
+.ui-btn--text {
+  padding: 0;
+  color: var(--link);
+  letter-spacing: 0.1em;
+}
+
+.ui-btn--text:not(:disabled):hover {
+  transform: none;
+  text-decoration: underline;
+}
+
+.ui-btn--sm {
+  padding: 0.45rem 0.65rem;
+  font-size: var(--text-2xs);
+}
+
+.ui-btn--sm.ui-btn--text {
+  padding: 0;
+}
+
+.ui-btn--icon {
+  width: 2.2rem;
+  height: 2.2rem;
+  padding: 0;
+  letter-spacing: 0;
+}
+
+.ui-btn--icon svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.ui-btn--block {
+  display: flex;
+  width: 100%;
+}
+
+// File inputs live inside a label[uiButton]; keep them reachable but invisible.
+.ui-btn input[type='file'] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.ui-btn:has(input[type='file']:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}

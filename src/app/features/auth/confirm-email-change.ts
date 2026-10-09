@@ -2,10 +2,11 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
+import { UI } from '../../shared/ui';
 
 @Component({
   selector: 'app-confirm-email-change',
-  imports: [RouterLink],
+  imports: [UI, RouterLink],
   templateUrl: './confirm-email-change.html',
   styleUrl: './auth-form.scss',
 })

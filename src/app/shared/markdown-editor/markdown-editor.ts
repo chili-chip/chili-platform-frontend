@@ -80,7 +80,7 @@ export class MarkdownEditorComponent implements AfterViewInit, OnDestroy, Contro
       status: false,
       sideBySideFullscreen: false,
       toolbar: toolbar(EasyMDECtor),
-      previewClass: ['editor-preview', 'markdown'],
+      previewClass: ['editor-preview', 'markdown', 'ui-prose'],
       previewRender: (text) => this.renderPreview(text),
     });
     editor.codemirror.on('change', () => {

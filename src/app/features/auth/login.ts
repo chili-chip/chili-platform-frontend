@@ -4,10 +4,11 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
+import { UI } from '../../shared/ui';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [UI, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './auth-form.scss',
 })

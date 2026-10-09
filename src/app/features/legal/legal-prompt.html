@@ -1,26 +1,21 @@
-<div class="veil" role="dialog" aria-modal="true" aria-labelledby="legal-prompt-title">
-  <section class="card">
-    <p class="kicker">Account</p>
-    <h2 id="legal-prompt-title">Accept the terms to continue</h2>
-    <p>
-      Please review and accept the terms of service and the privacy policy to continue using your
-      account. You only need to do this once.
-    </p>
-    <p class="links">
-      <a routerLink="/terms">Terms of service</a>
-      <a routerLink="/privacy">Privacy policy</a>
-    </p>
-    <label class="checks">
-      <input
-        type="checkbox"
-        [checked]="agreed()"
-        (change)="agreed.set($any($event.target).checked)"
-      />
-      <span>I am able to enter a contract, and I agree to the terms of service and the privacy policy.</span>
-    </label>
-    @if (error()) {
-      <p class="err">{{ error() }}</p>
-    }
-    <button class="btn primary" type="button" [disabled]="busy()" (click)="submit()">Continue</button>
-  </section>
-</div>
+<ui-dialog heading="Accept the terms to continue" [closable]="false">
+  <p class="kicker" uiDialogKicker>Account</p>
+  <p class="muted">
+    Please review and accept the terms of service and the privacy policy to continue using your
+    account. You only need to do this once.
+  </p>
+  <p class="ui-actions">
+    <a routerLink="/terms">Terms of service</a>
+    <a routerLink="/privacy">Privacy policy</a>
+  </p>
+  <label uiChoice>
+    <input type="checkbox" uiCheck [checked]="agreed()" (change)="agreed.set($any($event.target).checked)" />
+    <span>I am able to enter a contract, and I agree to the terms of service and the privacy policy.</span>
+  </label>
+  @if (error()) {
+    <p uiNotice="error">{{ error() }}</p>
+  }
+  <div>
+    <button uiButton type="button" [disabled]="busy()" (click)="submit()">Continue</button>
+  </div>
+</ui-dialog>

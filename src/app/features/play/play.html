@@ -1,20 +1,20 @@
-<section class="page">
+<section uiPage>
   <p class="kicker">Library</p>
   @if (loading()) {
     <h1>Loading game…</h1>
     <app-skeleton class="screen" width="min(512px, 100%)" height="auto" ratio="1" />
   } @else if (game(); as current) {
-    <header class="intro">
+    <header class="ui-page-header">
       <div>
         <h1>{{ current.title }}</h1>
         <p class="lede">by {{ current.owner }}</p>
       </div>
-      <div class="tools">
+      <div class="ui-page-header__actions">
         @if (current.data) {
-          <button type="button" class="btn ghost" (click)="download()">Download</button>
+          <button uiButton="ghost" type="button" (click)="download()">Download</button>
         }
         <a
-          class="btn ghost"
+          uiButton="ghost"
           [routerLink]="['/profile', auth.currentUser()?.username]"
           [queryParams]="{ tab: 'library', shelf: auth.currentUser()?.username === current.owner ? 'mine' : 'bought' }"
         >
@@ -31,12 +31,12 @@
           </div>
         }
       </div>
-      <p class="hint">Arrows or WASD move. Z, X, space, or enter confirms. Escape leaves.</p>
+      <p class="muted hint">Arrows or WASD move. Z, X, space, or enter confirms. Escape leaves.</p>
     }
   } @else {
     <h1>Game unavailable</h1>
   }
   @if (error()) {
-    <p class="err">{{ error() }}</p>
+    <p uiNotice="error" class="err">{{ error() }}</p>
   }
 </section>

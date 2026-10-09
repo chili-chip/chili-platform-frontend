@@ -8,11 +8,13 @@ import { ApiService } from '../../core/services/api.service';
 import { CartService } from '../../core/services/cart.service';
 import { MediaFadeDirective, SkeletonDetailComponent } from '../../shared/loading';
 import { MarkdownComponent } from '../../shared/markdown';
+import { UI } from '../../shared/ui';
 import { apiErrorMessage, productBlurb, productCover, productImages } from './store-utils';
 
 @Component({
   selector: 'app-product-detail',
   imports: [
+    UI,
     CurrencyPipe,
     MarkdownComponent,
     MediaFadeDirective,

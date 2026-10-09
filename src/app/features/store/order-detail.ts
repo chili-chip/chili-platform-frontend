@@ -6,11 +6,18 @@ import { StoreOrder } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SkeletonArticleComponent } from '../../shared/loading';
-import { apiErrorMessage, shippingAddressLines, shippingStatus } from './store-utils';
+import { UI } from '../../shared/ui';
+import {
+  apiErrorMessage,
+  orderStatusTone,
+  shippingAddressLines,
+  shippingStatus,
+  shippingStatusTone,
+} from './store-utils';
 
 @Component({
   selector: 'app-order-detail',
-  imports: [CurrencyPipe, DatePipe, RouterLink, SkeletonArticleComponent, TitleCasePipe],
+  imports: [UI, CurrencyPipe, DatePipe, RouterLink, SkeletonArticleComponent, TitleCasePipe],
   templateUrl: './order-detail.html',
   styleUrl: './order-detail.scss',
 })
@@ -37,6 +44,8 @@ export class OrderDetailComponent {
 
   addressLines = shippingAddressLines;
   shippingStatus = shippingStatus;
+  statusTone = orderStatusTone;
+  shippingTone = shippingStatusTone;
 
   private load(id: string): void {
     this.loading.set(true);

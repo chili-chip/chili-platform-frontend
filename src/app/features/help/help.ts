@@ -2,10 +2,11 @@ import { Component, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { DISCORD_URL, HELP_ARTICLES, HELP_TOPICS, HelpArticle } from './help-articles';
+import { UI } from '../../shared/ui';
 
 @Component({
   selector: 'app-help',
-  imports: [RouterLink],
+  imports: [UI, RouterLink],
   templateUrl: './help.html',
   styleUrl: './help.scss',
 })

@@ -8,11 +8,13 @@ import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SkeletonThreadsComponent, SpinnerComponent } from '../../shared/loading';
 import { MarkdownEditorComponent } from '../../shared/markdown-editor';
+import { UI } from '../../shared/ui';
 import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-community',
   imports: [
+    UI,
     DatePipe,
     MarkdownEditorComponent,
     ReactiveFormsModule,

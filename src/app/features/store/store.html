@@ -1,66 +1,49 @@
-<section class="page">
-  <header class="intro">
-    <div>
-      <p class="kicker">Chilichip</p>
-      <h1>Store</h1>
-      <p class="lede">Kits, shells, and parts for the vgc zero handheld, with secure checkout powered by Stripe.</p>
-    </div>
+<section uiPage>
+  <header uiPageHeader kicker="Chilichip" heading="Store">
+    <p class="lede">Kits, shells, and parts for the vgc zero handheld, with secure checkout powered by Stripe.</p>
     @if (!auth.isAuthenticated()) {
-      <a routerLink="/login" [queryParams]="{ next: '/store/checkout' }" class="btn ghost">Sign in to buy</a>
+      <a uiPageActions uiButton="ghost" routerLink="/login" [queryParams]="{ next: '/store/checkout' }">Sign in to buy</a>
     }
   </header>
 
-  <form class="search" role="search" (submit)="$event.preventDefault(); search()">
+  <form class="ui-input-group search" role="search" (submit)="$event.preventDefault(); search()">
     <input
+      uiInput
       type="search"
       [value]="draft()"
       (input)="draft.set($any($event.target).value)"
       placeholder="Search parts, boards, SKUs"
       aria-label="Search the store"
     />
-    <button type="submit" class="btn primary">Search</button>
+    <button uiButton type="submit">Search</button>
   </form>
 
   @if (categories().length) {
-    <nav class="chips" aria-label="Store categories">
-      <button
-        type="button"
-        class="chip"
-        [class.is-on]="!filters().category"
-        [attr.aria-pressed]="!filters().category"
-        (click)="apply({ category: '' })"
-      >
-        All
-      </button>
+    <nav class="ui-chips filters" aria-label="Store categories">
+      <button uiChip type="button" [selected]="!filters().category" (click)="apply({ category: '' })">All</button>
       @for (item of categories(); track item.slug) {
         <button
+          uiChip
           type="button"
-          class="chip"
-          [class.is-on]="filters().category === item.slug"
-          [attr.aria-pressed]="filters().category === item.slug"
+          [selected]="filters().category === item.slug"
           (click)="apply({ category: item.slug })"
         >
-          {{ item.name }} <span class="count">{{ item.product_count }}</span>
+          {{ item.name }} <span class="ui-chip__count">{{ item.product_count }}</span>
         </button>
       }
     </nav>
   }
 
-  <div class="toolbar">
-    <button
-      type="button"
-      class="btn ghost filter-btn"
-      aria-haspopup="dialog"
-      (click)="openFilters(filterDialog)"
-    >
+  <div class="ui-actions toolbar">
+    <button uiButton="ghost" type="button" aria-haspopup="dialog" (click)="openFilters(filterDialog)">
       Filters
       @if (activeFilterCount()) {
-        <span class="filter-count">{{ activeFilterCount() }}</span>
+        <span uiBadge="accent">{{ activeFilterCount() }}</span>
       }
     </button>
     <label class="sort">
       <span>Sort</span>
-      <select [value]="filters().sort" (change)="apply({ sort: $any($event.target).value })">
+      <select uiInput [value]="filters().sort" (change)="apply({ sort: $any($event.target).value })">
         <option value="">Name</option>
         <option value="price">Price, low to high</option>
         <option value="-price">Price, high to low</option>
@@ -68,69 +51,63 @@
       </select>
     </label>
     @if (filtered()) {
-      <button type="button" class="clear-link" (click)="clear()">Clear all</button>
+      <button uiButton="text" size="sm" type="button" (click)="clear()">Clear all</button>
     }
   </div>
 
-  <dialog
-    #filterDialog
-    class="filter-dialog"
-    aria-labelledby="store-filters-title"
-    (click)="backdropClose($event, filterDialog)"
-  >
-    <form class="filter-panel" method="dialog" (submit)="applyFilters(filterDialog)">
-      <header>
-        <h2 id="store-filters-title">Filters</h2>
-        <button type="button" class="close" aria-label="Close filters" (click)="filterDialog.close()">
-          ×
-        </button>
-      </header>
-      <fieldset class="price">
-        <legend>Price (€)</legend>
-        <label>
-          Min
+  <ng-template #filterDialog>
+    <ui-dialog heading="Filters">
+      <form class="ui-stack" id="store-filters" (submit)="$event.preventDefault(); applyFilters()">
+        <fieldset uiField class="price">
+          <legend>Price (€)</legend>
+          <label uiField>
+            Min
+            <input
+              uiInput
+              type="number"
+              min="0"
+              step="0.01"
+              inputmode="decimal"
+              [value]="draftFilters().min"
+              (input)="patchDraft({ min: $any($event.target).value })"
+            />
+          </label>
+          <label uiField>
+            Max
+            <input
+              uiInput
+              type="number"
+              min="0"
+              step="0.01"
+              inputmode="decimal"
+              [value]="draftFilters().max"
+              (input)="patchDraft({ max: $any($event.target).value })"
+            />
+          </label>
+        </fieldset>
+        <label uiChoice>
           <input
-            type="number"
-            min="0"
-            step="0.01"
-            inputmode="decimal"
-            [value]="draftFilters().min"
-            (input)="patchDraft({ min: $any($event.target).value })"
+            uiCheck
+            type="checkbox"
+            [checked]="!!draftFilters().stock"
+            (change)="patchDraft({ stock: $any($event.target).checked ? '1' : '' })"
           />
+          In stock only
         </label>
-        <label>
-          Max
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            inputmode="decimal"
-            [value]="draftFilters().max"
-            (input)="patchDraft({ max: $any($event.target).value })"
-          />
-        </label>
-      </fieldset>
-      <label class="toggle">
-        <input
-          type="checkbox"
-          [checked]="!!draftFilters().stock"
-          (change)="patchDraft({ stock: $any($event.target).checked ? '1' : '' })"
-        />
-        In stock only
-      </label>
-      <footer>
-        <button type="button" class="btn ghost" (click)="resetDraft()">Reset</button>
-        <button type="submit" class="btn primary">Show results</button>
+      </form>
+      <footer uiDialogFooter>
+        <button uiButton="ghost" type="button" (click)="resetDraft()">Reset</button>
+        <button uiButton type="submit" form="store-filters">Show results</button>
       </footer>
-    </form>
-  </dialog>
+    </ui-dialog>
+  </ng-template>
 
   @if (activeCategory()?.description; as blurb) {
-    <p class="category-blurb">{{ blurb }}</p>
+    <p class="lede category-blurb">{{ blurb }}</p>
   }
 
   @if (error()) {
-    <p class="err">{{ error() }}</p>
+    <p uiNotice="error" class="err">{{ error() }}</p>
   }
 
   @if (loading()) {
@@ -138,41 +115,32 @@
   } @else {
     <ul class="catalog">
       @for (product of products(); track product.id) {
-        <li class="card" [class.is-out]="product.stock < 1">
-          <a class="shot" [routerLink]="['/store', product.slug]">
-            @if (cover(product); as src) {
-              <img appMediaFade [src]="src" [alt]="product.name" />
-            } @else {
-              <span>{{ product.name.charAt(0) }}</span>
-            }
+        <li uiCard pad="none" elevated [muted]="product.stock < 1" class="card">
+          <a class="shot" [routerLink]="['/store', product.slug]" tabindex="-1" aria-hidden="true">
+            <ui-cover [src]="cover(product)" [alt]="product.name" />
           </a>
           <div class="body">
-            <div class="meta">
-              <span class="sku">{{ product.category_name || product.sku || product.slug }}</span>
+            <div class="meta row">
+              <span>{{ product.category_name || product.sku || product.slug }}</span>
               <span class="stock" [class.is-low]="product.stock > 0 && product.stock < 8">
                 {{ product.stock < 1 ? 'Sold out' : product.stock + ' in stock' }}
               </span>
             </div>
             <h2><a [routerLink]="['/store', product.slug]">{{ product.name }}</a></h2>
-            <p>{{ product.short_description || 'Hardware for the handheld.' }}</p>
+            <p class="muted">{{ product.short_description || 'Hardware for the handheld.' }}</p>
             <div class="buy">
               <strong>{{ product.price_cents / 100 | currency: product.currency.toUpperCase() }}</strong>
-              <button
-                type="button"
-                class="btn primary"
-                [disabled]="product.stock < 1"
-                (click)="addToCart(product)"
-              >
+              <button uiButton type="button" [disabled]="product.stock < 1" (click)="addToCart(product)">
                 {{ product.stock < 1 ? 'Sold out' : 'Add to cart' }}
               </button>
             </div>
           </div>
         </li>
       } @empty {
-        <li class="empty">
+        <li uiEmpty>
           @if (filtered()) {
             No products match these filters.
-            <button type="button" class="btn ghost" (click)="clear()">Show everything</button>
+            <button uiButton="ghost" type="button" (click)="clear()">Show everything</button>
           } @else {
             No products yet.
           }
@@ -181,7 +149,7 @@
     </ul>
     @if (hasMore()) {
       <p class="more">
-        <button type="button" class="btn ghost" [disabled]="loadingMore()" (click)="loadMore()">
+        <button uiButton="ghost" type="button" [disabled]="loadingMore()" (click)="loadMore()">
           {{ loadingMore() ? 'Loading…' : 'More products' }}
         </button>
       </p>

@@ -2,11 +2,14 @@ import { NgTemplateOutlet } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { MediaFadeDirective } from '../loading';
+import { UiBadge } from '../ui/status';
+import { UiCover } from '../ui/surface';
 
 @Component({
   selector: 'app-game-tile',
-  imports: [MediaFadeDirective, NgTemplateOutlet, RouterLink],
+  imports: [NgTemplateOutlet, RouterLink, UiBadge, UiCover],
+  // Same classes uiCard sets for `pad="none" elevated interactive`.
+  host: { class: 'ui-card ui-card--pad-none ui-card--elevated ui-card--interactive' },
   templateUrl: './game-tile.html',
   styleUrl: './game-tile.scss',
 })

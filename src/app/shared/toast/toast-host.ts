@@ -39,7 +39,7 @@ import { ToastService } from '../../core/services/toast.service';
       position: fixed;
       right: 1rem;
       bottom: 1rem;
-      z-index: 110;
+      z-index: var(--z-toast);
       pointer-events: none;
     }
 
@@ -60,7 +60,7 @@ import { ToastService } from '../../core/services/toast.service';
       background: var(--bg-1);
       border: 1px solid var(--line);
       border-left-width: 3px;
-      box-shadow: 4px 4px 0 rgb(0 0 0 / 0.45);
+      box-shadow: var(--shadow-toast);
       font-family: var(--font-mono);
       font-size: 0.8rem;
       line-height: 1.4;
@@ -69,7 +69,7 @@ import { ToastService } from '../../core/services/toast.service';
     }
 
     .toast--success {
-      border-left-color: var(--phosphor);
+      border-left-color: var(--success);
     }
 
     .toast--error {
@@ -77,7 +77,7 @@ import { ToastService } from '../../core/services/toast.service';
     }
 
     .toast--info {
-      border-left-color: var(--amber);
+      border-left-color: var(--warning);
     }
 
     .message {

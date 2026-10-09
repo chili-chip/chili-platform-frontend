@@ -8,6 +8,7 @@ import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
 import { SpinnerComponent } from '../../shared/loading';
+import { UI } from '../../shared/ui';
 
 type Section = 'profile' | 'avatar' | 'email' | 'password' | 'preferences';
 type Status = { kind: 'ok' | 'error'; text: string } | null;
@@ -17,7 +18,7 @@ const AVATAR_MAX_FILE = 8 * 1024 * 1024;
 
 @Component({
   selector: 'app-settings',
-  imports: [ReactiveFormsModule, RouterLink, SpinnerComponent],
+  imports: [UI, ReactiveFormsModule, RouterLink, SpinnerComponent],
   templateUrl: './settings.html',
   styleUrl: './settings.scss',
 })

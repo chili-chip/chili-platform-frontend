@@ -1,36 +1,85 @@
-.page {
-  padding: 2.5rem 6vw 4rem;
+// Shared by the marketplace pages and the listing editor.
+
+.search {
+  margin-top: var(--space-4);
 }
 
-.intro,
-.row,
-.buy,
-.tools {
+.filters {
+  margin-top: var(--space-4);
+}
+
+.sort {
   display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  align-items: flex-end;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
 }
 
-.intro h1,
-.hero h1 {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 3.2rem);
-}
-
-.lede,
-.muted {
+.sort > span {
+  font-size: 0.7rem;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
   color: var(--muted);
 }
 
-.rating-summary {
-  color: var(--amber);
-  font-size: 0.85rem;
+.err {
+  margin-top: var(--space-4);
 }
 
+.more {
+  margin-top: 1.4rem;
+  text-align: center;
+}
+
+.lede {
+  margin-bottom: 1.2rem;
+}
+
+// Game page
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(180px, 280px) 1fr;
+  gap: 1.4rem;
+  align-items: start;
+}
+
+.cover {
+  --cover-height: 220px;
+  --cover-font: 3rem;
+  border: var(--border);
+}
+
+.body {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.row a {
+  text-decoration: none;
+}
+
+.rating-summary,
 .yours {
   color: var(--amber);
-  font-size: 0.85rem;
+  font-size: var(--text-sm);
+}
+
+.rate {
+  display: grid;
+  gap: 0.55rem;
+  max-width: 40rem;
+  justify-items: start;
+}
+
+.rate .ui-field {
+  justify-self: stretch;
 }
 
 .stars {
@@ -39,12 +88,12 @@
 }
 
 .stars button {
-  background: transparent;
-  border: 0;
-  color: var(--amber);
+  padding: 0.1rem 0.15rem;
   font-size: 1.35rem;
   line-height: 1;
-  padding: 0.1rem 0.15rem;
+  color: var(--amber);
+  background: transparent;
+  border: 0;
   cursor: pointer;
 }
 
@@ -52,10 +101,14 @@
   cursor: wait;
 }
 
-.rate {
-  display: grid;
-  gap: 0.55rem;
-  max-width: 40rem;
+.tags,
+.buy {
+  margin-top: var(--space-2);
+}
+
+.buy strong {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
 }
 
 .reviews {
@@ -67,242 +120,50 @@
 }
 
 .reviews li {
-  background: var(--bg-1);
-  border: 1px solid var(--line);
-  padding: 0.9rem 1rem;
   display: grid;
   gap: 0.45rem;
 }
 
-.reviews .meta span {
+.reviews .row span {
   color: var(--amber);
+  font-size: var(--text-sm);
+  letter-spacing: 0;
 }
 
 .reviews p {
   white-space: pre-wrap;
 }
 
-.lede {
-  max-width: 52ch;
-}
-
-.err {
-  margin: 1rem 0 0;
-  color: var(--chili-hot);
-}
-
-.chips,
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  margin-top: 1rem;
-}
-
-.chip,
-.tag {
-  color: var(--text);
-  text-decoration: none;
-  border: 1px solid var(--line);
-  background: transparent;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  padding: 0.35rem 0.55rem;
-  cursor: pointer;
-}
-
-.chip.is-on,
-.tag.is-on {
-  color: #140407;
-  background: var(--chili);
-  border-color: var(--chili);
-}
-
-.grid {
-  list-style: none;
-  margin: 1.4rem 0 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1rem;
-}
-
-.card,
-.panel,
-.empty {
-  background: var(--bg-1);
-  border: 1px solid var(--line);
-}
-
-.card {
-  display: grid;
-  overflow: hidden;
-  box-shadow: 6px 6px 0 rgba(255, 59, 59, 0.12);
-}
-
-.shot {
-  min-height: 140px;
-  position: relative;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  text-decoration: none;
-  background: linear-gradient(135deg, #241016, #10131a 55%);
-  color: var(--chili-hot);
-  font-family: var(--font-display);
-  font-size: 2.4rem;
-}
-
-.shot img,
-.cover img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.body {
-  padding: 0.9rem 1rem 1rem;
-  display: grid;
-  gap: 0.45rem;
-}
-
-.body h2,
-.body h2 a {
-  color: inherit;
-  text-decoration: none;
-  font-size: 1.05rem;
-}
-
-.meta {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-  color: var(--muted);
-  font-size: 0.75rem;
-}
-
-label,
-.field {
-  display: grid;
-  gap: 0.35rem;
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-input,
-select,
-textarea {
-  font: inherit;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--text);
-  background: var(--bg-0);
-  border: 1px solid var(--line);
-  padding: 0.65rem 0.7rem;
-}
-
-.search {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.search input {
-  flex: 1;
-  min-width: 0;
-}
-
-.hero {
-  display: grid;
-  grid-template-columns: minmax(180px, 280px) 1fr;
-  gap: 1.4rem;
-  align-items: start;
-}
-
-.cover {
-  position: relative;
-  min-height: 220px;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  background: linear-gradient(135deg, #241016, #10131a 55%);
-  border: 1px solid var(--line);
-  color: var(--chili-hot);
-  font-family: var(--font-display);
-  font-size: 3rem;
-}
+// Sales
 
 .panels {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 0.7rem;
-  margin: 1rem 0;
-}
-
-.panel {
-  padding: 0.9rem 1rem;
-}
-
-.panel strong {
-  display: block;
-  margin-top: 0.25rem;
-  font-family: var(--font-display);
-  font-size: 1.4rem;
+  margin: var(--space-4) 0;
 }
 
 .stack {
   display: grid;
   gap: 0.7rem;
-  margin-top: 1rem;
+  margin-top: var(--space-6);
+  justify-items: start;
 }
 
-.mount {
-  min-height: 0;
+.stack > :is(.ui-table, .ui-field, .ui-empty, .mount) {
+  justify-self: stretch;
 }
 
 .mount:empty {
   display: none;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.85rem;
-}
-
-th,
-td {
-  text-align: left;
-  padding: 0.55rem 0.4rem;
-  border-bottom: 1px solid var(--line);
-  vertical-align: top;
-}
-
-.checks {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  text-transform: none;
-  letter-spacing: 0;
-  font-size: 0.85rem;
-}
-
-.checks a {
-  color: var(--phosphor);
-}
-
 @media (max-width: 720px) {
-  .intro,
-  .hero,
-  .buy,
-  .tools,
-  .search {
-    display: grid;
+  .hero {
     grid-template-columns: 1fr;
-    align-items: stretch;
+  }
+
+  .sort {
+    margin-left: 0;
   }
 }

@@ -8,10 +8,10 @@ import { marked } from 'marked';
 @Component({
   selector: 'app-markdown',
   template: '',
-  styleUrl: './markdown.scss',
+  styles: 'app-markdown { display: block; }',
   // The body is rendered with innerHTML, so its elements need unscoped styles.
   encapsulation: ViewEncapsulation.None,
-  host: { class: 'markdown', '[innerHTML]': 'html()' },
+  host: { class: 'markdown ui-prose', '[innerHTML]': 'html()' },
 })
 export class MarkdownComponent {
   readonly text = input<string | null | undefined>('');

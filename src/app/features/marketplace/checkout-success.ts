@@ -5,12 +5,13 @@ import { MarketplacePurchase } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SpinnerComponent } from '../../shared/loading';
+import { UI } from '../../shared/ui';
 import { marketError } from './market-utils';
 import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-marketplace-checkout-success',
-  imports: [RouterLink, SpinnerComponent],
+  imports: [UI, RouterLink, SpinnerComponent],
   templateUrl: './checkout-success.html',
   styleUrl: './market.scss',
 })

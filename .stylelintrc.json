@@ -1,0 +1,15 @@
+{
+  "extends": ["stylelint-config-recommended-scss"],
+  "rules": {
+    "no-descending-specificity": null,
+    "color-no-hex": [true, { "message": "Use a colour token from src/styles/_tokens.scss instead of a raw hex value." }],
+    "color-named": ["never", { "message": "Use a colour token from src/styles/_tokens.scss instead of a named colour." }],
+    "function-disallowed-list": [["rgb", "rgba", "hsl", "hsla"], { "message": "Use a colour token from src/styles/_tokens.scss (color-mix() on a token is fine)." }]
+  },
+  "overrides": [
+    {
+      "files": ["src/styles/_tokens.scss", "src/app/shared/vgc-zero/vgc-zero.scss"],
+      "rules": { "color-no-hex": null, "color-named": null, "function-disallowed-list": null }
+    }
+  ]
+}

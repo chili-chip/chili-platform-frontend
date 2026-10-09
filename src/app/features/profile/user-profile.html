@@ -1,50 +1,40 @@
-<section class="page">
+<section uiPage>
   @if (profile(); as user) {
     <div class="hero">
-      <div class="avatar">
-        @if (user.avatar_url) {
-          <img [src]="user.avatar_url" [alt]="user.username + ' avatar'" />
-        } @else {
-          {{ user.username.charAt(0) }}
-        }
-      </div>
+      <ui-avatar size="lg" [src]="user.avatar_url" [name]="user.username" [alt]="user.username + ' avatar'" />
       <div>
         <p class="kicker">Player</p>
         <h1>{{ user.display_name || user.username }}</h1>
         @if (user.display_name) {
           <p class="meta">&#64;{{ user.username }}</p>
         }
-        <p class="bio">{{ user.bio || (isOwn() ? 'Add a bio in your settings.' : 'This user has not added a bio yet.') }}</p>
+        <p class="lede bio">{{ user.bio || (isOwn() ? 'Add a bio in your settings.' : 'This user has not added a bio yet.') }}</p>
         @if (user.created_at) {
           <p class="meta">Joined {{ user.created_at | date: 'mediumDate' }}</p>
         }
         @if (isOwn()) {
-          <p><a class="btn ghost" routerLink="/settings">Settings</a></p>
+          <p class="settings"><a uiButton="ghost" size="sm" routerLink="/settings">Settings</a></p>
         }
       </div>
     </div>
   }
 
   @if (isOwn()) {
-    <nav class="tabs" aria-label="Profile">
-      <button type="button" [class.is-on]="tab() === 'orders'" (click)="selectTab('orders')">Orders</button>
-      <button type="button" [class.is-on]="tab() === 'library'" (click)="selectTab('library')">Library</button>
-      <button type="button" [class.is-on]="tab() === 'projects'" (click)="selectTab('projects')">Projects</button>
+    <nav class="ui-chips tabs" aria-label="Profile">
+      <button uiChip type="button" [selected]="tab() === 'orders'" (click)="selectTab('orders')">Orders</button>
+      <button uiChip type="button" [selected]="tab() === 'library'" (click)="selectTab('library')">Library</button>
+      <button uiChip type="button" [selected]="tab() === 'projects'" (click)="selectTab('projects')">Projects</button>
     </nav>
 
     @if (error()) {
-      <p class="err">{{ error() }}</p>
+      <p uiNotice="error" class="err">{{ error() }}</p>
     }
 
     @switch (tab()) {
       @case ('orders') {
         <section class="orders">
-          <header>
-            <div>
-              <p class="kicker">Hardware</p>
-              <h2>Orders</h2>
-            </div>
-            <a routerLink="/store" class="btn ghost">Shop store</a>
+          <header uiPageHeader [level]="2" kicker="Hardware" heading="Orders">
+            <a uiPageActions uiButton="ghost" routerLink="/store">Shop store</a>
           </header>
           @if (ordersLoading()) {
             <app-skeleton-rows [count]="3" label="Loading orders" />
@@ -52,9 +42,9 @@
             <ul>
               @for (order of orders(); track order.id) {
                 <li>
-                  <a class="order-card" [routerLink]="['/store/orders', order.id]">
-                    <div class="order-head">
-                      <span class="badge" [attr.data-status]="order.status">{{ order.status | titlecase }}</span>
+                  <a uiCard interactive class="order-card" [routerLink]="['/store/orders', order.id]">
+                    <div class="meta order-head">
+                      <span [uiBadge]="statusTone(order.status)">{{ order.status | titlecase }}</span>
                       <span>Order #{{ order.id }}</span>
                       <time>{{ order.created_at | date: 'medium' }}</time>
                       <strong>{{ order.total_cents / 100 | currency: order.currency.toUpperCase() }}</strong>
@@ -68,12 +58,12 @@
                       }
                     </div>
                     @if (shipping(order); as ship) {
-                      <p class="ship">{{ ship }}</p>
+                      <p class="muted ship">{{ ship }}</p>
                     }
                   </a>
                 </li>
               } @empty {
-                <li class="empty">No hardware orders yet. The Chilichip store is ready when you are.</li>
+                <li uiEmpty>No hardware orders yet. The Chilichip store is ready when you are.</li>
               }
             </ul>
           }
@@ -81,18 +71,14 @@
       }
       @case ('library') {
         <section class="orders">
-          <header>
-            <div>
-              <p class="kicker">Your copies</p>
-              <h2>Library</h2>
-            </div>
-            <a routerLink="/marketplace" class="btn ghost">Marketplace</a>
+          <header uiPageHeader [level]="2" kicker="Your copies" heading="Library">
+            <a uiPageActions uiButton="ghost" routerLink="/marketplace">Marketplace</a>
           </header>
-          <div class="shelves" aria-label="Library shelves">
-            <button type="button" [class.is-on]="shelf() === 'bought'" (click)="selectShelf('bought')">
+          <div class="ui-chips shelves" role="group" aria-label="Library shelves">
+            <button uiChip type="button" [selected]="shelf() === 'bought'" (click)="selectShelf('bought')">
               Bought games
             </button>
-            <button type="button" [class.is-on]="shelf() === 'mine'" (click)="selectShelf('mine')">My games</button>
+            <button uiChip type="button" [selected]="shelf() === 'mine'" (click)="selectShelf('mine')">My games</button>
           </div>
 
           @if (shelf() === 'bought') {
@@ -111,7 +97,7 @@
                     />
                   </li>
                 } @empty {
-                  <li class="empty">No bought games yet. The marketplace is where you claim or pay for one.</li>
+                  <li uiEmpty>No bought games yet. The marketplace is where you claim or pay for one.</li>
                 }
               </ul>
             }
@@ -130,7 +116,7 @@
                   />
                 </li>
               } @empty {
-                <li class="empty">No released games yet. Release a project when it is ready to sell.</li>
+                <li uiEmpty>No released games yet. Release a project when it is ready to sell.</li>
               }
             </ul>
           }
@@ -138,12 +124,8 @@
       }
       @case ('projects') {
         <section class="orders">
-          <header>
-            <div>
-              <p class="kicker">In progress</p>
-              <h2>Projects</h2>
-            </div>
-            <a routerLink="/creator" class="btn ghost">New game</a>
+          <header uiPageHeader [level]="2" kicker="In progress" heading="Projects">
+            <a uiPageActions uiButton="ghost" routerLink="/creator">New game</a>
           </header>
           @if (gamesLoading()) {
             <app-skeleton-grid variant="game" [count]="4" label="Loading projects" />
@@ -157,13 +139,13 @@
                     [link]="['/creator', game.id]"
                     [detail]="(game.updated_at | date: 'medium') ?? ''"
                   />
-                  <div class="actions">
-                    <button type="button" class="btn ghost" (click)="release(game)">Release</button>
-                    <button type="button" class="remove" (click)="removeGame(game, $event)">Remove</button>
+                  <div class="ui-actions">
+                    <button uiButton="ghost" size="sm" type="button" (click)="release(game)">Release</button>
+                    <button uiButton="danger" size="sm" type="button" (click)="removeGame(game, $event)">Remove</button>
                   </div>
                 </li>
               } @empty {
-                <li class="empty">No projects yet. Open the creator and save one to your profile.</li>
+                <li uiEmpty>No projects yet. Open the creator and save one to your profile.</li>
               }
             </ul>
           }
@@ -172,12 +154,7 @@
     }
   } @else {
     <section class="orders">
-      <header>
-        <div>
-          <p class="kicker">Released</p>
-          <h2>Games</h2>
-        </div>
-      </header>
+      <header uiPageHeader [level]="2" kicker="Released" heading="Games"></header>
       @if (gamesLoading()) {
         <app-skeleton-grid variant="game" [count]="4" label="Loading games" />
       } @else {
@@ -192,7 +169,7 @@
               />
             </li>
           } @empty {
-            <li class="empty">No released games yet.</li>
+            <li uiEmpty>No released games yet.</li>
           }
         </ul>
       }

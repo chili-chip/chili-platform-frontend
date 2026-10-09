@@ -1,7 +1,5 @@
-<section class="page">
-  <header class="intro">
-    <p class="kicker">Help</p>
-    <h1>Help center</h1>
+<section uiPage>
+  <header uiPageHeader kicker="Help" heading="Help center">
     <p class="lede">
       Answers about your account, the store, the marketplace, the creator, and the forum.
     </p>
@@ -9,6 +7,7 @@
 
   <form class="search" role="search" (submit)="$event.preventDefault()">
     <input
+      uiInput
       type="search"
       [value]="query()"
       (input)="query.set($any($event.target).value)"
@@ -22,16 +21,16 @@
       <ul class="results" aria-label="Search results">
         @for (article of found; track article.slug) {
           <li>
-            <a [routerLink]="['/help', article.slug]">
+            <a uiCard pad="sm" interactive [routerLink]="['/help', article.slug]">
               <span class="topic">{{ topicTitle(article) }}</span>
               <strong>{{ article.title }}</strong>
-              <span class="summary">{{ article.summary }}</span>
+              <span class="muted summary">{{ article.summary }}</span>
             </a>
           </li>
         }
       </ul>
     } @else {
-      <p class="empty" role="status">
+      <p uiEmpty class="empty" role="status">
         No articles match “{{ query() }}”. Try fewer or different words.
       </p>
     }
@@ -43,9 +42,9 @@
         <ul class="list">
           @for (article of group.articles; track article.slug) {
             <li>
-              <a [routerLink]="['/help', article.slug]">
+              <a uiCard pad="sm" interactive [routerLink]="['/help', article.slug]">
                 <strong>{{ article.title }}</strong>
-                <span class="summary">{{ article.summary }}</span>
+                <span class="muted summary">{{ article.summary }}</span>
               </a>
             </li>
           }

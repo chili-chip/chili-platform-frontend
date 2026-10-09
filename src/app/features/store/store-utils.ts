@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { Paginated, StoreDeliveryOption, StoreOrder } from '../../core/models/platform';
+import { Paginated, StoreDeliveryOption, StoreOrder, StoreOrderStatus } from '../../core/models/platform';
+import type { UiTone } from '../../shared/ui';
 
 export function unwrapList<T>(payload: Paginated<T> | T[]): T[] {
   return Array.isArray(payload) ? payload : (payload.results ?? []);
@@ -116,6 +117,34 @@ export function shippingStatus(order: StoreOrder): { key: ShippingStatus; label:
       return { key: 'not_shipping', label: SHIPPING_LABELS.not_shipping };
     default:
       return { key: 'awaiting_payment', label: SHIPPING_LABELS.awaiting_payment };
+  }
+}
+
+/** Badge colour for an order's payment status. */
+export function orderStatusTone(status: StoreOrderStatus): UiTone {
+  switch (status) {
+    case 'paid':
+    case 'fulfilled':
+      return 'success';
+    case 'pending':
+      return 'warning';
+    case 'canceled':
+    case 'failed':
+      return 'danger';
+  }
+}
+
+/** Badge colour for an order's shipping status. */
+export function shippingStatusTone(key: ShippingStatus): UiTone {
+  switch (key) {
+    case 'shipped':
+      return 'success';
+    case 'preparing':
+      return 'warning';
+    case 'not_shipping':
+      return 'danger';
+    default:
+      return 'neutral';
   }
 }
 

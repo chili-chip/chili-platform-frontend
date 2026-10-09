@@ -2,10 +2,13 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { NewsletterService } from '../../core/services/newsletter.service';
+import { UiButton } from '../ui/button';
+import { UiInput } from '../ui/form';
+import { UiNotice } from '../ui/status';
 
 @Component({
   selector: 'app-newsletter-signup',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, UiButton, UiInput, UiNotice],
   templateUrl: './newsletter-signup.html',
   styleUrl: './newsletter-signup.scss',
 })
