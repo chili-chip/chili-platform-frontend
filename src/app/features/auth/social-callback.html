@@ -1,0 +1,14 @@
+<section uiPage="form" class="auth">
+  <p class="kicker">Account</p>
+  <h1>{{ linking() ? 'Connecting ' + label() : 'Signing in' }}</h1>
+  @if (error()) {
+    <p uiNotice="error">{{ error() }}</p>
+    @if (linking()) {
+      <p class="switch"><a routerLink="/settings" fragment="connected">Back to settings</a></p>
+    } @else {
+      <p class="switch"><a routerLink="/login">Back to sign in</a></p>
+    }
+  } @else {
+    <p class="switch" role="status"><app-spinner /> Finishing with {{ label() }}…</p>
+  }
+</section>
