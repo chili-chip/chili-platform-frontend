@@ -33,3 +33,30 @@ h2 {
 .hint {
   font-size: var(--text-sm);
 }
+
+.connections {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    padding: var(--space-3) 0;
+    border-top: var(--border);
+  }
+
+  li:first-child {
+    border-top: 0;
+  }
+}
+
+.who {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}

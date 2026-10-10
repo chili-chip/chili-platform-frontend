@@ -3,14 +3,20 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
-import { UserSettings } from '../../core/models/platform';
+import {
+  SocialAccount,
+  SocialProvider,
+  SocialProviderId,
+  UserSettings,
+} from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
 import { SpinnerComponent } from '../../shared/loading';
+import { ProviderIcon } from '../../shared/social-login/provider-icon';
 import { UI } from '../../shared/ui';
 
-type Section = 'profile' | 'avatar' | 'email' | 'password' | 'preferences';
+type Section = 'profile' | 'avatar' | 'email' | 'password' | 'preferences' | 'connected';
 type Status = { kind: 'ok' | 'error'; text: string } | null;
 
 const AVATAR_SIZE = 256;
@@ -18,7 +24,7 @@ const AVATAR_MAX_FILE = 8 * 1024 * 1024;
 
 @Component({
   selector: 'app-settings',
-  imports: [UI, ReactiveFormsModule, RouterLink, SpinnerComponent],
+  imports: [UI, ReactiveFormsModule, RouterLink, SpinnerComponent, ProviderIcon],
   templateUrl: './settings.html',
   styleUrl: './settings.scss',
 })
@@ -31,6 +37,8 @@ export class SettingsComponent implements OnInit {
   readonly loading = signal(true);
   readonly busy = signal<Section | null>(null);
   readonly status = signal<Partial<Record<Section, Status>>>({});
+  readonly providers = signal<SocialProvider[]>([]);
+  readonly connected = signal<SocialAccount[]>([]);
 
   readonly profileForm = this.fb.nonNullable.group({
     display_name: ['', [Validators.maxLength(50)]],
@@ -61,6 +69,11 @@ export class SettingsComponent implements OnInit {
     if (user) {
       this.profileForm.reset({ display_name: user.display_name ?? '', bio: user.bio ?? '' });
     }
+    this.auth.socialProviders().subscribe({
+      next: (providers) => this.providers.set(providers),
+      error: () => undefined,
+    });
+    this.loadConnected();
     this.api.getSettings().subscribe({
       next: (settings) => {
         this.preferencesForm.reset(settings);
@@ -161,6 +174,36 @@ export class SettingsComponent implements OnInit {
       },
       error: (err) =>
         this.report('preferences', 'error', describe(err, 'Could not save your preferences.')),
+    });
+  }
+
+  connection(provider: SocialProviderId): SocialAccount | undefined {
+    return this.connected().find((account) => account.provider === provider);
+  }
+
+  connect(provider: SocialProviderId): void {
+    this.begin('connected');
+    this.auth.startSocialLogin(provider, { link: true }).subscribe({
+      error: (err) =>
+        this.report('connected', 'error', describe(err, 'Could not start connecting that account.')),
+    });
+  }
+
+  disconnect(provider: SocialProviderId, label: string): void {
+    this.begin('connected');
+    this.auth.disconnectSocial(provider).subscribe({
+      next: () => {
+        this.connected.update((all) => all.filter((account) => account.provider !== provider));
+        this.report('connected', 'ok', `${label} disconnected.`);
+      },
+      error: (err) => this.report('connected', 'error', describe(err, `Could not disconnect ${label}.`)),
+    });
+  }
+
+  private loadConnected(): void {
+    this.auth.socialAccounts().subscribe({
+      next: (accounts) => this.connected.set(accounts),
+      error: () => undefined,
     });
   }
 

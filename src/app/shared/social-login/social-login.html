@@ -1,0 +1,20 @@
+@if (providers().length) {
+  <div class="social ui-stack">
+    <p class="divider"><span>or</span></p>
+    @for (p of providers(); track p.provider) {
+      <button
+        uiButton="ghost"
+        block
+        type="button"
+        (click)="start(p.provider)"
+        [disabled]="busy() !== null"
+      >
+        <app-provider-icon [provider]="p.provider" />
+        Continue with {{ p.label }}
+      </button>
+    }
+    @if (error()) {
+      <p uiNotice="error">{{ error() }}</p>
+    }
+  </div>
+}

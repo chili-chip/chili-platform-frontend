@@ -165,6 +165,12 @@ export const routes: Routes = [
     title: 'Create account',
   },
   {
+    path: 'auth/callback/:provider',
+    loadComponent: () =>
+      import('./features/auth/social-callback').then((m) => m.SocialCallbackComponent),
+    title: 'Signing in',
+  },
+  {
     path: 'verify-email',
     loadComponent: () =>
       import('./features/auth/verify-email').then((m) => m.VerifyEmailComponent),

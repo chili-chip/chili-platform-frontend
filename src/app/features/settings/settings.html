@@ -4,6 +4,9 @@
   <nav class="jump" aria-label="Settings sections">
     <a href="#profile">Profile</a>
     <a href="#account">Account</a>
+    @if (providers().length || connected().length) {
+      <a href="#connected">Connected accounts</a>
+    }
     <a href="#preferences">Preferences</a>
     <a href="#privacy">Privacy</a>
   </nav>
@@ -104,6 +107,39 @@
       </div>
     </form>
   </article>
+
+  @if (providers().length || connected().length) {
+    <article uiCard pad="lg" id="connected" class="ui-stack card">
+      <h2>Connected accounts</h2>
+      <p class="muted">Sign in to Chili Platform with these accounts.</p>
+      <ul class="connections">
+        @for (p of providers(); track p.provider) {
+          @let account = connection(p.provider);
+          <li>
+            <span class="who">
+              <app-provider-icon [provider]="p.provider" />
+              <strong>{{ p.label }}</strong>
+              @if (account) {
+                <span class="muted">{{ account.login || account.email }}</span>
+              }
+            </span>
+            @if (account) {
+              <button uiButton="ghost" size="sm" type="button" (click)="disconnect(p.provider, p.label)" [disabled]="busy() === 'connected'">
+                Disconnect
+              </button>
+            } @else {
+              <button uiButton="ghost" size="sm" type="button" (click)="connect(p.provider)" [disabled]="busy() === 'connected'">
+                Connect
+              </button>
+            }
+          </li>
+        }
+      </ul>
+      @if (status().connected; as s) {
+        <p [uiNotice]="s.kind === 'ok' ? 'success' : 'error'" role="status">{{ s.text }}</p>
+      }
+    </article>
+  }
 
   <form [formGroup]="preferencesForm" (ngSubmit)="savePreferences()">
     <article uiCard pad="lg" id="preferences" class="ui-stack card">
