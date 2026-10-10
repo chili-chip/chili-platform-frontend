@@ -1,53 +1,38 @@
-<section class="page">
-  <a routerLink="/store" class="back">← Keep shopping</a>
-  <header class="intro">
-    <div>
-      <p class="kicker">Checkout</p>
-      <h1>Review your order</h1>
-      <p class="lede">
-        Check your items and choose a delivery method. You will complete payment securely with
-        Stripe on the next step.
-      </p>
-    </div>
+<section uiPage>
+  <a uiBackLink routerLink="/store">← Keep shopping</a>
+  <header uiPageHeader kicker="Checkout" heading="Review your order">
+    <p class="lede">
+      Check your items and choose a delivery method. You will complete payment securely with
+      Stripe on the next step.
+    </p>
   </header>
 
   @if (!cart.count()) {
-    <div class="empty">
+    <div uiEmpty class="empty">
       <p>Your cart is empty. Browse the store to find kits, shells, and parts.</p>
-      <a routerLink="/store" class="btn primary">Browse the store</a>
+      <a uiButton routerLink="/store">Browse the store</a>
     </div>
   } @else {
     <div class="layout">
       <ul class="lines">
         @for (line of cart.items(); track line.product.id) {
-          <li>
-            <div class="shot">
-              @if (cover(line.product); as src) {
-                <img [src]="src" [alt]="line.product.name" />
-              } @else {
-                <span>{{ line.product.name.charAt(0) }}</span>
-              }
-            </div>
+          <li uiCard elevated>
+            <ui-cover class="shot" [src]="cover(line.product)" [alt]="line.product.name" />
             <div class="copy">
-              <p class="sku">{{ line.product.sku || line.product.slug }}</p>
+              <p class="meta">{{ line.product.sku || line.product.slug }}</p>
               <h2><a [routerLink]="['/store', line.product.slug]">{{ line.product.name }}</a></h2>
               @if (line.product.is_digital) {
-                <p class="tag">Digital delivery</p>
+                <span uiBadge outline class="tag">Digital delivery</span>
               }
-              <p class="desc">{{ blurb(line.product) }}</p>
+              <p class="muted desc">{{ blurb(line.product) }}</p>
               <div class="row">
-                <div class="qty">
-                  <button type="button" (click)="cart.setQuantity(line.product.id, line.quantity - 1)">−</button>
-                  <span>{{ line.quantity }}</span>
-                  <button
-                    type="button"
-                    [disabled]="line.quantity >= line.product.stock"
-                    (click)="cart.setQuantity(line.product.id, line.quantity + 1)"
-                  >
-                    +
-                  </button>
-                  <button type="button" class="remove" (click)="cart.remove(line.product.id)">Remove</button>
-                </div>
+                <ui-quantity
+                  [value]="line.quantity"
+                  [max]="line.product.stock"
+                  [label]="line.product.name"
+                  (valueChange)="cart.setQuantity(line.product.id, $event)"
+                  (remove)="cart.remove(line.product.id)"
+                />
                 <strong>
                   {{ (line.product.price_cents * line.quantity) / 100 | currency: line.product.currency.toUpperCase() }}
                 </strong>
@@ -57,21 +42,22 @@
         }
       </ul>
 
-      <aside class="pay">
+      <aside uiCard pad="lg" class="pay">
         <p class="kicker">Checkout</p>
         <h2>Order summary</h2>
         @if (deliveryLoading()) {
-          <p class="note">Loading delivery options…</p>
+          <p uiNotice class="note">Loading delivery options…</p>
         } @else if (digitalOnly()) {
-          <p class="digital-note">Digital items are delivered online, so there is no delivery fee.</p>
+          <p uiNotice class="digital-note">Digital items are delivered online, so there is no delivery fee.</p>
         } @else if (noSharedOption()) {
-          <p class="err clash">These items cannot be delivered together. Please place a separate order for each.</p>
+          <p uiNotice="error" class="clash">These items cannot be delivered together. Please place a separate order for each.</p>
         } @else if (availableOptions().length) {
           <fieldset class="delivery">
             <legend>Delivery</legend>
             @for (option of availableOptions(); track option.slug) {
               <label class="option" [class.is-on]="delivery()?.slug === option.slug">
                 <input
+                  uiCheck
                   type="radio"
                   name="delivery"
                   [value]="option.slug"
@@ -129,7 +115,7 @@
             <dd>{{ totalCents() / 100 | currency: cart.currency().toUpperCase() }}</dd>
           </div>
         </dl>
-        <p class="note">
+        <p uiNotice class="note">
           @if (digitalOnly()) {
             No shipping address is needed for digital items.
           } @else if (delivery()?.requires_address === false) {
@@ -139,24 +125,26 @@
           }
         </p>
         @if (stripeTestMode()) {
-          <p class="note">
+          <p uiNotice class="note">
             Test mode: use card <code>4242 4242 4242 4242</code> with any future date and any CVC.
           </p>
         }
         @if (error()) {
-          <p class="err">{{ error() }}</p>
+          <p uiNotice="error" class="note">{{ error() }}</p>
         }
         @if (auth.isAuthenticated()) {
           <button
+            uiButton
+            block
             type="button"
-            class="btn primary pay-btn"
+            class="pay-btn"
             [disabled]="paying() || deliveryLoading() || noSharedOption()"
             (click)="pay()"
           >
             {{ paying() ? 'Redirecting…' : 'Continue to payment' }}
           </button>
         } @else {
-          <a routerLink="/login" [queryParams]="{ next: '/store/checkout' }" class="btn primary pay-btn">
+          <a uiButton block routerLink="/login" [queryParams]="{ next: '/store/checkout' }" class="pay-btn">
             Sign in to pay
           </a>
         }

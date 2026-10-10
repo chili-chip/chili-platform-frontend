@@ -11,9 +11,9 @@
         where you buy the hardware, make games for it, sell them, and meet the people doing the same.
       </p>
       <div class="cta-row">
-        <button type="button" class="btn primary" disabled aria-describedby="buy-soon">Buy now</button>
+        <button type="button" uiButton disabled aria-describedby="buy-soon">Buy now</button>
         <p id="buy-soon" class="soon">Coming soon</p>
-        <a routerLink="/creator" class="btn ghost">Try Web Creator</a>
+        <a routerLink="/creator" uiButton="ghost">Try Web Creator</a>
       </div>
       <p class="aside">
         Specs, assembly guides, and the SDK are in the
@@ -68,9 +68,9 @@
               }
             </ul>
           } @else {
-            <div class="empty">
+            <div uiEmpty class="empty">
               <p>No games are listed yet. The first one could be yours.</p>
-              <a routerLink="/creator" class="btn ghost">Make a game</a>
+              <a routerLink="/creator" uiButton="ghost">Make a game</a>
             </div>
           }
         } @else {
@@ -115,7 +115,7 @@
               }
             </ul>
           } @else {
-            <div class="empty">
+            <div uiEmpty class="empty">
               <p>Nothing is in stock right now. Check back soon, or ask on Discord.</p>
             </div>
           }
@@ -153,9 +153,9 @@
               }
             </ul>
           } @else {
-            <div class="empty">
+            <div uiEmpty class="empty">
               <p>No threads yet. Start the first one.</p>
-              <a [routerLink]="auth.isAuthenticated() ? '/community' : '/register'" class="btn ghost">
+              <a [routerLink]="auth.isAuthenticated() ? '/community' : '/register'" uiButton="ghost">
                 {{ auth.isAuthenticated() ? 'Open the forum' : 'Create an account' }}
               </a>
             </div>

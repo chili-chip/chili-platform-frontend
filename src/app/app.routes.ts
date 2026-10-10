@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { authGuard } from './core/guards/auth.guard';
+import { unsavedWorkGuard } from './core/guards/unsaved-work.guard';
 
 export const routes: Routes = [
   {
@@ -101,12 +102,14 @@ export const routes: Routes = [
   {
     path: 'creator',
     canActivate: [authGuard],
+    canDeactivate: [unsavedWorkGuard],
     loadComponent: () => import('./features/creator/creator').then((m) => m.CreatorComponent),
     title: 'Web Creator',
   },
   {
     path: 'creator/:id',
     canActivate: [authGuard],
+    canDeactivate: [unsavedWorkGuard],
     loadComponent: () => import('./features/creator/creator').then((m) => m.CreatorComponent),
     title: 'Web Creator',
   },
@@ -160,6 +163,12 @@ export const routes: Routes = [
     path: 'register',
     loadComponent: () => import('./features/auth/register').then((m) => m.RegisterComponent),
     title: 'Create account',
+  },
+  {
+    path: 'auth/callback/:provider',
+    loadComponent: () =>
+      import('./features/auth/social-callback').then((m) => m.SocialCallbackComponent),
+    title: 'Signing in',
   },
   {
     path: 'verify-email',
@@ -216,6 +225,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/profile/user-profile').then((m) => m.UserProfileComponent),
     title: 'Profile',
+  },
+  {
+    path: 'dev/ui',
+    loadComponent: () =>
+      import('./features/ui-showcase/ui-showcase').then((m) => m.UiShowcaseComponent),
+    title: 'Components',
   },
   { path: '**', redirectTo: '' },
 ];

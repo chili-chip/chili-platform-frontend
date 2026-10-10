@@ -45,6 +45,22 @@ npm start                 # http://localhost:4200
 
 The landing hero loads `public/models/vgc-zero.glb`.
 
+## Components and styling
+
+Pages are built from a small component library on top of the [Angular CDK](https://material.angular.dev/cdk) (dialogs, overlays, focus trapping), styled with our own SCSS. Open `/dev/ui` in a running app to see every component.
+
+- `src/styles/_tokens.scss`: colours, type scale, spacing, shadows and layers as CSS variables. Use these instead of raw values.
+- `src/styles/ui/`: the component styles, loaded globally.
+- `src/app/shared/ui/`: the Angular side. Import `UI` for everything, for example `<button uiButton="ghost">`, `<label uiField>`, `<input uiInput>`, `<li uiCard elevated>`, `<span uiBadge="success">`, `<ui-dialog>` (opened with `UiDialogService`).
+
+Component stylesheets keep only page layout; buttons, inputs, cards, chips, badges and messages come from the library.
+
+`npm run lint:styles` runs Stylelint (also in CI). It rejects raw hex, `rgb()` and named colours outside `_tokens.scss`; use a token, or `color-mix()` on a token for a tint. The vgc zero illustration is the one exception.
+
+## Creator
+
+The Bitsy editor and the citsy runtime live in [chili-chip/chili-creator](https://github.com/chili-chip/chili-creator). This app depends on a tagged release (`@chili-chip/creator` in `package.json`), and the build copies its `editor/` and `citsy/` folders to `/creator/editor` and `/creator/citsy`, so the editor runs on this site's origin and shares its sign-in. To ship a new editor release, bump the tag in `package.json` and run `npm install`.
+
 ## Environments
 
 | | Production | Dev |

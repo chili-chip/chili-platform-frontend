@@ -1,0 +1,113 @@
+// Long-form text: rendered markdown, help articles, legal pages.
+
+.ui-prose {
+  line-height: var(--leading-loose);
+  overflow-wrap: anywhere;
+}
+
+.ui-prose > :first-child {
+  margin-top: 0;
+}
+
+.ui-prose > :last-child {
+  margin-bottom: 0;
+}
+
+.ui-prose h1,
+.ui-prose h2,
+.ui-prose h3,
+.ui-prose h4 {
+  font-family: var(--font-display);
+  color: var(--text);
+  margin: 1.4rem 0 0.5rem;
+}
+
+.ui-prose h1 {
+  font-size: var(--text-2xl);
+}
+
+.ui-prose h2 {
+  font-size: var(--text-lg);
+}
+
+.ui-prose h3,
+.ui-prose h4 {
+  font-size: var(--text-md);
+}
+
+.ui-prose p {
+  margin: 0 0 0.9rem;
+}
+
+.ui-prose ul,
+.ui-prose ol {
+  margin: 0 0 0.9rem;
+  padding-left: 1.2rem;
+}
+
+.ui-prose li {
+  margin: 0.25rem 0;
+}
+
+.ui-prose a {
+  color: var(--link);
+}
+
+.ui-prose strong {
+  color: var(--text);
+}
+
+.ui-prose blockquote {
+  margin: 0 0 0.9rem;
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--line);
+}
+
+.ui-prose img {
+  max-width: 100%;
+  height: auto;
+}
+
+.ui-prose table {
+  border-collapse: collapse;
+  margin: 0 0 0.9rem;
+}
+
+.ui-prose th,
+.ui-prose td {
+  border: var(--border);
+  padding: 0.3rem 0.6rem;
+  text-align: left;
+}
+
+.ui-prose code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--surface-sunken);
+  padding: 0.1em 0.35em;
+}
+
+.ui-prose pre {
+  background: var(--surface-sunken);
+  border: var(--border);
+  padding: 0.9rem;
+  overflow: auto;
+  margin: 0 0 0.9rem;
+}
+
+.ui-prose pre code {
+  padding: 0;
+  background: none;
+}
+
+.ui-prose hr {
+  border: 0;
+  border-top: var(--border);
+  margin: 1.4rem 0;
+}
+
+.ui-prose mark {
+  background: color-mix(in srgb, var(--amber) 28%, transparent);
+  color: var(--text);
+  padding: 0 0.2rem;
+}

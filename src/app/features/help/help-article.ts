@@ -6,10 +6,11 @@ import { marked } from 'marked';
 import { map } from 'rxjs';
 
 import { DISCORD_URL, HELP_ARTICLES, HELP_TOPICS, HelpArticle } from './help-articles';
+import { UI } from '../../shared/ui';
 
 @Component({
   selector: 'app-help-article',
-  imports: [RouterLink],
+  imports: [UI, RouterLink],
   templateUrl: './help-article.html',
   styleUrl: './help-article.scss',
   // The body is rendered from Markdown with innerHTML, so its elements need unscoped styles.

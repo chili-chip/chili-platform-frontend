@@ -9,19 +9,13 @@
 }
 
 <ng-template #face>
-  <div class="shot">
-    @if (cover()) {
-      <img appMediaFade [src]="cover()" [alt]="title()" />
-    } @else {
-      <span>{{ title().charAt(0) }}</span>
-    }
-  </div>
+  <ui-cover [src]="cover()" [alt]="title()" />
   <div class="body">
     @if (meta() || badge()) {
       <div class="meta">
         <span>{{ meta() }}</span>
         @if (badge()) {
-          <span>{{ badge() }}</span>
+          <span uiBadge="success">{{ badge() }}</span>
         }
       </div>
     }

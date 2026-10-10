@@ -4,10 +4,11 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
+import { UI } from '../../shared/ui';
 
 @Component({
   selector: 'app-reset-password',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [UI, ReactiveFormsModule, RouterLink],
   templateUrl: './reset-password.html',
   styleUrl: './auth-form.scss',
 })

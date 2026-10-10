@@ -4,14 +4,16 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { GameProject, MarketplaceListing } from '../../core/models/platform';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
-import { MediaFadeDirective, SkeletonDetailComponent, SpinnerComponent } from '../../shared/loading';
+import { SkeletonDetailComponent, SpinnerComponent } from '../../shared/loading';
+import { MarkdownComponent } from '../../shared/markdown';
+import { UI } from '../../shared/ui';
 import { downloadBitsy } from '../play/bitsy-file';
 import { formatPrice, marketError } from './market-utils';
 import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-game-page',
-  imports: [MediaFadeDirective, RouterLink, SkeletonDetailComponent, SpinnerComponent],
+  imports: [UI, MarkdownComponent, RouterLink, SkeletonDetailComponent, SpinnerComponent],
   templateUrl: './game-page.html',
   styleUrl: './market.scss',
 })

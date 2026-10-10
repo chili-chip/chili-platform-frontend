@@ -1,34 +1,30 @@
-<section class="page">
-  <header class="intro">
-    <div>
-      <p class="kicker">Marketplace</p>
-      <h1>Listing</h1>
-      <p class="lede">
-        Choose one of your released games to list in the marketplace. Unreleased projects cannot be
-        listed, and released games stay out of the marketplace until you publish a listing here.
-      </p>
-    </div>
-    <a class="btn ghost" [routerLink]="['/profile', username()]" [queryParams]="{ tab: 'library', shelf: 'mine' }">
+<section uiPage>
+  <header uiPageHeader kicker="Marketplace" heading="Listing">
+    <p class="lede">
+      Choose one of your released games to list in the marketplace. Unreleased projects cannot be
+      listed, and released games stay out of the marketplace until you publish a listing here.
+    </p>
+    <a uiPageActions uiButton="ghost" [routerLink]="['/profile', username()]" [queryParams]="{ tab: 'library', shelf: 'mine' }">
       My games
     </a>
   </header>
 
   @if (error()) {
-    <p class="err">{{ error() }}</p>
+    <p uiNotice="error" class="err">{{ error() }}</p>
   }
 
   @if (loading()) {
     <app-skeleton-rows [count]="2" label="Loading games" />
   } @else if (!games().length) {
-    <p class="empty">You do not have any released games yet. Release a project first, then come back to list it.</p>
-    <p class="tools">
-      <a class="btn ghost" [routerLink]="['/profile', username()]" [queryParams]="{ tab: 'projects' }">Projects</a>
-    </p>
+    <div uiEmpty class="editor">
+      You do not have any released games yet. Release a project first, then come back to list it.
+      <a uiButton="ghost" [routerLink]="['/profile', username()]" [queryParams]="{ tab: 'projects' }">Projects</a>
+    </div>
   } @else {
-    <section class="stack">
-      <label>
+    <section uiCard pad="lg" class="ui-stack editor">
+      <label uiField>
         Game
-        <select [value]="gameId()" (change)="pick(+$any($event.target).value)">
+        <select uiInput [value]="gameId()" (change)="pick(+$any($event.target).value)">
           <option value="0">Choose a released game</option>
           @for (game of games(); track game.id) {
             <option [value]="game.id">{{ game.title }}</option>
@@ -39,35 +35,36 @@
       @if (gameId() && !selected()) {
         <p class="muted">Release this project before listing it.</p>
       } @else if (selected(); as game) {
-        <label class="checks">
-          <input type="checkbox" [checked]="free()" (change)="free.set($any($event.target).checked)" />
+        <label uiChoice>
+          <input uiCheck type="checkbox" [checked]="free()" (change)="free.set($any($event.target).checked)" />
           Free listing
         </label>
         @if (!free()) {
-          <label>
+          <label uiField>
             Price (EUR, at least €1)
-            <input [value]="price()" (input)="price.set($any($event.target).value)" inputmode="decimal" />
+            <input uiInput [value]="price()" (input)="price.set($any($event.target).value)" inputmode="decimal" />
           </label>
         }
-        <label>
+        <label uiField>
           Category
-          <select [value]="category()" (change)="category.set($any($event.target).value)">
+          <select uiInput [value]="category()" (change)="category.set($any($event.target).value)">
             @for (item of categories(); track item.slug) {
               <option [value]="item.slug">{{ item.name }}</option>
             }
           </select>
         </label>
-        <label>
+        <label uiField>
           Tags
-          <input [value]="tags()" (input)="tags.set($any($event.target).value)" placeholder="bitsy, maze" />
+          <input uiInput [value]="tags()" (input)="tags.set($any($event.target).value)" placeholder="bitsy, maze" />
         </label>
-        <label>
-          Description
-          <textarea rows="4" [value]="description()" (input)="description.set($any($event.target).value)"></textarea>
-        </label>
+        <div uiField>
+          <span>Description</span>
+          <app-markdown-editor label="Description" [(value)]="description" />
+        </div>
         @if (!game.listing_slug && !auth.currentUser()?.seller_terms_accepted_at) {
-          <label class="checks">
+          <label uiChoice>
             <input
+              uiCheck
               type="checkbox"
               [checked]="sellerAgreed()"
               (change)="sellerAgreed.set($any($event.target).checked)"
@@ -79,13 +76,13 @@
             </span>
           </label>
         }
-        <div class="tools">
-          <button type="button" class="btn primary" [disabled]="busy()" (click)="save()">
+        <div class="ui-actions">
+          <button uiButton type="button" [disabled]="busy()" (click)="save()">
             {{ game.listing_slug ? 'Update listing' : 'List game' }}
           </button>
           @if (game.listing_slug) {
-            <button type="button" class="btn ghost" [disabled]="busy()" (click)="unlist()">Unlist</button>
-            <a class="btn ghost" [routerLink]="['/marketplace', game.listing_slug]">View</a>
+            <button uiButton="ghost" type="button" [disabled]="busy()" (click)="unlist()">Unlist</button>
+            <a uiButton="ghost" [routerLink]="['/marketplace', game.listing_slug]">View</a>
           }
         </div>
       }

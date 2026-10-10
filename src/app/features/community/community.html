@@ -1,66 +1,55 @@
-<section class="page">
-  <header class="intro">
-    <div>
-      <p class="kicker">Forums</p>
-      <h1>Community</h1>
-      <p class="lede">Discuss the hardware, share your development progress, and talk games with the vgc zero community.</p>
-    </div>
+<section uiPage>
+  <header uiPageHeader kicker="Forums" heading="Community">
+    <p class="lede">Discuss the hardware, share your development progress, and talk games with the vgc zero community.</p>
     @if (auth.isAuthenticated()) {
-      <button type="button" class="btn primary" (click)="showComposer.set(!showComposer())">
+      <button uiPageActions uiButton type="button" [attr.aria-expanded]="showComposer()" (click)="showComposer.set(!showComposer())">
         New post
       </button>
     } @else {
-      <a routerLink="/login" class="btn ghost">Sign in to post</a>
+      <a uiPageActions uiButton="ghost" routerLink="/login">Sign in to post</a>
     }
   </header>
 
-  <div class="cats">
-    <button type="button" class="chip" [class.is-on]="!activeCategory()" (click)="filterBy()">
-      All
-    </button>
+  <div class="ui-chips cats" role="group" aria-label="Categories">
+    <button uiChip type="button" [selected]="!activeCategory()" (click)="filterBy()">All</button>
     @for (category of categories(); track category.slug) {
-      <button
-        type="button"
-        class="chip"
-        [class.is-on]="activeCategory() === category.slug"
-        (click)="filterBy(category.slug)"
-      >
+      <button uiChip type="button" [selected]="activeCategory() === category.slug" (click)="filterBy(category.slug)">
         {{ category.name }}
       </button>
     }
   </div>
 
   @if (showComposer()) {
-    <form class="composer" [formGroup]="form" (ngSubmit)="submit()">
+    <form uiCard pad="lg" class="ui-stack composer" [formGroup]="form" (ngSubmit)="submit()">
       <h2>New thread</h2>
-      <label>
+      <label uiField>
         Title
-        <input formControlName="title" maxlength="160" />
+        <input uiInput formControlName="title" maxlength="160" />
       </label>
-      <label>
+      <label uiField>
         Category
-        <select formControlName="category">
+        <select uiInput formControlName="category">
           <option [ngValue]="0" disabled>Select a category</option>
           @for (category of categories(); track category.id) {
             <option [ngValue]="category.id">{{ category.name }}</option>
           }
         </select>
       </label>
-      <label>
-        Content
-        <textarea formControlName="content" rows="6"></textarea>
-      </label>
+      <div uiField>
+        <span>Content</span>
+        <app-markdown-editor formControlName="content" label="Thread content" minHeight="200px" />
+      </div>
       @if (error()) {
-        <p class="err">{{ error() }}</p>
+        <p uiNotice="error">{{ error() }}</p>
       }
-      <div class="cta-row">
-        <button class="btn primary" type="submit" [disabled]="publishing()">
+      <div class="ui-actions">
+        <button uiButton type="submit" [disabled]="publishing()">
           @if (publishing()) {
             <app-spinner />
           }
           Publish
         </button>
-        <button class="btn ghost" type="button" (click)="showComposer.set(false)">Cancel</button>
+        <button uiButton="ghost" type="button" (click)="showComposer.set(false)">Cancel</button>
       </div>
     </form>
   }
@@ -68,26 +57,24 @@
   @if (loading()) {
     <app-skeleton-threads label="Loading threads" />
   } @else {
-  <ul class="feed">
-    @for (post of posts(); track post.id) {
-      <li>
-        <a [routerLink]="['/community/post', post.id]" class="thread">
-          <div class="avatar" [style.background-image]="post.author.avatar_url ? 'url(' + post.author.avatar_url + ')' : 'none'">
-            {{ post.author.username.charAt(0) }}
-          </div>
-          <div>
-            <div class="meta">
-              <span class="badge">{{ post.category_detail?.name ?? 'Forum' }}</span>
-              <time>{{ post.created_at | date: 'medium' }}</time>
+    <ul class="feed">
+      @for (post of posts(); track post.id) {
+        <li>
+          <a uiCard interactive class="thread" [routerLink]="['/community/post', post.id]">
+            <ui-avatar [src]="post.author.avatar_url" [name]="post.author.username" />
+            <div>
+              <div class="meta row">
+                <span uiBadge="accent">{{ post.category_detail?.name ?? 'Forum' }}</span>
+                <time>{{ post.created_at | date: 'medium' }}</time>
+              </div>
+              <h3>{{ post.title }}</h3>
+              <p class="muted">{{ post.author.display_name || post.author.username }} · {{ post.comment_count ?? 0 }} comments</p>
             </div>
-            <h3>{{ post.title }}</h3>
-            <p>{{ post.author.display_name || post.author.username }} · {{ post.comment_count ?? 0 }} comments</p>
-          </div>
-        </a>
-      </li>
-    } @empty {
-      <li class="empty">No threads yet. Be the first spark in this board.</li>
-    }
-  </ul>
+          </a>
+        </li>
+      } @empty {
+        <li uiEmpty>No threads yet. Be the first spark in this board.</li>
+      }
+    </ul>
   }
 </section>

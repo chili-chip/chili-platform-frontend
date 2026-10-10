@@ -1,7 +1,7 @@
 .chrome {
   position: sticky;
   top: 0;
-  z-index: 40;
+  z-index: var(--z-header);
 }
 
 .nav {
@@ -57,10 +57,10 @@
 }
 
 .links a,
-.session a,
-.session button {
+.session a:not(.ui-btn),
+.session button:not(.ui-btn) {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: var(--text-xs);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
@@ -72,20 +72,13 @@
 
 .links a.is-active,
 .links a:hover,
-.session a:hover,
-.session button:hover {
+.session a:not(.ui-btn):hover,
+.session button:not(.ui-btn):hover {
   color: var(--text);
 }
 
-.cta {
-  color: var(--bg-0) !important;
-  background: var(--chili) !important;
-  padding: 0.45rem 0.8rem;
-  box-shadow: 3px 3px 0 #3d050c;
-}
-
-.ghost {
-  color: var(--phosphor) !important;
+.session .account {
+  color: var(--phosphor);
 }
 
 .menu {
@@ -106,7 +99,7 @@
   padding: 0.55rem 1.5rem;
   background: color-mix(in srgb, var(--amber) 14%, var(--bg-1));
   border-bottom: 1px solid color-mix(in srgb, var(--amber) 42%, var(--line));
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   line-height: 1.45;
   text-align: center;
 }
@@ -122,16 +115,6 @@
 
   .menu-toggle {
     display: inline-flex;
-    align-items: center;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text);
-    background: transparent;
-    border: 1px solid var(--line);
-    padding: 0.45rem 0.7rem;
-    cursor: pointer;
   }
 
   .menu {
@@ -166,6 +149,8 @@
   }
 
   .nav.is-open .session .cta {
+    justify-content: flex-start;
+    margin: 0.6rem 0;
     box-shadow: none;
   }
 

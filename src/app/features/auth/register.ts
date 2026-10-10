@@ -1,14 +1,17 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
+import { SocialLoginComponent } from '../../shared/social-login/social-login';
+import { UI } from '../../shared/ui';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [UI, ReactiveFormsModule, RouterLink, SocialLoginComponent],
   templateUrl: './register.html',
   styleUrl: './auth-form.scss',
 })
@@ -28,6 +31,16 @@ export class RegisterComponent {
     bio: [''],
     acceptTerms: [false, Validators.requiredTrue],
   });
+
+  /** Mirrors the terms box so the GitHub and Google buttons can send it. */
+  readonly termsAccepted = toSignal(this.form.controls.acceptTerms.valueChanges, {
+    initialValue: false,
+  });
+
+  requireTerms(): void {
+    this.form.controls.acceptTerms.markAsTouched();
+    this.error.set('Accept the terms of service and privacy policy to create an account.');
+  }
 
   submit(): void {
     if (this.form.invalid) {

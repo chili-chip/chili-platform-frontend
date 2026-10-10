@@ -1,5 +1,5 @@
-.page {
-  padding: 3rem 6vw 5rem;
+.ui-page {
+  padding-top: var(--space-12);
 }
 
 .hero {
@@ -8,90 +8,40 @@
   align-items: flex-start;
 }
 
-.avatar {
-  width: 72px;
-  height: 72px;
-  display: grid;
-  place-items: center;
-  background: #241016;
-  color: var(--chili-hot);
-  font-family: var(--font-display);
-  font-size: 2rem;
-}
-
 h1 {
-  font-family: var(--font-display);
   font-size: 2.6rem;
 }
 
 .bio {
   max-width: 48ch;
-  color: var(--muted);
 }
 
-.meta {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
+.hero .meta {
+  margin-top: var(--space-1);
 }
 
-.tabs,
-.shelves {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
+.settings {
+  margin-top: var(--space-3);
 }
 
 .tabs {
-  margin-top: 2rem;
+  margin-top: var(--space-8);
 }
 
 .shelves {
-  margin-bottom: 1rem;
-}
-
-.tabs button,
-.shelves button {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text);
-  background: transparent;
-  border: 1px solid var(--line);
-  padding: 0.45rem 0.7rem;
-  cursor: pointer;
-}
-
-.tabs button.is-on,
-.shelves button.is-on {
-  color: #140407;
-  background: var(--chili);
-  border-color: var(--chili);
+  margin-bottom: var(--space-4);
 }
 
 .err {
-  margin: 1rem 0 0;
-  color: var(--chili-hot);
+  margin-top: var(--space-4);
 }
 
 .orders {
   margin-top: 1.4rem;
 }
 
-.orders header {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  align-items: flex-end;
-  margin-bottom: 1rem;
-}
-
-.orders h2 {
-  font-family: var(--font-display);
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
+.orders > header {
+  margin-bottom: var(--space-4);
 }
 
 .orders > ul:not(.game-grid) {
@@ -102,85 +52,9 @@ h1 {
   gap: 0.8rem;
 }
 
-.orders > ul:not(.game-grid) > li,
-.empty {
-  background: var(--bg-1);
-  border: 1px solid var(--line);
-}
-
-.project {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: stretch;
-}
-
-.project.is-block {
-  grid-template-columns: 1fr;
-}
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  align-items: center;
-  margin: 0;
-}
-
-.actions .btn {
-  padding: 0.45rem 0.65rem;
-  font-size: 0.68rem;
-}
-
-.order-card .actions {
-  margin: 0.2rem 0 0;
-}
-
-.cover {
-  display: block;
-  width: 96px;
-  height: 96px;
-  margin: 0.8rem 0 0.8rem 0.8rem;
-  object-fit: contain;
-  image-rendering: pixelated;
-  background: #07080c;
-  border: 1px solid var(--line);
-}
-
-.project .order-card {
-  display: flex;
-  gap: 0.8rem;
-  align-items: center;
-}
-
-.remove {
-  margin: 0;
-  align-self: center;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--chili);
-  background: transparent;
-  border: 1px solid color-mix(in srgb, var(--chili) 55%, transparent);
-  padding: 0.45rem 0.6rem;
-  cursor: pointer;
-}
-
 .order-card {
   display: block;
   padding: 1rem 1.1rem;
-  color: inherit;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.empty {
-  display: block;
-  padding: 1rem 1.1rem;
-}
-
-.orders > ul:not(.game-grid) > li:hover:not(.empty) {
-  border-color: var(--phosphor);
 }
 
 .order-head {
@@ -188,11 +62,6 @@ h1 {
   flex-wrap: wrap;
   gap: 0.7rem;
   align-items: center;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
   margin-bottom: 0.75rem;
 }
 
@@ -200,35 +69,12 @@ h1 {
   margin-left: auto;
   color: var(--text);
   font-family: var(--font-display);
-  font-size: 1rem;
+  font-size: var(--text-md);
   letter-spacing: 0;
   text-transform: none;
 }
 
-.badge {
-  color: var(--bg-0);
-  background: var(--muted);
-  padding: 0.15rem 0.4rem;
-}
-
-.badge[data-status='paid'],
-.badge[data-status='fulfilled'] {
-  background: var(--phosphor);
-}
-
-.badge[data-status='pending'] {
-  background: var(--amber);
-}
-
-.badge[data-status='canceled'],
-.badge[data-status='failed'] {
-  background: var(--chili);
-}
-
 .items {
-  list-style: none;
-  margin: 0;
-  padding: 0;
   display: grid;
   gap: 0.4rem;
 }
@@ -236,24 +82,11 @@ h1 {
 .items div {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
-  color: var(--text);
+  gap: var(--space-4);
   font-size: 0.92rem;
-}
-
-.ship,
-.empty {
-  color: var(--muted);
-  font-size: 0.88rem;
 }
 
 .ship {
   margin-top: 0.7rem;
-}
-
-.avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: inherit;
+  font-size: 0.88rem;
 }

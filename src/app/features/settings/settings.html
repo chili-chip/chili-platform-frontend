@@ -1,162 +1,193 @@
-<section class="settings">
+<section uiPage="panel" class="settings">
   <p class="kicker">Account</p>
   <h1>Settings</h1>
   <nav class="jump" aria-label="Settings sections">
     <a href="#profile">Profile</a>
     <a href="#account">Account</a>
+    @if (providers().length || connected().length) {
+      <a href="#connected">Connected accounts</a>
+    }
     <a href="#preferences">Preferences</a>
     <a href="#privacy">Privacy</a>
   </nav>
 
   @let user = auth.currentUser();
 
-  <article id="profile" class="card">
+  <article uiCard pad="lg" id="profile" class="ui-stack card">
     <h2>Profile</h2>
     <div class="avatar-row">
-      @if (user?.avatar_url) {
-        <img class="avatar" [src]="user?.avatar_url" alt="Your avatar" width="72" height="72" />
-      } @else {
-        <span class="avatar avatar--empty" aria-hidden="true">{{ (user?.username ?? '?').charAt(0) }}</span>
-      }
-      <div class="avatar-actions">
-        <label class="btn ghost file">
+      <ui-avatar size="lg" [src]="user?.avatar_url" [name]="user?.username ?? '?'" alt="Your avatar" />
+      <div class="ui-actions">
+        <label uiButton="ghost">
           {{ user?.avatar_url ? 'Change avatar' : 'Upload avatar' }}
           <input type="file" accept="image/png,image/jpeg,image/webp" (change)="chooseAvatar($event)" [disabled]="busy() === 'avatar'" />
         </label>
         @if (user?.avatar_url) {
-          <button type="button" class="btn ghost" (click)="removeAvatar()" [disabled]="busy() === 'avatar'">Remove</button>
+          <button uiButton="ghost" type="button" (click)="removeAvatar()" [disabled]="busy() === 'avatar'">Remove</button>
         }
       </div>
     </div>
     @if (status().avatar; as s) {
-      <p [class]="s.kind === 'ok' ? 'ok' : 'err'" role="status">{{ s.text }}</p>
+      <p [uiNotice]="s.kind === 'ok' ? 'success' : 'error'" role="status">{{ s.text }}</p>
     }
     @if (!user?.avatar_url || !user?.bio) {
-      <p class="hint">Add {{ !user?.avatar_url ? 'an avatar' : 'a bio' }} so people can recognise you in the community and marketplace.</p>
+      <p class="muted hint">Add {{ !user?.avatar_url ? 'an avatar' : 'a bio' }} so people can recognise you in the community and marketplace.</p>
     }
 
-    <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
-      <label>
+    <form class="ui-stack" [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+      <label uiField>
         Username
-        <input [value]="user?.username ?? ''" disabled />
+        <input uiInput [value]="user?.username ?? ''" disabled />
       </label>
-      <label>
+      <label uiField>
         Display name
-        <input formControlName="display_name" maxlength="50" autocomplete="nickname" placeholder="Shown instead of your username" />
+        <input uiInput formControlName="display_name" maxlength="50" autocomplete="nickname" placeholder="Shown instead of your username" />
       </label>
-      <label>
+      <label uiField [hint]="profileForm.controls.bio.value.length + '/500'">
         Bio
-        <textarea formControlName="bio" rows="4" maxlength="500"></textarea>
-        <span class="count">{{ profileForm.controls.bio.value.length }}/500</span>
+        <textarea uiInput formControlName="bio" rows="4" maxlength="500"></textarea>
       </label>
       @if (status().profile; as s) {
-        <p [class]="s.kind === 'ok' ? 'ok' : 'err'" role="status">{{ s.text }}</p>
+        <p [uiNotice]="s.kind === 'ok' ? 'success' : 'error'" role="status">{{ s.text }}</p>
       }
-      <div class="actions">
-        <button class="btn primary" type="submit" [disabled]="busy() === 'profile' || profileForm.pristine">Save profile</button>
+      <div class="ui-actions">
+        <button uiButton type="submit" [disabled]="busy() === 'profile' || profileForm.pristine">Save profile</button>
         @if (user) {
-          <a class="link" [routerLink]="['/profile', user.username]">View public profile</a>
+          <a [routerLink]="['/profile', user.username]">View public profile</a>
         }
       </div>
     </form>
   </article>
 
-  <article id="account" class="card">
+  <article uiCard pad="lg" id="account" class="ui-stack card">
     <h2>Account</h2>
     <p class="muted">
       Email: {{ user?.email }}
       @if (user?.email_verified === false) {
-        <span class="tag">Unverified</span> <a class="link" routerLink="/verify-email">Send a new link</a>
+        <span uiBadge="warning" outline>Unverified</span> <a routerLink="/verify-email">Send a new link</a>
       }
     </p>
-    <form [formGroup]="emailForm" (ngSubmit)="changeEmail()">
-      <label>
+    <form class="ui-stack" [formGroup]="emailForm" (ngSubmit)="changeEmail()">
+      <label
+        uiField
+        [error]="emailForm.controls.new_email.touched && emailForm.controls.new_email.invalid ? 'Enter a valid email address.' : ''"
+      >
         New email
-        <input type="email" formControlName="new_email" autocomplete="off" />
-        @if (emailForm.controls.new_email.touched && emailForm.controls.new_email.invalid) {
-          <span class="err">Enter a valid email address.</span>
-        }
+        <input uiInput type="email" formControlName="new_email" autocomplete="off" />
       </label>
-      <label>
+      <label uiField>
         Current password
-        <input type="password" formControlName="password" autocomplete="off" />
+        <input uiInput type="password" formControlName="password" autocomplete="off" />
       </label>
       @if (status().email; as s) {
-        <p [class]="s.kind === 'ok' ? 'ok' : 'err'" role="status">{{ s.text }}</p>
+        <p [uiNotice]="s.kind === 'ok' ? 'success' : 'error'" role="status">{{ s.text }}</p>
       }
-      <div class="actions">
-        <button class="btn primary" type="submit" [disabled]="busy() === 'email'">Change email</button>
+      <div class="ui-actions">
+        <button uiButton type="submit" [disabled]="busy() === 'email'">Change email</button>
       </div>
     </form>
 
-    <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
-      <label>
+    <form class="ui-stack" [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+      <label uiField>
         Current password
-        <input type="password" formControlName="current_password" autocomplete="current-password" />
+        <input uiInput type="password" formControlName="current_password" autocomplete="current-password" />
       </label>
-      <label>
+      <label
+        uiField
+        [error]="passwordForm.controls.new_password.touched && passwordForm.controls.new_password.invalid ? 'Use at least 8 characters.' : ''"
+      >
         New password
-        <input type="password" formControlName="new_password" autocomplete="new-password" />
-        @if (passwordForm.controls.new_password.touched && passwordForm.controls.new_password.invalid) {
-          <span class="err">Use at least 8 characters.</span>
-        }
+        <input uiInput type="password" formControlName="new_password" autocomplete="new-password" />
       </label>
       @if (status().password; as s) {
-        <p [class]="s.kind === 'ok' ? 'ok' : 'err'" role="status">{{ s.text }}</p>
+        <p [uiNotice]="s.kind === 'ok' ? 'success' : 'error'" role="status">{{ s.text }}</p>
       }
-      <div class="actions">
-        <button class="btn primary" type="submit" [disabled]="busy() === 'password'">Change password</button>
+      <div class="ui-actions">
+        <button uiButton type="submit" [disabled]="busy() === 'password'">Change password</button>
       </div>
     </form>
   </article>
 
+  @if (providers().length || connected().length) {
+    <article uiCard pad="lg" id="connected" class="ui-stack card">
+      <h2>Connected accounts</h2>
+      <p class="muted">Sign in to Chili Platform with these accounts.</p>
+      <ul class="connections">
+        @for (p of providers(); track p.provider) {
+          @let account = connection(p.provider);
+          <li>
+            <span class="who">
+              <app-provider-icon [provider]="p.provider" />
+              <strong>{{ p.label }}</strong>
+              @if (account) {
+                <span class="muted">{{ account.login || account.email }}</span>
+              }
+            </span>
+            @if (account) {
+              <button uiButton="ghost" size="sm" type="button" (click)="disconnect(p.provider, p.label)" [disabled]="busy() === 'connected'">
+                Disconnect
+              </button>
+            } @else {
+              <button uiButton="ghost" size="sm" type="button" (click)="connect(p.provider)" [disabled]="busy() === 'connected'">
+                Connect
+              </button>
+            }
+          </li>
+        }
+      </ul>
+      @if (status().connected; as s) {
+        <p [uiNotice]="s.kind === 'ok' ? 'success' : 'error'" role="status">{{ s.text }}</p>
+      }
+    </article>
+  }
+
   <form [formGroup]="preferencesForm" (ngSubmit)="savePreferences()">
-    <article id="preferences" class="card">
+    <article uiCard pad="lg" id="preferences" class="ui-stack card">
       <h2>Preferences</h2>
       @if (loading()) {
         <p class="muted" role="status"><app-spinner /> Loading your preferences…</p>
       }
-      <label>
+      <label uiField>
         Language
-        <select formControlName="locale">
+        <select uiInput formControlName="locale">
           <option value="en">English</option>
           <option value="pl">Polski</option>
         </select>
       </label>
-      <label>
+      <label uiField>
         Appearance
-        <select formControlName="theme">
+        <select uiInput formControlName="theme">
           <option value="system">System</option>
           <option value="light">Light</option>
           <option value="dark">Dark</option>
         </select>
       </label>
-      <label class="checks">
-        <input type="checkbox" formControlName="newsletter_opt_in" />
+      <label uiChoice>
+        <input uiCheck type="checkbox" formControlName="newsletter_opt_in" />
         <span>Send me the newsletter with product and platform news.</span>
       </label>
     </article>
 
-    <article id="privacy" class="card">
+    <article uiCard pad="lg" id="privacy" class="ui-stack card">
       <h2>Privacy</h2>
       <p class="muted">Choose what appears on your public profile. Orders and library are always private.</p>
-      <label class="checks">
-        <input type="checkbox" formControlName="show_bio" />
+      <label uiChoice>
+        <input uiCheck type="checkbox" formControlName="show_bio" />
         <span>Show my bio</span>
       </label>
-      <label class="checks">
-        <input type="checkbox" formControlName="show_joined" />
+      <label uiChoice>
+        <input uiCheck type="checkbox" formControlName="show_joined" />
         <span>Show when I joined</span>
       </label>
-      <label class="checks">
-        <input type="checkbox" formControlName="show_games" />
+      <label uiChoice>
+        <input uiCheck type="checkbox" formControlName="show_games" />
         <span>Show my released games</span>
       </label>
       @if (status().preferences; as s) {
-        <p [class]="s.kind === 'ok' ? 'ok' : 'err'" role="status">{{ s.text }}</p>
+        <p [uiNotice]="s.kind === 'ok' ? 'success' : 'error'" role="status">{{ s.text }}</p>
       }
-      <div class="actions">
-        <button class="btn primary" type="submit" [disabled]="busy() === 'preferences' || loading() || preferencesForm.pristine">
+      <div class="ui-actions">
+        <button uiButton type="submit" [disabled]="busy() === 'preferences' || loading() || preferencesForm.pristine">
           Save preferences
         </button>
       </div>

@@ -1,17 +1,19 @@
-<section class="page">
-  <a routerLink="/community" class="back">← All threads</a>
+<section uiPage="medium">
+  <a uiBackLink routerLink="/community">← All threads</a>
 
   @if (postLoading()) {
     <app-skeleton-article label="Loading thread" />
   } @else if (post(); as thread) {
     <article class="post">
-      <span class="badge">{{ thread.category_detail?.name }}</span>
+      @if (thread.category_detail?.name; as category) {
+        <span uiBadge="accent">{{ category }}</span>
+      }
       <h1>{{ thread.title }}</h1>
       <p class="meta">
         <a [routerLink]="['/profile', thread.author.username]">{{ thread.author.display_name || thread.author.username }}</a>
         · {{ thread.created_at | date: 'medium' }}
       </p>
-      <p class="body">{{ thread.content }}</p>
+      <app-markdown class="body" [text]="thread.content" [breaks]="true" />
     </article>
   }
 
@@ -19,32 +21,36 @@
   @if (commentsLoading()) {
     <app-skeleton-rows [count]="3" label="Loading comments" />
   } @else {
-  <ul class="comments">
-    @for (comment of comments(); track comment.id) {
-      <li>
-        <strong>
-          <a [routerLink]="['/profile', comment.author.username]">{{ comment.author.display_name || comment.author.username }}</a>
-        </strong>
-        <time>{{ comment.created_at | date: 'short' }}</time>
-        <p>{{ comment.content }}</p>
-      </li>
-    } @empty {
-      <li class="empty">No replies yet.</li>
-    }
-  </ul>
+    <ul class="comments">
+      @for (comment of comments(); track comment.id) {
+        <li uiCard pad="sm">
+          <p class="comment-head">
+            <strong>
+              <a [routerLink]="['/profile', comment.author.username]">{{ comment.author.display_name || comment.author.username }}</a>
+            </strong>
+            <time class="meta">{{ comment.created_at | date: 'short' }}</time>
+          </p>
+          <app-markdown [text]="comment.content" [breaks]="true" />
+        </li>
+      } @empty {
+        <li uiEmpty>No replies yet.</li>
+      }
+    </ul>
   }
 
   @if (auth.isAuthenticated()) {
-    <form [formGroup]="form" (ngSubmit)="submit()">
-      <textarea formControlName="content" rows="4" placeholder="Reply to this thread"></textarea>
-      <button class="btn primary" type="submit" [disabled]="posting()">
-        @if (posting()) {
-          <app-spinner />
-        }
-        Comment
-      </button>
+    <form uiCard pad="sm" class="ui-stack reply" [formGroup]="form" (ngSubmit)="submit()">
+      <app-markdown-editor formControlName="content" label="Reply" placeholder="Reply to this thread" />
+      <div>
+        <button uiButton type="submit" [disabled]="posting()">
+          @if (posting()) {
+            <app-spinner />
+          }
+          Comment
+        </button>
+      </div>
     </form>
   } @else {
-    <a routerLink="/login" class="btn ghost">Sign in to comment</a>
+    <a uiButton="ghost" routerLink="/login">Sign in to comment</a>
   }
 </section>

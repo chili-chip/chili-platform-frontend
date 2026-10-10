@@ -4,10 +4,12 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
+import { SocialLoginComponent } from '../../shared/social-login/social-login';
+import { UI } from '../../shared/ui';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [UI, ReactiveFormsModule, RouterLink, SocialLoginComponent],
   templateUrl: './login.html',
   styleUrl: './auth-form.scss',
 })

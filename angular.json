@@ -23,10 +23,26 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "allowedCommonJsDependencies": [
+              "easymde",
+              "codemirror",
+              "codemirror-spell-checker",
+              "marked"
+            ],
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@chili-chip/creator/editor",
+                "output": "creator/editor"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@chili-chip/creator/citsy",
+                "output": "creator/citsy"
               }
             ],
             "styles": [

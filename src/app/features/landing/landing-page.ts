@@ -13,6 +13,7 @@ import {
   SkeletonRowsComponent,
   SkeletonThreadsComponent,
 } from '../../shared/loading';
+import { UI } from '../../shared/ui';
 import { formatPrice } from '../marketplace/market-utils';
 import { productBlurb, productCover, unwrapList } from '../store/store-utils';
 import { ConsoleStageComponent } from './console-stage';
@@ -27,6 +28,7 @@ const RECENT_THREADS = 4;
 @Component({
   selector: 'app-landing-page',
   imports: [
+    UI,
     ConsoleStageComponent,
     DatePipe,
     GameTileComponent,

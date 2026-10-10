@@ -1,0 +1,109 @@
+// EasyMDE's base styles, then the site's dark theme on top.
+@use 'easymde/dist/easymde.min';
+// The preview uses the global .ui-prose styles, like app-markdown.
+
+app-markdown-editor {
+  display: block;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: var(--text-sm);
+}
+
+app-markdown-editor .EasyMDEContainer .CodeMirror {
+  font-family: var(--font-mono);
+  color: var(--text);
+  background: var(--bg-0);
+  border: 1px solid var(--line);
+  border-radius: 0;
+}
+
+app-markdown-editor .CodeMirror-cursor {
+  border-left-color: var(--text);
+}
+
+app-markdown-editor .CodeMirror-selected,
+app-markdown-editor .CodeMirror-focused .CodeMirror-selected,
+app-markdown-editor .CodeMirror-line::selection,
+app-markdown-editor .CodeMirror-line > span::selection,
+app-markdown-editor .CodeMirror-line > span > span::selection {
+  background: color-mix(in srgb, var(--phosphor) 18%, transparent);
+}
+
+app-markdown-editor .CodeMirror .CodeMirror-placeholder {
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+app-markdown-editor .cm-s-easymde .cm-header-1 {
+  font-size: 1.5em;
+}
+
+app-markdown-editor .cm-s-easymde .cm-header-2 {
+  font-size: 1.3em;
+}
+
+app-markdown-editor .cm-s-easymde .cm-header-3 {
+  font-size: 1.15em;
+}
+
+app-markdown-editor .cm-s-easymde .cm-link,
+app-markdown-editor .cm-s-easymde .cm-url {
+  color: var(--phosphor);
+}
+
+app-markdown-editor .cm-s-easymde .cm-comment {
+  background: var(--bg-1);
+}
+
+app-markdown-editor .editor-toolbar {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  border-radius: 0;
+  padding: 4px 6px;
+  opacity: 1;
+}
+
+app-markdown-editor .editor-toolbar button {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  min-width: 30px;
+  width: auto;
+  padding: 0 6px;
+  border-radius: 0;
+}
+
+app-markdown-editor .editor-toolbar button:hover,
+app-markdown-editor .editor-toolbar button.active {
+  color: var(--text);
+  background: var(--bg-0);
+  border-color: var(--line);
+}
+
+app-markdown-editor .editor-toolbar i.separator {
+  border-left-color: var(--line);
+  border-right: 0;
+}
+
+app-markdown-editor .editor-toolbar.disabled-for-preview button:not(.no-disable) {
+  opacity: 0.35;
+}
+
+app-markdown-editor .editor-preview,
+app-markdown-editor .editor-preview-side {
+  background: var(--bg-1);
+  color: var(--text);
+}
+
+app-markdown-editor .editor-preview-side {
+  border-color: var(--line);
+  border-radius: 0;
+}
+
+// EasyMDE only hides no-mobile separators; hide the split view button too.
+@media (max-width: 700px) {
+  app-markdown-editor .editor-toolbar button.no-mobile {
+    display: none;
+  }
+}

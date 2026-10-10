@@ -16,7 +16,7 @@
   content: '';
   position: absolute;
   inset: 8% 6%;
-  background: radial-gradient(circle, rgba(255, 59, 59, 0.18), transparent 68%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--chili) 18%, transparent), transparent 68%);
   pointer-events: none;
 }
 

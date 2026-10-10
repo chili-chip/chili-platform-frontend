@@ -1,4 +1,4 @@
-<section class="page">
+<section uiPage>
   <p class="kicker"><a routerLink="/marketplace">Marketplace</a></p>
 
   @if (loading()) {
@@ -11,15 +11,9 @@
     />
   } @else if (listing(); as item) {
     <div class="hero">
-      <div class="cover">
-        @if (item.game.cover) {
-          <img appMediaFade [src]="item.game.cover" [alt]="item.game.title" />
-        } @else {
-          <span>{{ item.game.title.charAt(0) }}</span>
-        }
-      </div>
+      <ui-cover class="cover" [src]="item.game.cover" [alt]="item.game.title" />
       <div class="body">
-        <div class="meta">
+        <div class="meta row">
           <span>{{ item.category.name }}</span>
           <a [routerLink]="['/profile', item.game.owner]">{{ item.game.owner }}</a>
         </div>
@@ -31,9 +25,10 @@
           </p>
         } @else if (item.in_library) {
           <div class="rate">
-            <label>
+            <label uiField>
               Comment
               <textarea
+                uiInput
                 rows="3"
                 maxlength="500"
                 placeholder="Optional"
@@ -58,8 +53,8 @@
               }
             </div>
             <button
+              uiButton="ghost"
               type="button"
-              class="btn ghost"
               [disabled]="pickedStars() < 1 || savingRating()"
               (click)="rate(item)"
             >
@@ -70,28 +65,32 @@
             </button>
           </div>
         }
-        <p class="lede">{{ item.description || 'No description provided.' }}</p>
-        <div class="tags">
+        @if (item.description.trim()) {
+          <app-markdown class="lede" [text]="item.description" [breaks]="true" />
+        } @else {
+          <p class="lede">No description provided.</p>
+        }
+        <div class="ui-chips tags">
           @for (tag of item.tags; track tag) {
-            <a class="tag" [routerLink]="['/marketplace']" [queryParams]="{ tag }">{{ tag }}</a>
+            <a uiChip [routerLink]="['/marketplace']" [queryParams]="{ tag }">{{ tag }}</a>
           }
         </div>
-        <div class="buy">
+        <div class="ui-actions buy">
           <strong>{{ priceLabel(item.price_cents, item.currency) }}</strong>
           @if (inLibrary()) {
-            <a class="btn primary" [routerLink]="['/play', item.game.id]">Play</a>
-            <button type="button" class="btn ghost" (click)="download()">Download .bitsy</button>
+            <a uiButton [routerLink]="['/play', item.game.id]">Play</a>
+            <button type="button" uiButton="ghost" (click)="download()">Download .bitsy</button>
           }
           @if (ownReleased()) {
             <a
-              class="btn ghost"
+              uiButton="ghost"
               [routerLink]="['/profile', item.game.owner, 'listing']"
               [queryParams]="{ game: item.game.id }"
             >
               Listing
             </a>
           } @else if (!inLibrary()) {
-            <button type="button" class="btn primary" [disabled]="buying()" (click)="buy(item)">
+            <button type="button" uiButton [disabled]="buying()" (click)="buy(item)">
               @if (buying()) {
                 <app-spinner />
               }
@@ -100,15 +99,15 @@
           }
         </div>
         @if (error()) {
-          <p class="err">{{ error() }}</p>
+          <p uiNotice="error" class="err">{{ error() }}</p>
         }
       </div>
     </div>
     @if (item.reviews.length) {
       <ul class="reviews">
         @for (review of item.reviews; track review.username) {
-          <li>
-            <div class="meta">
+          <li uiCard pad="sm">
+            <div class="meta row">
               <a [routerLink]="['/profile', review.username]">{{ review.username }}</a>
               <span [attr.aria-label]="review.stars + ' out of 5'">{{ filledStars(review.stars) }}</span>
             </div>
@@ -121,15 +120,9 @@
     }
   } @else if (game(); as copy) {
     <div class="hero">
-      <div class="cover">
-        @if (copy.cover) {
-          <img appMediaFade [src]="copy.cover" [alt]="copy.title" />
-        } @else {
-          <span>{{ copy.title.charAt(0) }}</span>
-        }
-      </div>
+      <ui-cover class="cover" [src]="copy.cover" [alt]="copy.title" />
       <div class="body">
-        <div class="meta">
+        <div class="meta row">
           <a [routerLink]="['/profile', copy.owner]">{{ copy.owner }}</a>
         </div>
         <h1>{{ copy.title }}</h1>
@@ -138,31 +131,31 @@
         } @else {
           <p class="lede">This game is not available in the marketplace.</p>
         }
-        <div class="buy">
+        <div class="ui-actions buy">
           @if (inLibrary()) {
-            <a class="btn primary" [routerLink]="['/play', copy.id]">Play</a>
-            <button type="button" class="btn ghost" (click)="download()">Download .bitsy</button>
+            <a uiButton [routerLink]="['/play', copy.id]">Play</a>
+            <button type="button" uiButton="ghost" (click)="download()">Download .bitsy</button>
           }
           @if (ownReleased()) {
             <a
-              class="btn ghost"
+              uiButton="ghost"
               [routerLink]="['/profile', copy.owner, 'listing']"
               [queryParams]="{ game: copy.id }"
             >
               Listing
             </a>
           } @else if (!copy.released && ownerName() === auth.currentUser()?.username) {
-            <a class="btn ghost" [routerLink]="['/creator', copy.id]">Open in the creator</a>
+            <a uiButton="ghost" [routerLink]="['/creator', copy.id]">Open in the creator</a>
           }
         </div>
         @if (error()) {
-          <p class="err">{{ error() }}</p>
+          <p uiNotice="error" class="err">{{ error() }}</p>
         }
       </div>
     </div>
   } @else {
     <h1>Game not found</h1>
-    <p class="err">{{ error() }}</p>
-    <a routerLink="/marketplace" class="btn ghost">Back to the marketplace</a>
+    <p uiNotice="error" class="err">{{ error() }}</p>
+    <a uiButton="ghost" routerLink="/marketplace">Back to the marketplace</a>
   }
 </section>

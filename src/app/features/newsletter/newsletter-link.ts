@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { NewsletterService } from '../../core/services/newsletter.service';
+import { UI } from '../../shared/ui';
 
 type LinkAction = 'confirm' | 'unsubscribe';
 
@@ -21,7 +22,7 @@ const COPY: Record<LinkAction, { title: string; busy: string; invalid: string }>
 /** Handles the confirm and unsubscribe links from newsletter emails (route data `action`). */
 @Component({
   selector: 'app-newsletter-link',
-  imports: [RouterLink],
+  imports: [UI, RouterLink],
   templateUrl: './newsletter-link.html',
   styleUrl: '../auth/auth-form.scss',
 })
