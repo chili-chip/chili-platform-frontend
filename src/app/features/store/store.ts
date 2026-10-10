@@ -9,6 +9,7 @@ import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
 import { SkeletonGridComponent } from '../../shared/loading';
+import { ratingSummary } from '../../shared/ratings';
 import { UI, UiDialogService } from '../../shared/ui';
 import { apiErrorMessage, productCover, unwrapList } from './store-utils';
 
@@ -62,6 +63,15 @@ export class StoreComponent implements OnInit {
   readonly page = signal(1);
   readonly hasMore = signal(false);
   readonly cover = productCover;
+
+  ratingLine(product: StoreProduct): string {
+    return ratingSummary(product.rating_average ?? null, product.rating_count ?? 0);
+  }
+
+  ratingLabel(product: StoreProduct): string {
+    const count = product.rating_count ?? 0;
+    return `Rated ${product.rating_average ?? 0} out of 5 by ${count} ${count === 1 ? 'shopper' : 'shoppers'}`;
+  }
 
   readonly filtered = computed(() => {
     const { q, category, min, max, stock } = this.filters();
@@ -187,7 +197,12 @@ export class StoreComponent implements OnInit {
           }
           this.loading.set(false);
           this.loadingMore.set(false);
-          this.error.set(apiErrorMessage(err, 'We could not load the store right now. Please try again shortly.'));
+          this.error.set(
+            apiErrorMessage(
+              err,
+              'We could not load the store right now. Please try again shortly.',
+            ),
+          );
         },
       });
   }

@@ -88,6 +88,26 @@
   color: var(--muted);
 }
 
+.rating-summary,
+.yours {
+  display: inline-block;
+  margin-top: 0.4rem;
+  color: var(--amber);
+  font-size: var(--text-sm);
+  text-decoration: none;
+}
+
+.reviews {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: 2.4rem;
+  max-width: 68ch;
+}
+
+.reviews h2 {
+  font-size: var(--text-lg);
+}
+
 @media (max-width: 760px) {
   .hero {
     grid-template-columns: 1fr;

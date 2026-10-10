@@ -32,6 +32,7 @@
       <div class="copy">
         <p class="kicker">{{ item.sku || item.slug }}</p>
         <h1>{{ item.name }}</h1>
+        <p class="rating-summary">{{ ratingSummary(item) }}</p>
         @if (blurb()) {
           <p class="lede">{{ blurb() }}</p>
         }
@@ -55,5 +56,33 @@
     @if (item.long_description.trim()) {
       <app-markdown class="long-copy" [text]="item.long_description" />
     }
+
+    <section id="reviews" class="reviews" aria-labelledby="reviews-title">
+      <h2 id="reviews-title">Ratings and comments</h2>
+      @if (item.my_rating; as mine) {
+        <p class="yours" [attr.aria-label]="'Your rating, ' + mine + ' out of 5'">
+          Your rating {{ filledStars(mine) }}
+        </p>
+      } @else if (auth.isAuthenticated()) {
+        <app-rating-form
+          label="Rate this product"
+          [saving]="savingRating()"
+          (rate)="rate(item, $event)"
+        />
+        @if (ratingError()) {
+          <p uiNotice="error" class="err">{{ ratingError() }}</p>
+        }
+      } @else {
+        <p class="muted">
+          <button uiButton="text" type="button" (click)="signInToRate()">Sign in</button> to rate
+          this product.
+        </p>
+      }
+      <app-review-list
+        class="review-list"
+        [reviews]="item.reviews ?? []"
+        empty="No ratings yet. Be the first."
+      />
+    </section>
   }
 </section>

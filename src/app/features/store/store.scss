@@ -64,6 +64,15 @@
   display: grid;
 }
 
+.rating {
+  color: var(--amber);
+  font-size: var(--text-sm);
+}
+
+.rating.is-empty {
+  color: var(--muted);
+}
+
 .shot {
   --cover-height: 160px;
   --cover-font: 3rem;

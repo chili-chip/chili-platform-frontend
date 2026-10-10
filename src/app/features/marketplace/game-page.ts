@@ -6,6 +6,13 @@ import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SkeletonDetailComponent, SpinnerComponent } from '../../shared/loading';
 import { MarkdownComponent } from '../../shared/markdown';
+import {
+  filledStars,
+  RatingFormComponent,
+  RatingSubmit,
+  ratingSummary,
+  ReviewListComponent,
+} from '../../shared/ratings';
 import { UI } from '../../shared/ui';
 import { downloadBitsy } from '../play/bitsy-file';
 import { formatPrice, marketError } from './market-utils';
@@ -13,7 +20,15 @@ import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-game-page',
-  imports: [UI, MarkdownComponent, RouterLink, SkeletonDetailComponent, SpinnerComponent],
+  imports: [
+    UI,
+    MarkdownComponent,
+    RatingFormComponent,
+    ReviewListComponent,
+    RouterLink,
+    SkeletonDetailComponent,
+    SpinnerComponent,
+  ],
   templateUrl: './game-page.html',
   styleUrl: './market.scss',
 })
@@ -29,12 +44,9 @@ export class GamePageComponent implements OnInit {
   readonly loading = signal(true);
   readonly buying = signal(false);
   readonly savingRating = signal(false);
-  readonly starHover = signal(0);
-  readonly pickedStars = signal(0);
-  readonly comment = signal('');
   readonly error = signal('');
   readonly priceLabel = formatPrice;
-  readonly starChoices = [1, 2, 3, 4, 5];
+  readonly filledStars = filledStars;
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -58,37 +70,23 @@ export class GamePageComponent implements OnInit {
   }
 
   ratingSummary(listing: MarketplaceListing): string {
-    const score = listing.rating_average === null ? '—' : listing.rating_average.toFixed(1);
-    const label = listing.rating_count === 1 ? 'rating' : 'ratings';
-    return `${score} · ${listing.rating_count} ${label}`;
-  }
-
-  filledStars(count: number): string {
-    return '★★★★★☆☆☆☆☆'.slice(5 - count, 10 - count);
+    return ratingSummary(listing.rating_average, listing.rating_count);
   }
 
   canRate(listing: MarketplaceListing): boolean {
     return listing.in_library && listing.my_rating === null && !this.savingRating();
   }
 
-  shownStars(): number {
-    return this.starHover() || this.pickedStars();
-  }
-
-  rate(listing: MarketplaceListing): void {
-    const stars = this.pickedStars();
-    if (!this.canRate(listing) || stars < 1) {
+  rate(listing: MarketplaceListing, { stars, comment }: RatingSubmit): void {
+    if (!this.canRate(listing)) {
       return;
     }
     this.savingRating.set(true);
     this.error.set('');
-    this.api.rateMarketplaceListing(listing.slug, stars, this.comment()).subscribe({
+    this.api.rateMarketplaceListing(listing.slug, stars, comment).subscribe({
       next: (updated) => {
         this.listing.set(updated);
         this.savingRating.set(false);
-        this.starHover.set(0);
-        this.pickedStars.set(0);
-        this.comment.set('');
         this.toast.success('Thanks, your rating was saved.');
       },
       error: (err) => {
