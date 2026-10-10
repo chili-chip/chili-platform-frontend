@@ -2,3 +2,8 @@
   X-Frame-Options: SAMEORIGIN
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
+
+# The creator's files keep their names between releases, so browsers must
+# check for a new copy instead of mixing cached files from an older release.
+/creator/*
+  Cache-Control: no-cache
