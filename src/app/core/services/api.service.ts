@@ -122,6 +122,13 @@ export class ApiService {
     return this.http.get<StoreProduct>(`${this.base}/store/products/${slug}/`);
   }
 
+  rateProduct(slug: string, stars: number, comment = '') {
+    return this.http.post<StoreProduct>(`${this.base}/store/products/${slug}/rating/`, {
+      stars,
+      comment,
+    });
+  }
+
   listDeliveryOptions() {
     return this.http.get<StoreDeliveryOption[]>(`${this.base}/store/delivery-options/`);
   }

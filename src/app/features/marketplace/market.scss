@@ -71,36 +71,6 @@
   font-size: var(--text-sm);
 }
 
-.rate {
-  display: grid;
-  gap: 0.55rem;
-  max-width: 40rem;
-  justify-items: start;
-}
-
-.rate .ui-field {
-  justify-self: stretch;
-}
-
-.stars {
-  display: flex;
-  gap: 0.2rem;
-}
-
-.stars button {
-  padding: 0.1rem 0.15rem;
-  font-size: 1.35rem;
-  line-height: 1;
-  color: var(--amber);
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-}
-
-.stars button:disabled {
-  cursor: wait;
-}
-
 .tags,
 .buy {
   margin-top: var(--space-2);
@@ -112,26 +82,7 @@
 }
 
 .reviews {
-  list-style: none;
-  margin: 1.4rem 0 0;
-  padding: 0;
-  display: grid;
-  gap: 0.7rem;
-}
-
-.reviews li {
-  display: grid;
-  gap: 0.45rem;
-}
-
-.reviews .row span {
-  color: var(--amber);
-  font-size: var(--text-sm);
-  letter-spacing: 0;
-}
-
-.reviews p {
-  white-space: pre-wrap;
+  margin-top: 1.4rem;
 }
 
 // Sales

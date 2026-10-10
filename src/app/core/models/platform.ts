@@ -153,8 +153,23 @@ export interface StoreProduct {
   /** Delivery option slugs this product ships with. Empty allows every active option. */
   delivery_options?: string[];
   is_active: boolean;
+  /** Average stars, one decimal. Null until someone rates the product. */
+  rating_average?: number | null;
+  rating_count?: number;
+  /** The signed-in shopper's own stars, or null. */
+  my_rating?: number | null;
+  /** Product page only, newest first. */
+  reviews?: StoreProductReview[];
   created_at: string;
   updated_at: string;
+}
+
+export interface StoreProductReview {
+  username: string;
+  stars: number;
+  comment: string;
+  verified_purchase: boolean;
+  created_at: string;
 }
 
 export type StoreOrderStatus = 'pending' | 'paid' | 'canceled' | 'failed' | 'fulfilled';
